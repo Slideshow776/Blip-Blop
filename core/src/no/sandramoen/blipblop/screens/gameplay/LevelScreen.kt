@@ -1,12 +1,14 @@
 package no.sandramoen.blipblop.screens.gameplay
 
+import no.sandramoen.blipblop.actors.Player
 import no.sandramoen.blipblop.utils.BaseScreen
 
 class LevelScreen : BaseScreen() {
     private val token = "LevelScreen"
 
     override fun initialize() {
-
+        Player(mainStage, true)
+        Player(mainStage, false)
     }
 
     override fun update(dt: Float) {

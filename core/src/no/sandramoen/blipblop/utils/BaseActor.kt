@@ -37,7 +37,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         this.y = y
         s.addActor(this)
         animation = null
-        debug = false
+        debug = true
     }
 
     override fun setSize(width: Float, height: Float) {
@@ -273,7 +273,23 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         this.color.a = opacity
     }
 
+    fun boundToWorld() {
+        if (x < 0) // check left edge
+            x = 0f
+        if (x + width > worldBounds.width) // check right edge
+            x = worldBounds.width - width
+    }
+
     companion object {
+        private val token = "BaseActor.kt - companion: "
+        private var worldBounds = Rectangle(0f, 0f, BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT)
+
+        fun setWorldBounds(width: Float, height: Float) { // input is in world units, not pixels
+            worldBounds = Rectangle(0f, 0f, width, height)
+        }
+
+        fun setWorldBounds(ba: BaseActor) = setWorldBounds(ba.width, ba.height)
+        fun getWorldBounds() = worldBounds
         fun getList(stage: Stage, className: String): ArrayList<BaseActor> {
             var list: ArrayList<BaseActor> = ArrayList()
 
