@@ -5,21 +5,24 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.utils.BaseActor
 
 class Player(s: Stage, player1: Boolean) : BaseActor(0f, 0f, s) {
-    private var player1: Boolean = player1
+    private val token = "Player"
+    val bottomPlayer: Boolean = player1
 
     init {
         // miscellaneous
         setSize(15.5f, 2.5f)
-        if (player1) setPosition(10f, 10f)
-        else setPosition(90f, 90f)
+        if (player1) setPosition(50f - width / 2, 10f)
+        else setPosition(50f - width / 2, 90f)
+        setOrigin(Align.center)
 
         // physics
-        setAcceleration(Gdx.graphics.width / 1f) // pixels/seconds
-        setMaxSpeed(Gdx.graphics.width / 8f)
-        setDeceleration(Gdx.graphics.width / 1f)
+        setAcceleration(Gdx.graphics.width * 3f) // pixels/seconds
+        setMaxSpeed(Gdx.graphics.width * 0.25f)
+        setDeceleration(Gdx.graphics.width * 3f)
         setBoundaryRectangle()
     }
 
@@ -37,23 +40,48 @@ class Player(s: Stage, player1: Boolean) : BaseActor(0f, 0f, s) {
             // TODO: implement this
         } else { // desktop controls
             when {
-                player1 && Gdx.input.isKeyPressed(Input.Keys.LEFT) -> moveLeft()
-                player1 && Gdx.input.isKeyPressed(Input.Keys.RIGHT) -> moveRight()
-                !player1 && Gdx.input.isKeyPressed(Input.Keys.A) -> moveLeft()
-                !player1 && Gdx.input.isKeyPressed(Input.Keys.D) -> moveRight()
+                bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.LEFT) -> moveLeft()
+                bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.RIGHT) -> moveRight()
+                !bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.A) -> moveLeft()
+                !bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.D) -> moveRight()
                 else -> moveForward()
             }
         }
     }
 
+    fun hitAnimation() {
+        val amount = .2f
+        val duration = .05f
+        val bounceAction =
+            if (bottomPlayer)
+                Actions.sequence(
+                    Actions.moveBy(0f, -amount, duration),
+                    Actions.moveBy(0f, amount, duration)
+                )
+            else
+                Actions.sequence(
+                    Actions.moveBy(0f, amount, duration),
+                    Actions.moveBy(0f, -amount, duration)
+                )
+        addAction(
+            Actions.parallel(
+                bounceAction,
+                Actions.sequence(
+                    Actions.scaleBy(.1f, -.1f, duration * 2),
+                    Actions.scaleTo(1f, 1f, duration * 2)
+                )
+            )
+        )
+    }
+
     private fun moveLeft() {
         accelerateAtAngle(180f)
-        addAction(Actions.rotateTo(1f, 1f))
+        addAction(Actions.rotateTo(2f, .75f))
     }
 
     private fun moveRight() {
         accelerateAtAngle(0f)
-        addAction(Actions.rotateTo(-1f, 1f))
+        addAction(Actions.rotateTo(-2f, .75f))
     }
 
     private fun moveForward() {

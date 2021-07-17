@@ -173,7 +173,9 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         velocityVec.setAngle(angle)
     }
 
-    fun getMotionAngle() = velocityVec.angle()
+    fun getMotionAngle() = velocityVec.angleDeg()
+    fun getVelocity() = velocityVec
+    fun setVelocity(vel: Vector2) { velocityVec = vel }
     fun isMoving() = getSpeed() > 0
     fun setAcceleration(acc: Float) {
         acceleration = acc

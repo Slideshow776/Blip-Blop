@@ -45,6 +45,10 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         var defaultShader: String? = null
         var shockwaveShader: String? = null
         var levelMusic1: Music? = null
+        var blipSound: Sound? = null
+        var blopSound: Sound? = null
+        var startSound: Sound? = null
+        var deflectSound: Sound? = null
         var vibrations: Boolean = false
         var green = Color(0.113f, 0.968f, 0.282f, 1f)
         var yellow = Color(0.968f, 0.815f, 0.113f, 1f)
@@ -79,6 +83,10 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         assetManager.setErrorListener(this)
         assetManager.load("images/included/packed/blipBlop.pack.atlas", TextureAtlas::class.java)
         // assetManager.load("audio/music/AlexBeroza_-_Drive.mp3", Music::class.java)
+        assetManager.load("audio/sound/blip.wav", Sound::class.java)
+        assetManager.load("audio/sound/blop.wav", Sound::class.java)
+        assetManager.load("audio/sound/start.wav", Sound::class.java)
+        assetManager.load("audio/sound/deflect.wav", Sound::class.java)
 
         // assetManager.load("skins/default/uiskin.json", Skin::class.java)
 
@@ -95,6 +103,10 @@ abstract class BaseGame() : Game(), AssetErrorListener {
 
         // audio
         // levelMusic1 = assetManager.get("audio/music/AlexBeroza_-_Drive.mp3", Music::class.java)
+        blipSound = assetManager.get("audio/sound/blip.wav", Sound::class.java)
+        blopSound = assetManager.get("audio/sound/blop.wav", Sound::class.java)
+        startSound = assetManager.get("audio/sound/start.wav", Sound::class.java)
+        deflectSound = assetManager.get("audio/sound/deflect.wav", Sound::class.java)
 
         // text files
         defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()
