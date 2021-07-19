@@ -15,6 +15,7 @@ class LevelScreen : BaseScreen() {
         Player(mainStage, true)
         Player(mainStage, false)
         ball = Ball(mainStage)
+        tempMiddleActor()
     }
 
     override fun update(dt: Float) {
@@ -50,6 +51,13 @@ class LevelScreen : BaseScreen() {
     override fun keyDown(keycode: Int): Boolean { // desktop controls
 
         return false
+    }
+
+    private fun tempMiddleActor() { // this will be replaced by graphics later
+        val temp = BaseActor(0f, 0f, mainStage)
+        temp.setPosition(0f,-1f)
+        temp.height = 51f
+        temp.width = 101f
     }
 
 
