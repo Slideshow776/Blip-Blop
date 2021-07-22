@@ -1,24 +1,30 @@
 package no.sandramoen.blipblop.screens.gameplay
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector3
 import no.sandramoen.blipblop.actors.Ball
 import no.sandramoen.blipblop.actors.Player
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen
+import com.badlogic.gdx.utils.Array
 
 class LevelScreen : BaseScreen() {
-    private val token = "LevelScreen"
+    private val tag = "LevelScreen"
     private lateinit var ball: Ball
+    private lateinit var players: Array<Player>
 
     override fun initialize() {
-        Player(mainStage, true)
-        Player(mainStage, false)
+        players =  Array()
+        players.add(Player(mainStage, true))
+        players.add(Player(mainStage, false))
         ball = Ball(mainStage)
         tempMiddleActor()
     }
 
     override fun update(dt: Float) {
+
+        // paddle hit
         for (player: BaseActor in BaseActor.getList(mainStage, Player::class.java.canonicalName)) {
             if (ball.overlaps(player as Player) && ball.canBePaddled) {
                 if (player.bottomPlayer && ball.y < player.y) return
@@ -43,13 +49,14 @@ class LevelScreen : BaseScreen() {
         }
     }
 
-    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-
-        return false
+    override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
+        val worldCoordinates = camera.unproject(Vector3(screenX.toFloat(), screenY.toFloat(), 0f))
+        if (worldCoordinates.y >= 50f) players[1].touchX = worldCoordinates.x
+        else players[0].touchX = worldCoordinates.x
+        return super.touchDragged(screenX, screenY, pointer)
     }
 
     override fun keyDown(keycode: Int): Boolean { // desktop controls
-
         return false
     }
 
@@ -59,6 +66,4 @@ class LevelScreen : BaseScreen() {
         temp.height = 51f
         temp.width = 101f
     }
-
-
 }

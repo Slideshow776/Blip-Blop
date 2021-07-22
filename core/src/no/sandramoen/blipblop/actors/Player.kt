@@ -8,16 +8,22 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.utils.BaseActor
 
-class Player(s: Stage, player1: Boolean) : BaseActor(0f, 0f, s) {
-    private val token = "Player"
-    val bottomPlayer: Boolean = player1
+class Player(s: Stage, bottomPlayer: Boolean) : BaseActor(0f, 0f, s) {
+    val bottomPlayer: Boolean = bottomPlayer
+    var touchX = 0f
+
+    private val tag = "Player"
+    private val touchDeadZone = 5f // removes player twitching
+    private var paddleCenter = 0f
 
     init {
         // miscellaneous
         setSize(15.5f, 2.5f)
-        if (player1) setPosition(50f - width / 2, 10f)
+        if (bottomPlayer) setPosition(50f - width / 2, 10f)
         else setPosition(50f - width / 2, 90f)
         setOrigin(Align.center)
+        paddleCenter = x + width / 2
+        touchX = paddleCenter
 
         // physics
         setAcceleration(Gdx.graphics.width * 3f) // pixels/seconds
@@ -36,9 +42,14 @@ class Player(s: Stage, player1: Boolean) : BaseActor(0f, 0f, s) {
             boundToWorld()
         }
 
-        if (Gdx.app.type == Application.ApplicationType.Android) {
-            // TODO: implement this
-        } else { // desktop controls
+        /*if (Gdx.app.type == Application.ApplicationType.Android) {*/
+            val paddleCenter = x + width / 2
+            when {
+                touchX > paddleCenter + touchDeadZone -> moveRight()
+                touchX < paddleCenter - touchDeadZone -> moveLeft()
+                else -> moveForward()
+            }
+        /*} else { // desktop controls
             when {
                 bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.LEFT) -> moveLeft()
                 bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.RIGHT) -> moveRight()
@@ -46,31 +57,31 @@ class Player(s: Stage, player1: Boolean) : BaseActor(0f, 0f, s) {
                 !bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.D) -> moveRight()
                 else -> moveForward()
             }
-        }
+        }*/
     }
 
     fun hitAnimation() {
         val amount = .2f
         val duration = .05f
         val bounceAction =
-            if (bottomPlayer)
-                Actions.sequence(
-                    Actions.moveBy(0f, -amount, duration),
-                    Actions.moveBy(0f, amount, duration)
-                )
-            else
-                Actions.sequence(
-                    Actions.moveBy(0f, amount, duration),
-                    Actions.moveBy(0f, -amount, duration)
-                )
+                if (bottomPlayer)
+                    Actions.sequence(
+                            Actions.moveBy(0f, -amount, duration),
+                            Actions.moveBy(0f, amount, duration)
+                    )
+                else
+                    Actions.sequence(
+                            Actions.moveBy(0f, amount, duration),
+                            Actions.moveBy(0f, -amount, duration)
+                    )
         addAction(
-            Actions.parallel(
-                bounceAction,
-                Actions.sequence(
-                    Actions.scaleBy(.1f, -.1f, duration * 2),
-                    Actions.scaleTo(1f, 1f, duration * 2)
+                Actions.parallel(
+                        bounceAction,
+                        Actions.sequence(
+                                Actions.scaleBy(.1f, -.1f, duration * 2),
+                                Actions.scaleTo(1f, 1f, duration * 2)
+                        )
                 )
-            )
         )
     }
 
@@ -85,6 +96,6 @@ class Player(s: Stage, player1: Boolean) : BaseActor(0f, 0f, s) {
     }
 
     private fun moveForward() {
-        addAction(Actions.rotateTo(0f, 1f))
+        addAction(Actions.rotateTo(0f, .5f))
     }
 }

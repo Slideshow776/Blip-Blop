@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 
 class GameUtils {
-    private val token = "GameUtils.kt"
+    private val tag = "GameUtils.kt"
 
     companion object {
         fun isTouchDownEvent(e: Event): Boolean { // Custom type checker

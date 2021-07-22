@@ -10,7 +10,7 @@ import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 
 class Ball(s: Stage) : BaseActor(BaseGame.WORLD_WIDTH / 2, BaseGame.WORLD_HEIGHT / 2, s) {
-    private val token = "Ball"
+    private val tag = "Ball"
     val ballSpeed = Gdx.graphics.height / 20f
     var canBePaddled = true
 
