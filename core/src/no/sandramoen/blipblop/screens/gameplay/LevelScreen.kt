@@ -41,8 +41,8 @@ class LevelScreen : BaseScreen() {
                         bounceAngle = MathUtils.lerp(210f, 330f, paddlePercentHit)
                         BaseGame.blopSound!!.play(BaseGame.soundVolume)
                     }
-                player.hitAnimation()
-                ball.hitAnimation()
+                player.ballImpactAnimation()
+                ball.playerImpactAnimation()
                 ball.setMotionAngle(bounceAngle)
                 ball.setSpeed(ball.ballSpeed) // pixels / seconds
             }
@@ -51,8 +51,10 @@ class LevelScreen : BaseScreen() {
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
         val worldCoordinates = camera.unproject(Vector3(screenX.toFloat(), screenY.toFloat(), 0f))
-        if (worldCoordinates.y >= 50f) players[1].touchX = worldCoordinates.x
-        else players[0].touchX = worldCoordinates.x
+
+        if (worldCoordinates.y <= 50f) players[0].touchX = worldCoordinates.x
+        else players[1].touchX = worldCoordinates.x
+
         return super.touchDragged(screenX, screenY, pointer)
     }
 

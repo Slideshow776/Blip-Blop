@@ -11,7 +11,7 @@ import no.sandramoen.blipblop.utils.BaseGame
 
 class Ball(s: Stage) : BaseActor(BaseGame.WORLD_WIDTH / 2, BaseGame.WORLD_HEIGHT / 2, s) {
     private val tag = "Ball"
-    val ballSpeed = Gdx.graphics.height / 20f
+    val ballSpeed = Gdx.graphics.height / 25f
     var canBePaddled = true
 
     init {
@@ -38,7 +38,7 @@ class Ball(s: Stage) : BaseActor(BaseGame.WORLD_WIDTH / 2, BaseGame.WORLD_HEIGHT
         if (x < 0 || x + width > getWorldBounds().width) { // bounce off walls
             setVelocity(Vector2(getVelocity().x * -1f, getVelocity().y))
             boundToWorld()
-            wallHit()
+            wallImpactAnimation()
             BaseGame.deflectSound!!.play(BaseGame.soundVolume)
         }
 
@@ -47,7 +47,7 @@ class Ball(s: Stage) : BaseActor(BaseGame.WORLD_WIDTH / 2, BaseGame.WORLD_HEIGHT
         }
     }
 
-    fun hitAnimation() {
+    fun playerImpactAnimation() {
         val duration = .075f
         addAction(Actions.sequence(
             Actions.scaleBy(.75f, -.75f, duration),
@@ -55,7 +55,7 @@ class Ball(s: Stage) : BaseActor(BaseGame.WORLD_WIDTH / 2, BaseGame.WORLD_HEIGHT
         ))
     }
 
-    private fun wallHit() {
+    private fun wallImpactAnimation() {
         val duration = .1f
         addAction(Actions.sequence(
             Actions.scaleBy(-.75f, .75f, duration),
