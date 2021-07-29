@@ -26,11 +26,12 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
     private var maxSpeed: Float = 1000f
     private var deceleration: Float = 0f
     private var boundaryPolygon: Polygon? = null
-    var animationWidth = width
     private var animationHeight = height
 
     var isFacingRight = true
     var pause = false
+    var animationWidth = width
+    var collisionEnabled = true
 
     init {
         this.x = x
@@ -259,6 +260,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
     }
 
     fun overlaps(other: BaseActor): Boolean {
+        if (!collisionEnabled) return false
         val poly1: Polygon = this.getBoundaryPolygon()
         val poly2: Polygon = other.getBoundaryPolygon()
 
