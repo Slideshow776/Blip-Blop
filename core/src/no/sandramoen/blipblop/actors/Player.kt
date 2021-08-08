@@ -2,190 +2,174 @@ package no.sandramoen.blipblop.actors
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.VertexAttributes
+import com.badlogic.gdx.graphics.g3d.Material
+import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.utils.Align
-import no.sandramoen.blipblop.utils.BaseActor
+import com.badlogic.gdx.math.Vector3
+import no.sandramoen.blipblop.utils.BaseActor3D
+import no.sandramoen.blipblop.utils.Stage3D
+import java.util.*
+import kotlin.concurrent.schedule
+import kotlin.math.abs
 
-class Player(s: Stage, bottomPlayer: Boolean) : BaseActor(0f, 0f, s) {
+open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
     private val tag = "Player"
-    private val touchDeadZone = .25f
-    private var activationDelayForAI = 5f
-    private var enableAIWithDelay = Actions.sequence(
-            Actions.delay(activationDelayForAI),
-            Actions.run {
-                enableAI = true
-                setSpeed(getSpeed() / 2)
-            }
-    )
-    private var paddleCenter = 0f
-    private var androidSpeed = 30f
+    private val touchDeadZone = .05f
+    private val scaleX = 1.25f
+    private val playerAndroidSpeed = 20f
+    private val playerDesktopSpeed = 1.0f
+    private val leftWorldBounds = -5.7f
+    private val rightWorldBounds = 5.7f
+    private var activationDelayForAI: Long = 5000
+    private var enableAIWithDelay = Timer("EnableAIWithDelay", false).schedule(activationDelayForAI) {}
+    private var topPlayerYPosition = 5.5f
+    private var bottomPlayerYPosition = -5.5f
+    private var normalizedXPosition = .5f
     private var shadowBall: Ball
-    private var topPlayerYPosition = 85f
-    private var bottomPlayerYPosition = 15f
-    private var aiSpeed = 5f
+    private var shouldRunBallImpactAnimation = false
+    private var ballImpactAnimationPercent = 0f
 
     val bottomPlayer: Boolean = bottomPlayer
-    var touchX = 0f
+    val width = 1.875f
     var enableAI = true
-    var aiMovementDisabled = false
-    var aiShouldMoveToX = -10f
+    var normalizedTouchX = .5f
     var score = 0
     var miss = 0
     var hit = 0
+    var desktopAcceleration = 1f
+    var aiShouldMoveToX = 0f
 
     init {
-        // miscellaneous
-        setSize(15.5f, 2.75f)
-        if (bottomPlayer) setPosition(50f - width / 2, bottomPlayerYPosition)
-        else setPosition(50f - width / 2, topPlayerYPosition)
-        setOrigin(Align.center)
-        paddleCenter = x + width / 2
-        touchX = paddleCenter
-        shadowBall = Ball(this.stage, shadowBall = true)
-        shadowBall.debug = true
-        shadowBall.setVelocity(Vector2(0f, 0f))
-        shadowBall.setPosition(-10f, -10f)
+        // 3D model
+        val modelBuilder = ModelBuilder()
+        val boxMaterial = Material()
+        val usageCode = VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
+        val boxModel = modelBuilder.createBox(width, .225f, .225f, boxMaterial, usageCode.toLong())
+        val position = Vector3(0f, 0f, 0f)
+        setModelInstance(ModelInstance(boxModel, position))
+        setBaseRectangle()
 
-        // physics
-        setAcceleration(Gdx.graphics.width * 3f) // pixels/seconds
-        setMaxSpeed(Gdx.graphics.width * .1f) // .07f // .25f
-        setDeceleration(Gdx.graphics.width * 3f)
-        setBoundaryRectangle()
+        // shadow ball
+        shadowBall = Ball(0f, 0f, 0f, this.stage, isShadowBall = true)
+        shadowBall.setVelocity(Vector2(0f, 0f))
+        shadowBall.setPosition(Vector3(-10f, -10f, 0f))
+
+        // miscellaneous
+        loadTexture("player")
+        setColor(Color.GREEN)
+        if (bottomPlayer) setPosition(Vector3(0f, bottomPlayerYPosition, 0f))
+        else setPosition(Vector3(0f, topPlayerYPosition, 0f))
     }
 
     override fun act(dt: Float) {
         super.act(dt)
-        applyPhysics(dt)
-
-        if (x < 0 || x + width > getWorldBounds().width) { // stops the player from going off screen
-            setSpeed(0f)
-            boundToWorld()
-        }
 
         // controls
-        paddleCenter = x + width / 2
-        if (Gdx.app.type == Application.ApplicationType.Android && !enableAI) {
+        if (enableAI) {
             when {
-                touchX > paddleCenter + touchDeadZone -> moveRight()
-                touchX < paddleCenter - touchDeadZone -> moveLeft()
+                aiShouldMoveToX > getPosition().x + width / 4 -> moveRight()
+                aiShouldMoveToX < getPosition().x - width / 4 -> moveLeft()
+                else -> standStill()
+            }
+        } else if (Gdx.app.type == Application.ApplicationType.Android && !enableAI) {
+            normalizedXPosition = (getPosition().x - leftWorldBounds) / (rightWorldBounds - leftWorldBounds)
+            when {
+                normalizedTouchX > normalizedXPosition + touchDeadZone -> moveRight()
+                normalizedTouchX < normalizedXPosition - touchDeadZone -> moveLeft()
                 else -> standStill()
             }
         } else if (Gdx.app.type == Application.ApplicationType.Desktop) {
             when {
-                bottomPlayer && Gdx.input.isKeyPressed(Keys.LEFT) -> moveLeft()
-                bottomPlayer && Gdx.input.isKeyPressed(Keys.RIGHT) -> moveRight()
-                !bottomPlayer && Gdx.input.isKeyPressed(Keys.A) -> moveLeft()
-                !bottomPlayer && Gdx.input.isKeyPressed(Keys.D) -> moveRight()
+                bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.LEFT) -> moveLeft()
+                bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.RIGHT) -> moveRight()
+                !bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.A) -> moveLeft()
+                !bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.D) -> moveRight()
                 else -> standStill()
             }
         }
 
-        // miscellaneous
-        if (bottomPlayer && shadowBall.y < bottomPlayerYPosition && shadowBall.y != -10f) {
-            aiShouldMoveToX = shadowBall.x
+        // shadow ball
+        if (bottomPlayer && shadowBall.getPosition().y < bottomPlayerYPosition && shadowBall.getPosition().y != -10f) {
+            aiShouldMoveToX = shadowBall.getPosition().x
             shadowBall.setVelocity(Vector2(0f, 0f))
-            shadowBall.setPosition(-10f, -10f)
-        } else if (!bottomPlayer && shadowBall.y > topPlayerYPosition && shadowBall.y != -10f) {
-            aiShouldMoveToX = shadowBall.x + shadowBall.width / 2 // centered shadow ball destination
+            shadowBall.setPosition(Vector3(-10f, -10f, 0f))
+        } else if (!bottomPlayer && shadowBall.getPosition().y > topPlayerYPosition && shadowBall.getPosition().y != -10f) {
+            aiShouldMoveToX = shadowBall.getPosition().x
             shadowBall.setVelocity(Vector2(0f, 0f))
-            shadowBall.setPosition(-10f, -10f)
+            shadowBall.setPosition(Vector3(-10f, -10f, 0f))
         }
 
-        if (enableAI) playAsAi()
-    }
-
-    fun ballImpactAnimation() {
-        val amount = .2f
-        val duration = .05f
-        val bounceAction =
-                if (bottomPlayer)
-                    Actions.sequence(
-                            Actions.moveBy(0f, -amount, duration),
-                            Actions.moveBy(0f, amount, duration)
-                    )
-                else
-                    Actions.sequence(
-                            Actions.moveBy(0f, amount, duration),
-                            Actions.moveBy(0f, -amount, duration)
-                    )
-        addAction(Actions.parallel(
-                bounceAction,
-                Actions.sequence(
-                        Actions.scaleBy(.1f, -.1f, duration * 2),
-                        Actions.scaleTo(1f, 1f, duration * 2)
-                )
-        ))
+        // animation
+        if (shouldRunBallImpactAnimation) ballImpactAnimation(dt)
     }
 
     fun enableAIWithDelay() {
-        enableAIWithDelay = Actions.sequence(
-                Actions.delay(activationDelayForAI),
-                Actions.run {
-                    enableAI = true
-                    setMaxSpeed((Gdx.graphics.width * 0.25f) / 2)
-                }
-        )
-        if (!actions.contains(enableAIWithDelay))
-            addAction(enableAIWithDelay)
+        enableAIWithDelay = Timer("EnableAIWithDelay", false).schedule(activationDelayForAI) {
+            enableAI = true
+            // setSpeed(getSpeed() / 2)
+        }
     }
 
     fun disableAI() {
         enableAI = false
-        setMaxSpeed(Gdx.graphics.width * 0.25f)
-        if (actions.contains(enableAIWithDelay))
-            actions.removeValue(enableAIWithDelay, true)
+        enableAIWithDelay.cancel()
+        // setMaxSpeed(Gdx.graphics.width * 0.25f)
     }
 
     fun spawnShadowBall(ball: Ball) { // https://www.rharel.com/projects/pong-ai
-        shadowBall.debug = false // convenient debug option
-        shadowBall.setPosition(ball.x, ball.y)
-        shadowBall.setVelocity(Vector2(
-                ball.getVelocity().x * 100,
-                ball.getVelocity().y * 100
-        ))
+        shadowBall.setPosition(ball.getPosition())
+        shadowBall.setVelocity(Vector2(ball.getVelocity().x * 5f, ball.getVelocity().y * 5f))
+        shadowBall.inPlay = true
     }
 
-    private fun playAsAi() { // an AI needs to know where the ball is
-        var temp = if (aiShouldMoveToX > 0f) aiShouldMoveToX
-        else 50f
-        when {
-            temp > paddleCenter + width / 4 -> moveRight(temp)
-            temp < paddleCenter - width / 4 -> moveLeft(temp)
-            else -> standStill()
+    fun ballImpact() {
+        hit++
+        shouldRunBallImpactAnimation = true
+    }
+
+    private fun moveLeft() {
+        if (getPosition().x >= leftWorldBounds) {
+            if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
+                if (desktopAcceleration < 2f) desktopAcceleration += .05f
+                val speed = playerDesktopSpeed * desktopAcceleration
+                moveBy(rotation.transform(Vector3(-speed, 0f, 0f)).scl(.1f))
+            } else if (Gdx.app.type == Application.ApplicationType.Android) {
+                val speed = playerAndroidSpeed * abs(normalizedTouchX - normalizedXPosition) // smooths movement
+                moveBy(rotation.transform(Vector3(-speed, 0f, 0f)).scl(.1f))
+            }
         }
     }
 
-    private fun moveRight(incomingX: Float = touchX) {
-        if (enableAI) {
-            accelerateAtAngle(0f)
-            /*x += ((incomingX - paddleCenter) / 100) * aiSpeed
-            if (x + width > 100f) x = 100f - width // world bounds*/
-        } else if (Gdx.app.type == Application.ApplicationType.Android) {
-            x += ((incomingX - paddleCenter) / 100) * androidSpeed
-            if (x + width > 100f) x = 100f - width // world bounds
-        } else if (Gdx.app.type == Application.ApplicationType.Desktop)
-            accelerateAtAngle(0f)
-        addAction(Actions.rotateTo(-2f, .75f))
-    }
-
-    private fun moveLeft(incomingX: Float = touchX) {
-        if (enableAI) {
-            accelerateAtAngle(180f)
-            /*x -= ((paddleCenter - incomingX) / 100) * aiSpeed
-            if (x < 0) x = 0f // world bounds*/
-        } else if (Gdx.app.type == Application.ApplicationType.Android) {
-            x -= ((paddleCenter - incomingX) / 100) * androidSpeed
-            if (x < 0) x = 0f // world bounds
-        } else if (Gdx.app.type == Application.ApplicationType.Desktop)
-            accelerateAtAngle(180f)
-        addAction(Actions.rotateTo(2f, .75f))
+    private fun moveRight() {
+        if (getPosition().x <= rightWorldBounds) {
+            if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
+                if (desktopAcceleration < 2f) desktopAcceleration += .05f
+                val speed = playerDesktopSpeed * desktopAcceleration
+                moveBy(rotation.transform(Vector3(speed, 0f, 0f)).scl(.1f))
+            } else if (Gdx.app.type == Application.ApplicationType.Android) {
+                val speed = playerAndroidSpeed * abs(normalizedTouchX - normalizedXPosition) // smooths movement
+                moveBy(rotation.transform(Vector3(speed, 0f, 0f)).scl(.1f))
+            }
+        }
     }
 
     private fun standStill() {
-        addAction(Actions.rotateTo(0f, .5f))
+        desktopAcceleration = 1f
+    }
+
+    private fun ballImpactAnimation(dt: Float) {
+        ballImpactAnimationPercent += .2f
+        if (ballImpactAnimationPercent > 1f) {
+            ballImpactAnimationPercent = 0f
+            shouldRunBallImpactAnimation = false
+        }
+        val scaleX = MathUtils.lerp(1f, 1.125f, ballImpactAnimationPercent)
+        val scaleY = MathUtils.lerp(1f, .75f, ballImpactAnimationPercent)
+        setScale(scaleX, scaleY, 1f)
     }
 }

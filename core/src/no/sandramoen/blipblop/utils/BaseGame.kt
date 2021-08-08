@@ -37,6 +37,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         const val WORLD_WIDTH = 100f
         const val WORLD_HEIGHT = 100f
         const val scale = 1.5f
+        var RATIO = 0f
 
         // game assets
         var labelStyle: LabelStyle? = null
@@ -66,12 +67,18 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         fun setActiveScreen(s: BaseScreen) {
             game?.setScreen(s)
         }
+
+        fun setActiveScreen(s: BaseScreen3D) {
+            game?.setScreen(s)
+        }
     }
 
     override fun create() {
         Gdx.input.inputProcessor = InputMultiplexer() // discrete input
 
         // global variables
+        RATIO = Gdx.graphics.width.toFloat() / Gdx.graphics.height
+
         // GameUtils.loadGameState()
         if (!loadPersonalParameters) {
             soundVolume = .75f

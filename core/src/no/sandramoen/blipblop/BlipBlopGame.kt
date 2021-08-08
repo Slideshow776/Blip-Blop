@@ -1,7 +1,6 @@
 package no.sandramoen.blipblop
 
 import no.sandramoen.blipblop.screens.gameplay.LevelScreen
-import no.sandramoen.blipblop.screens.shell.SplashScreen
 import no.sandramoen.blipblop.utils.BaseGame
 
 class BlipBlopGame() : BaseGame() {

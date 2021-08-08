@@ -1,91 +1,147 @@
 package no.sandramoen.blipblop.actors
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.VertexAttributes
+import com.badlogic.gdx.graphics.g3d.Material
+import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.utils.Align
-import no.sandramoen.blipblop.utils.BaseActor
+import com.badlogic.gdx.math.Vector3
+import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
+import no.sandramoen.blipblop.utils.Stage3D
+import java.util.Timer
+import kotlin.concurrent.schedule
 
-class Ball(s: Stage, shadowBall: Boolean = false) : BaseActor(BaseGame.WORLD_WIDTH / 2, BaseGame.WORLD_HEIGHT / 2, s) {
+class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = false) : BaseActor3D(x, y, z, s) {
     private val tag = "Ball"
-    private val shadowBall = shadowBall
+    private val isShadowBall: Boolean = isShadowBall
 
-    val ballSpeed = 90f
-    var inPlay: Boolean = true
+    private var shouldRunWallAnimation = false
+    private var wallAnimationPercent = 0f
+
+    private var shouldRunPlayerImpactAnimation = false
+    private var playerImpactAnimationPercent = 0f
+
+    val ballSpeed = 12f
+    var inPlay = true
 
     init {
-        // miscellaneous
-        setSize(
-                3f,
-                3f * Gdx.graphics.width / Gdx.graphics.height
+        // 3D model
+        val modelBuilder = ModelBuilder()
+        val sphereMaterial = Material()
+        val usageCode = VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
+        val radius = .5f
+        val model = modelBuilder.createSphere(
+                radius,
+                radius * Gdx.graphics.width / Gdx.graphics.height,
+                radius,
+                32,
+                32,
+                sphereMaterial,
+                usageCode.toLong()
         )
-        if (!shadowBall) BaseGame.startSound!!.play(BaseGame.soundVolume) // TODO: this needs to be in LevelScreen.kt somewhere? : )
-        setOrigin(Align.center)
+        val position = Vector3(0f, 0f, 0f)
+        setModelInstance(ModelInstance(model, position))
+        setBasePolygon()
 
-        // physics
-        setSpeed(ballSpeed) // pixels / seconds
-        setMaxSpeed(ballSpeed * 5)
-        setDeceleration(0f)
+        // miscellaneous
+        if (!isShadowBall) {
+            BaseGame.startSound!!.play(BaseGame.soundVolume)
+            setColor(Color.LIGHT_GRAY)
+        } else {
+            setColor(Color.PURPLE)
+            loadTexture("invisible")
+        }
+        setSpeed(ballSpeed / 2)
         setMotionAngle(270f)
-        setBoundaryRectangle()
     }
 
     override fun act(dt: Float) {
         super.act(dt)
+
+        // logic
         if (inPlay) {
             applyPhysics(dt)
 
-            if (x < 0 || x + width > getWorldBounds().width) { // bounce off walls
-                setVelocity(Vector2(getVelocity().x * -1f, getVelocity().y))
-                boundToWorld()
-                wallImpactAnimation()
-                if (!shadowBall) BaseGame.deflectSound!!.play(BaseGame.soundVolume)
-            }
+            // vertical bounce
+            if (getPosition().x >= 6.4f || getPosition().x <= -6.4f)
+                wallBounce()
 
-            if (!shadowBall && (y < 0 - height || y - height > getWorldBounds().height))
+            // horizontal out of bounds
+            if (!isShadowBall && getPosition().y >= 6.5f || getPosition().y <= -6.5f)
                 inPlay = false
         }
-    }
 
-    fun playerImpactAnimation() {
-        val duration = .075f
-        addAction(Actions.sequence(
-                Actions.scaleBy(.75f, -.75f, duration),
-                Actions.scaleTo(1f, 1f, duration)
-        ))
-    }
-
-    fun toggleCollision() {
-        collisionEnabled = false
-        addAction(Actions.sequence(
-                Actions.delay(.5f),
-                Actions.run { collisionEnabled = true }
-        ))
+        // animation
+        if (shouldRunWallAnimation) wallAnimation(dt)
+        if (shouldRunPlayerImpactAnimation) playerImpactAnimation(dt)
     }
 
     fun reset() {
-        if (shadowBall) return
-        setPosition(BaseGame.WORLD_WIDTH / 2 - width / 2, BaseGame.WORLD_HEIGHT / 2 - height / 2)
+        if (isShadowBall) return
+        setPosition(Vector3(0f, 0f, 0f))
         setSpeed(ballSpeed / 2) // pixels / seconds
         if (MathUtils.randomBoolean()) setMotionAngle(MathUtils.random(30f, 150f))
         else setMotionAngle(MathUtils.random(210f, 330f))
-
-        actions.clear()
-        addAction(Actions.scaleTo(1f, 1f, 0f))
 
         BaseGame.startSound!!.play(BaseGame.soundVolume)
         collisionEnabled = true
         inPlay = true
     }
 
-    private fun wallImpactAnimation() {
-        val duration = .1f
-        addAction(Actions.sequence(
-                Actions.scaleBy(-.75f, .75f, duration),
-                Actions.scaleTo(1f, 1f, duration)
-        ))
+    fun playerImpact(player: Player) {
+        val ballCenterX = getPosition().x // TODO: not perfect, but good enough(?)
+        var paddlePercentHit: Float = (ballCenterX - (player.getPosition().x - (player.width / 2))) / player.width
+        if (paddlePercentHit < 0f) paddlePercentHit = 0f
+        else if (paddlePercentHit > 1f) paddlePercentHit = 1f
+        var bounceAngle: Float
+        if (player.bottomPlayer) {
+            bounceAngle = MathUtils.lerp(150f, 30f, paddlePercentHit)
+            if (!isShadowBall) BaseGame.blipSound!!.play(BaseGame.soundVolume)
+        } else {
+            bounceAngle = MathUtils.lerp(210f, 330f, paddlePercentHit)
+            if (!isShadowBall) BaseGame.blopSound!!.play(BaseGame.soundVolume)
+        }
+        setMotionAngle(bounceAngle)
+        setSpeed(ballSpeed) // pixels / seconds
+
+        collisionEnabled = false
+        Timer("EnablingCollision", false).schedule(500) { collisionEnabled = true }
+        shouldRunPlayerImpactAnimation = true
+    }
+
+    private fun wallBounce() {
+        // logic
+        if (this.velocityVec.x < 0) setPosition(Vector3(getPosition().x + .1f, getPosition().y, getPosition().z)) // offset position so ball doesn't get stuck
+        else setPosition(Vector3(getPosition().x - .1f, getPosition().y, getPosition().z))
+
+        if (!isShadowBall) BaseGame.deflectSound!!.play(BaseGame.soundVolume)
+        this.velocityVec.x *= -1
+
+        shouldRunWallAnimation = true
+    }
+
+    private fun wallAnimation(dt: Float) {
+        wallAnimationPercent += .15f
+        if (wallAnimationPercent > 1f) {
+            wallAnimationPercent = 0f
+            shouldRunWallAnimation = false
+        }
+        val scaleX = MathUtils.lerp(1f, .1f, wallAnimationPercent)
+        val scaleY = MathUtils.lerp(1f, 1.5f, wallAnimationPercent)
+        setScale(scaleX, scaleY, 1f)
+    }
+
+    private fun playerImpactAnimation(dt: Float) {
+        playerImpactAnimationPercent += .15f
+        if (playerImpactAnimationPercent > 1f) {
+            playerImpactAnimationPercent = 0f
+            shouldRunPlayerImpactAnimation = false
+        }
+        val scaleX = MathUtils.lerp(1f, 1.5f, playerImpactAnimationPercent)
+        val scaleY = MathUtils.lerp(1f, .1f, playerImpactAnimationPercent)
+        setScale(scaleX, scaleY, 1f)
     }
 }
