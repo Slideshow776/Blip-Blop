@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
+import no.sandramoen.blipblop.ui.Score
 import no.sandramoen.blipblop.utils.BaseScreen3D
 
 class LevelScreen : BaseScreen3D() {
     private val tag = "LevelScreen"
     private lateinit var ball: Ball
     private lateinit var players: Array<Player>
+    private lateinit var score: Score
     private var games = 1
 
     override fun initialize() {
@@ -36,21 +38,23 @@ class LevelScreen : BaseScreen3D() {
         // camera
         mainStage3D.setCameraPosition(0f, 0f, 10f)
         mainStage3D.setCameraDirection(0f, 0f, 0f)
+
+        // gui
+        score = Score(uiTable)
     }
 
     override fun update(dt: Float) {
         // player
         for (player in players) {
             if (ball.overlaps(player)) {
-                // todo: do I need this? (should be on top here)
-                /*if (player.bottomPlayer && players[1].enableAI) players[1].spawnShadowBall(ball)
-                else if (!player.bottomPlayer && players[0].enableAI) players[0].spawnShadowBall(ball)*/
-
                 ball.playerImpact(player)
 
                 player.ballImpact()
+
                 if (player.bottomPlayer && players[1].enableAI) players[1].spawnShadowBall(ball)
-                else if (!player.bottomPlayer && players[0].enableAI) players[0].spawnShadowBall(ball)
+                else if (!player.bottomPlayer && players[0].enableAI) players[0].spawnShadowBall(
+                    ball
+                )
             }
         }
 
@@ -70,6 +74,7 @@ class LevelScreen : BaseScreen3D() {
             if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
             if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
             // reportHitRating()
+            score.setScore(players[1].score, players[0].score)
             games++
         }
     }

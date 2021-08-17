@@ -20,6 +20,7 @@ abstract class BaseScreen3D : Screen, InputProcessor {
 
         uiTable = Table()
         uiTable.setFillParent(true)
+        // uiTable.debug = true
         uiStage.addActor(uiTable)
 
         initialize()
