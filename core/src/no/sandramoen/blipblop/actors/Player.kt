@@ -13,22 +13,23 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.Stage3D
-import java.util.*
-import kotlin.concurrent.schedule
 import kotlin.math.abs
 
 open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
     private val tag = "Player"
-    private val touchDeadZone = .05f
-    private val playerAndroidSpeed = 20f
-    private val playerDesktopSpeed = 1.0f
+    private val touchDeadZone = .00f
+    private val speedPlayerAndroid = 40f
+    private val speedPlayerDesktop = 3f
+    private var accelerationPlayerDesktop = 1f
+    private val speedAI = 1.5f
+    private var accelerationAI = 1f
     private val leftWorldBounds = -5.7f
     private val rightWorldBounds = 5.7f
     private var enableAIWithDelay = false
     private var enableAiWithDelayCount = 0f
     private var enableAiWithDelayFrequency = 5f
-    private var topPlayerYPosition = 5.5f
-    private var bottomPlayerYPosition = -5.5f
+    private var topPlayerYPosition = 5.3f
+    private var bottomPlayerYPosition = -5.3f
     private var normalizedXPosition = .5f
     private var shadowBall: Ball
     private var shouldRunBallImpactAnimation = false
@@ -41,7 +42,6 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
     var score = 0
     var miss = 0
     var hit = 0
-    var desktopAcceleration = 1f
     var aiShouldMoveToX = 0f
 
     init {
@@ -58,6 +58,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
         shadowBall = Ball(0f, 0f, 0f, this.stage, isShadowBall = true)
         shadowBall.setVelocity(Vector2(0f, 0f))
         shadowBall.setPosition(Vector3(-10f, -10f, 0f))
+        shadowBall.inPlay = false
 
         // miscellaneous
         loadTexture("player")
@@ -76,7 +77,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
                 aiShouldMoveToX < getPosition().x - width / 4 -> moveLeft()
                 else -> standStill()
             }
-        } else if (Gdx.app.type == Application.ApplicationType.Android && !enableAI) {
+        } else if (Gdx.app.type == Application.ApplicationType.Android) {
             normalizedXPosition = (getPosition().x - leftWorldBounds) / (rightWorldBounds - leftWorldBounds)
             when {
                 normalizedTouchX > normalizedXPosition + touchDeadZone -> moveRight()
@@ -144,11 +145,14 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
     private fun moveLeft() {
         if (getPosition().x >= leftWorldBounds) {
             if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
-                if (desktopAcceleration < 2f) desktopAcceleration += .05f
-                val speed = playerDesktopSpeed * desktopAcceleration
+                val entitySpeed = if (enableAI) speedAI else speedPlayerDesktop
+                var entityAcceleration = if (enableAI) accelerationAI else accelerationPlayerDesktop
+
+                if (entityAcceleration < 2f) entityAcceleration += .05f
+                val speed = entitySpeed * entityAcceleration
                 moveBy(rotation.transform(Vector3(-speed, 0f, 0f)).scl(.1f))
             } else if (Gdx.app.type == Application.ApplicationType.Android) {
-                val speed = playerAndroidSpeed * abs(normalizedTouchX - normalizedXPosition) // smooths movement
+                val speed = speedPlayerAndroid * abs(normalizedTouchX - normalizedXPosition) // smooths movement
                 moveBy(rotation.transform(Vector3(-speed, 0f, 0f)).scl(.1f))
             }
         }
@@ -157,18 +161,22 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
     private fun moveRight() {
         if (getPosition().x <= rightWorldBounds) {
             if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
-                if (desktopAcceleration < 2f) desktopAcceleration += .05f
-                val speed = playerDesktopSpeed * desktopAcceleration
+                val entitySpeed = if (enableAI) speedAI else speedPlayerDesktop
+                var entityAcceleration = if (enableAI) accelerationAI else accelerationPlayerDesktop
+
+                if (entityAcceleration < 2f) entityAcceleration += .05f
+                val speed = entitySpeed * entityAcceleration
                 moveBy(rotation.transform(Vector3(speed, 0f, 0f)).scl(.1f))
             } else if (Gdx.app.type == Application.ApplicationType.Android) {
-                val speed = playerAndroidSpeed * abs(normalizedTouchX - normalizedXPosition) // smooths movement
+                val speed = speedPlayerAndroid * abs(normalizedTouchX - normalizedXPosition) // smooths movement
                 moveBy(rotation.transform(Vector3(speed, 0f, 0f)).scl(.1f))
             }
         }
     }
 
     private fun standStill() {
-        desktopAcceleration = 1f
+        accelerationPlayerDesktop = 1f
+        accelerationAI = 1f
     }
 
     private fun ballImpactAnimation(dt: Float) {
