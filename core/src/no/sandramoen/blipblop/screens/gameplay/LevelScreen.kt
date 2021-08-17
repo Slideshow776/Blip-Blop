@@ -1,7 +1,7 @@
 package no.sandramoen.blipblop.screens.gameplay
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
+import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
@@ -69,7 +69,7 @@ class LevelScreen : BaseScreen3D() {
 
             if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
             if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
-            reportHitRating()
+            // reportHitRating()
             games++
         }
     }
@@ -79,14 +79,14 @@ class LevelScreen : BaseScreen3D() {
     }
 
     override fun keyUp(keycode: Int): Boolean {
-        if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.LEFT) players[0].enableAIWithDelay()
-        if (keycode == Input.Keys.A || keycode == Input.Keys.D) players[1].enableAIWithDelay()
+        if (keycode == Keys.RIGHT || keycode == Keys.LEFT) players[0].enableAIWithDelay()
+        if (keycode == Keys.A || keycode == Keys.D) players[1].enableAIWithDelay()
         return super.keyUp(keycode)
     }
 
     override fun keyDown(keycode: Int): Boolean {
-        if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.LEFT) players[0].disableAI()
-        if (keycode == Input.Keys.A || keycode == Input.Keys.D) players[1].disableAI()
+        if (keycode == Keys.RIGHT || keycode == Keys.LEFT) players[0].disableAI()
+        if (keycode == Keys.A || keycode == Keys.D) players[1].disableAI()
         return false
     }
 

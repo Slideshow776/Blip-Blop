@@ -14,13 +14,12 @@ import no.sandramoen.blipblop.utils.Stage3D
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = false) : BaseActor3D(x, y, z, s) {
+class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = false) :
+    BaseActor3D(x, y, z, s) {
     private val tag = "Ball"
     private val isShadowBall: Boolean = isShadowBall
-
     private var shouldRunWallAnimation = false
     private var wallAnimationPercent = 0f
-
     private var shouldRunPlayerImpactAnimation = false
     private var playerImpactAnimationPercent = 0f
 
@@ -31,16 +30,17 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         // 3D model
         val modelBuilder = ModelBuilder()
         val sphereMaterial = Material()
-        val usageCode = VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
+        val usageCode =
+            VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
         val radius = .5f
         val model = modelBuilder.createSphere(
-                radius,
-                radius * Gdx.graphics.width / Gdx.graphics.height,
-                radius,
-                32,
-                32,
-                sphereMaterial,
-                usageCode.toLong()
+            radius,
+            radius * Gdx.graphics.width / Gdx.graphics.height,
+            radius,
+            32,
+            32,
+            sphereMaterial,
+            usageCode.toLong()
         )
         val position = Vector3(0f, 0f, 0f)
         setModelInstance(ModelInstance(model, position))
@@ -75,8 +75,8 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         }
 
         // animation
-        if (shouldRunWallAnimation) wallAnimation(dt)
-        if (shouldRunPlayerImpactAnimation) playerImpactAnimation(dt)
+        if (shouldRunWallAnimation) wallAnimation()
+        if (shouldRunPlayerImpactAnimation) playerImpactAnimation()
     }
 
     fun reset() {
@@ -93,7 +93,8 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
 
     fun playerImpact(player: Player) {
         val ballCenterX = getPosition().x // TODO: not perfect, but good enough(?)
-        var paddlePercentHit: Float = (ballCenterX - (player.getPosition().x - (player.width / 2))) / player.width
+        var paddlePercentHit: Float =
+            (ballCenterX - (player.getPosition().x - (player.width / 2))) / player.width
         if (paddlePercentHit < 0f) paddlePercentHit = 0f
         else if (paddlePercentHit > 1f) paddlePercentHit = 1f
         var bounceAngle: Float
@@ -113,9 +114,16 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
     }
 
     private fun wallBounce() {
-        // logic
-        if (this.velocityVec.x < 0) setPosition(Vector3(getPosition().x + .1f, getPosition().y, getPosition().z)) // offset position so ball doesn't get stuck
-        else setPosition(Vector3(getPosition().x - .1f, getPosition().y, getPosition().z))
+        if (this.velocityVec.x < 0)
+            setPosition(
+                Vector3(
+                    getPosition().x + .15f,
+                    getPosition().y,
+                    getPosition().z
+                )
+            ) // offset position so ball doesn't get stuck
+        else
+            setPosition(Vector3(getPosition().x - .15f, getPosition().y, getPosition().z))
 
         if (!isShadowBall) BaseGame.deflectSound!!.play(BaseGame.soundVolume)
         this.velocityVec.x *= -1
@@ -123,7 +131,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         shouldRunWallAnimation = true
     }
 
-    private fun wallAnimation(dt: Float) {
+    private fun wallAnimation() {
         wallAnimationPercent += .15f
         if (wallAnimationPercent > 1f) {
             wallAnimationPercent = 0f
@@ -134,7 +142,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         setScale(scaleX, scaleY, 1f)
     }
 
-    private fun playerImpactAnimation(dt: Float) {
+    private fun playerImpactAnimation() {
         playerImpactAnimationPercent += .15f
         if (playerImpactAnimationPercent > 1f) {
             playerImpactAnimationPercent = 0f

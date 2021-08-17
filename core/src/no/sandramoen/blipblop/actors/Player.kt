@@ -2,7 +2,7 @@ package no.sandramoen.blipblop.actors
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
+import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Material
@@ -20,13 +20,13 @@ import kotlin.math.abs
 open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
     private val tag = "Player"
     private val touchDeadZone = .05f
-    private val scaleX = 1.25f
     private val playerAndroidSpeed = 20f
     private val playerDesktopSpeed = 1.0f
     private val leftWorldBounds = -5.7f
     private val rightWorldBounds = 5.7f
-    private var activationDelayForAI: Long = 5000
-    private var enableAIWithDelay = Timer("EnableAIWithDelay", false).schedule(activationDelayForAI) {}
+    private var enableAIWithDelay = false
+    private var enableAiWithDelayCount = 0f
+    private var enableAiWithDelayFrequency = 5f
     private var topPlayerYPosition = 5.5f
     private var bottomPlayerYPosition = -5.5f
     private var normalizedXPosition = .5f
@@ -85,43 +85,52 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
             }
         } else if (Gdx.app.type == Application.ApplicationType.Desktop) {
             when {
-                bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.LEFT) -> moveLeft()
-                bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.RIGHT) -> moveRight()
-                !bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.A) -> moveLeft()
-                !bottomPlayer && Gdx.input.isKeyPressed(Input.Keys.D) -> moveRight()
+                bottomPlayer && Gdx.input.isKeyPressed(Keys.LEFT) -> moveLeft()
+                bottomPlayer && Gdx.input.isKeyPressed(Keys.RIGHT) -> moveRight()
+                !bottomPlayer && Gdx.input.isKeyPressed(Keys.A) -> moveLeft()
+                !bottomPlayer && Gdx.input.isKeyPressed(Keys.D) -> moveRight()
                 else -> standStill()
             }
         }
 
         // shadow ball
-        if (bottomPlayer && shadowBall.getPosition().y < bottomPlayerYPosition && shadowBall.getPosition().y != -10f) {
+        if (bottomPlayer && shadowBall.inPlay && shadowBall.getPosition().y < bottomPlayerYPosition) {
             aiShouldMoveToX = shadowBall.getPosition().x
             shadowBall.setVelocity(Vector2(0f, 0f))
             shadowBall.setPosition(Vector3(-10f, -10f, 0f))
-        } else if (!bottomPlayer && shadowBall.getPosition().y > topPlayerYPosition && shadowBall.getPosition().y != -10f) {
+            shadowBall.inPlay = false
+        } else if (!bottomPlayer && shadowBall.inPlay && shadowBall.getPosition().y > topPlayerYPosition) {
             aiShouldMoveToX = shadowBall.getPosition().x
             shadowBall.setVelocity(Vector2(0f, 0f))
             shadowBall.setPosition(Vector3(-10f, -10f, 0f))
+            shadowBall.inPlay = false
         }
 
         // animation
         if (shouldRunBallImpactAnimation) ballImpactAnimation(dt)
+
+        // miscellaneous
+        if (enableAIWithDelay) {
+            enableAiWithDelayCount += dt
+            if (enableAiWithDelayCount > enableAiWithDelayFrequency) {
+                enableAIWithDelay = false
+                enableAI = true
+                enableAiWithDelayCount = 0f
+            }
+        }
     }
 
     fun enableAIWithDelay() {
-        enableAIWithDelay = Timer("EnableAIWithDelay", false).schedule(activationDelayForAI) {
-            enableAI = true
-            // setSpeed(getSpeed() / 2)
-        }
+        enableAIWithDelay = true
     }
 
     fun disableAI() {
         enableAI = false
-        enableAIWithDelay.cancel()
-        // setMaxSpeed(Gdx.graphics.width * 0.25f)
+        enableAIWithDelay = false
+        enableAiWithDelayCount = 0f
     }
 
-    fun spawnShadowBall(ball: Ball) { // https://www.rharel.com/projects/pong-ai
+    fun spawnShadowBall(ball: Ball) { // inspired by https://www.rharel.com/projects/pong-ai
         shadowBall.setPosition(ball.getPosition())
         shadowBall.setVelocity(Vector2(ball.getVelocity().x * 5f, ball.getVelocity().y * 5f))
         shadowBall.inPlay = true
