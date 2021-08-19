@@ -25,6 +25,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
 
     val ballSpeed = 12f
     var inPlay = true
+    var pause = false
 
     init {
         // 3D model
@@ -52,13 +53,14 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
             setColor(Color.LIGHT_GRAY)
         } else {
             setColor(Color.PURPLE)
-            loadTexture("invisible")
+            loadTexture("invisible") // TODO: This only makes the ball pitch black, need a real solution here..
         }
         setSpeed(ballSpeed / 2)
         setMotionAngle(270f)
     }
 
     override fun act(dt: Float) {
+        if (pause) return
         super.act(dt)
 
         // logic

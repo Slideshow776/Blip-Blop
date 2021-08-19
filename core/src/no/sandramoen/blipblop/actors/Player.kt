@@ -11,11 +11,12 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.scenes.scene2d.Stage
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.Stage3D
 import kotlin.math.abs
 
-open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
+open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: Stage, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
     private val tag = "Player"
     private val touchDeadZone = .00f
     private val speedPlayerAndroid = 40f
@@ -34,6 +35,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
     private var shadowBall: Ball
     private var shouldRunBallImpactAnimation = false
     private var ballImpactAnimationPercent = 0f
+    private var label: PlayerLabel
 
     val bottomPlayer: Boolean = bottomPlayer
     val width = 1.875f
@@ -43,6 +45,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
     var miss = 0
     var hit = 0
     var aiShouldMoveToX = 0f
+    var pause = false
 
     init {
         // 3D model
@@ -65,12 +68,15 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
         setColor(Color.GREEN)
         if (bottomPlayer) setPosition(Vector3(0f, bottomPlayerYPosition, 0f))
         else setPosition(Vector3(0f, topPlayerYPosition, 0f))
+        label = PlayerLabel(x, y, f, bottomPlayer)
     }
 
     override fun act(dt: Float) {
+        if (pause) return
         super.act(dt)
 
         // controls
+        normalizedXPosition = (getPosition().x - leftWorldBounds) / (rightWorldBounds - leftWorldBounds)
         if (enableAI) {
             when {
                 aiShouldMoveToX > getPosition().x + width / 4 -> moveRight()
@@ -78,7 +84,6 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
                 else -> standStill()
             }
         } else if (Gdx.app.type == Application.ApplicationType.Android) {
-            normalizedXPosition = (getPosition().x - leftWorldBounds) / (rightWorldBounds - leftWorldBounds)
             when {
                 normalizedTouchX > normalizedXPosition + touchDeadZone -> moveRight()
                 normalizedTouchX < normalizedXPosition - touchDeadZone -> moveLeft()
@@ -108,7 +113,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
         }
 
         // animation
-        if (shouldRunBallImpactAnimation) ballImpactAnimation(dt)
+        if (shouldRunBallImpactAnimation) ballImpactAnimation()
 
         // miscellaneous
         if (enableAIWithDelay) {
@@ -119,6 +124,9 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
                 enableAiWithDelayCount = 0f
             }
         }
+
+        label.calculatePosition(normalizedXPosition, bottomPlayer)
+        label.isVisible = enableAI
     }
 
     fun enableAIWithDelay() {
@@ -179,7 +187,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, botto
         accelerationAI = 1f
     }
 
-    private fun ballImpactAnimation(dt: Float) {
+    private fun ballImpactAnimation() {
         ballImpactAnimationPercent += .2f
         if (ballImpactAnimationPercent > 1f) {
             ballImpactAnimationPercent = 0f

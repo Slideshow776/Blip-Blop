@@ -26,11 +26,11 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
     private var maxSpeed: Float = 1000f
     private var deceleration: Float = 0f
     private var boundaryPolygon: Polygon? = null
-    private var animationHeight = height
 
     var isFacingRight = true
     var pause = false
     var animationWidth = width
+    var animationHeight = height
     var collisionEnabled = true
 
     init {
@@ -38,7 +38,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         this.y = y
         s.addActor(this)
         animation = null
-        debug = true
+        // debug = true
     }
 
     override fun setSize(width: Float, height: Float) {
@@ -58,6 +58,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         //  apply color tint effect
         val c: Color = color
         batch.setColor(c.r, c.g, c.b, c.a)
+
 
         if (animation != null && isVisible) {
             if (isFacingRight)

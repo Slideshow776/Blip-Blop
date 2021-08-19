@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
-import no.sandramoen.blipblop.ui.Score
+import no.sandramoen.blipblop.ui.*
+import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
 
 class LevelScreen : BaseScreen3D() {
@@ -14,6 +17,8 @@ class LevelScreen : BaseScreen3D() {
     private lateinit var ball: Ball
     private lateinit var players: Array<Player>
     private lateinit var score: Score
+    private lateinit var winner: Winner
+    private lateinit var gameMenu: GameMenu
     private var games = 1
 
     override fun initialize() {
@@ -21,8 +26,8 @@ class LevelScreen : BaseScreen3D() {
         players = Array()
 
         // players
-        players.add(Player(s = mainStage3D, bottomPlayer = true))
-        players.add(Player(s = mainStage3D, bottomPlayer = false))
+        players.add(Player(s = mainStage3D, f = foreground2DStage, bottomPlayer = true))
+        players.add(Player(s = mainStage3D, f = foreground2DStage, bottomPlayer = false))
 
         // ball
         ball = Ball(0f, 0f, 0f, mainStage3D)
@@ -40,7 +45,17 @@ class LevelScreen : BaseScreen3D() {
         mainStage3D.setCameraDirection(0f, 0f, 0f)
 
         // gui
+        gameMenu = GameMenu(uiTable)
+        winner = Winner(uiTable)
         score = Score(uiTable)
+
+        gameMenu.restart.addListener(object : ActorGestureListener() {
+            override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                restart()
+                resume()
+            }
+        })
     }
 
     override fun update(dt: Float) {
@@ -60,22 +75,34 @@ class LevelScreen : BaseScreen3D() {
 
         // ball
         if (!ball.inPlay) {
+            // score
             if (ball.getPosition().y > 0f) {
                 players[0].score++
                 players[1].miss++
             } else {
-                players[1].score++
                 players[0].miss++
+                players[1].score++
             }
+            score.setScore(players[1].score, players[0].score)
+            // reportHitRating()
+            games++
+            if (players[0].score >= 10) {
+                winner.bottomPlayerLabel.isVisible = true
+                gameOver()
+            } else if (players[1].score >= 10) {
+                winner.topPlayerLabel.isVisible = true
+                gameOver()
+            }
+
+            // ball
             ball.reset()
             players[0].aiShouldMoveToX = .5f
             players[1].aiShouldMoveToX = .5f
 
-            if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
+            // shadow ball
             if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
-            // reportHitRating()
-            score.setScore(players[1].score, players[0].score)
-            games++
+            if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
+
         }
     }
 
@@ -119,11 +146,37 @@ class LevelScreen : BaseScreen3D() {
         return super.touchDragged(screenX, screenY, pointer)
     }
 
+    override fun resume() {
+        super.resume()
+        for (player in players) player.pause = false
+        ball.pause = false
+        gameMenu.disappear()
+    }
+
     private fun reportHitRating() {
         val player1HitRating = players[1].hit.toDouble() / (players[1].hit + players[1].miss)
         val player0HitRating = players[0].hit.toDouble() / (players[0].hit + players[0].miss)
         println("\nGames: $games")
         println("top player: hit rating: ${String.format("%.2f", player1HitRating)}")
         println("bottom player: hit rating: ${String.format("%.2f", player0HitRating)}")
+    }
+
+    private fun restart() {
+        for (player in players) {
+            player.score = 0
+            player.enableAI = true
+        }
+        score.setScore(players[1].score, players[0].score)
+        winner.reset()
+        ball.reset()
+        if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
+        if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
+        gameMenu.disappear()
+    }
+
+    private fun gameOver() {
+        for (player in players) player.pause = true
+        ball.pause = true
+        gameMenu.appear()
     }
 }

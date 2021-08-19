@@ -36,7 +36,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         lateinit var fontGenerator: FreeTypeFontGenerator
         const val WORLD_WIDTH = 100f
         const val WORLD_HEIGHT = 100f
-        const val scale = 1.5f
+        const val scale = 1.0f
         var RATIO = 0f
 
         // game assets
@@ -46,11 +46,13 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         var skin: Skin? = null
         var defaultShader: String? = null
         var shockwaveShader: String? = null
+        var glowShader: String? = null
         var levelMusic1: Music? = null
         var blipSound: Sound? = null
         var blopSound: Sound? = null
         var startSound: Sound? = null
         var deflectSound: Sound? = null
+        var clickSound: Sound? = null
         var vibrations: Boolean = false
         var green = Color(0.113f, 0.968f, 0.282f, 1f)
         var yellow = Color(0.968f, 0.815f, 0.113f, 1f)
@@ -96,6 +98,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             assetManager.load("audio/sound/blop.wav", Sound::class.java)
             assetManager.load("audio/sound/start.wav", Sound::class.java)
             assetManager.load("audio/sound/deflect.wav", Sound::class.java)
+            assetManager.load("audio/sound/click1.wav", Sound::class.java)
 
             // assetManager.load("skins/default/uiskin.json", Skin::class.java)
 
@@ -106,6 +109,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
 
             assetManager.load(AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.finishLoading()
 
             textureAtlas = assetManager.get("images/included/packed/blipBlop.pack.atlas") // all images are found in this global static variable
@@ -116,10 +120,12 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             blopSound = assetManager.get("audio/sound/blop.wav", Sound::class.java)
             startSound = assetManager.get("audio/sound/start.wav", Sound::class.java)
             deflectSound = assetManager.get("audio/sound/deflect.wav", Sound::class.java)
+            clickSound = assetManager.get("audio/sound/click1.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()
             shockwaveShader = assetManager.get("shaders/shockwave.fs", Text::class.java).getString()
+            glowShader = assetManager.get("shaders/glow-pulse.fs", Text::class.java).getString()
 
             // skins
             skin = Skin(Gdx.files.internal("skins/default/uiskin.json"))

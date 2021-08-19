@@ -79,7 +79,7 @@ abstract class BaseScreen : Screen, InputProcessor {
 
     override fun resize(width: Int, height: Int) {
         mainStage.viewport.update(width, height);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f)
     }
 
     override fun pause() {}

@@ -6,22 +6,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.utils.BaseGame
 
-class Score(uiTable: Table) {
-    private val tag = "Score"
-    private var topPlayerLabel: Label
-    private var bottomPlayerLabel: Label
+
+class Winner(uiTable: Table) {
+    private val tag = "Winner"
+
+    var topPlayerLabel: Label
+    var bottomPlayerLabel: Label
 
     init {
         // initialize
-        topPlayerLabel = Label("0", BaseGame.labelStyle)
+        val scale = .5f
+        topPlayerLabel = Label("Winner!", BaseGame.labelStyle)
         topPlayerLabel.setAlignment(Align.center)
-        bottomPlayerLabel = Label("0", BaseGame.labelStyle)
+        topPlayerLabel.setFontScale(scale)
+        topPlayerLabel.isVisible = false
+        bottomPlayerLabel = Label("Winner!", BaseGame.labelStyle)
         bottomPlayerLabel.setAlignment(Align.center)
+        bottomPlayerLabel.setFontScale(scale)
+        bottomPlayerLabel.isVisible = false
 
         //  positioning
         val table = Table()
         table.add(topPlayerLabel).width(Gdx.graphics.width * .01f)
-            .padRight(Gdx.graphics.width * .25f)
+            .padRight(Gdx.graphics.width * 1f)
         table.add(bottomPlayerLabel).width(Gdx.graphics.width * .01f)
         table.isTransform = true
         table.setOrigin(Gdx.graphics.width * .125f / 2, table.prefHeight / 2)
@@ -32,8 +39,8 @@ class Score(uiTable: Table) {
         uiTable.add(table).width(Gdx.graphics.width * .125f)
     }
 
-    fun setScore(topScore: Int, bottomScore: Int) {
-        topPlayerLabel.setText("$topScore")
-        bottomPlayerLabel.setText("$bottomScore")
+    fun reset() {
+        topPlayerLabel.isVisible = false
+        bottomPlayerLabel.isVisible = false
     }
 }
