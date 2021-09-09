@@ -21,11 +21,11 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
     private var time = .0f
     private var shockWavePositionX = .0f
     private var shockWavePositionY = .0f
-    private var disabled = true
+    private var disabled = false
 
     init {
         if (texturePath.isNotBlank()) loadTexture(texturePath)
-        setSize(100f, 100f)
+        setSize(BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT)
 
         ShaderProgram.pedantic = false
         vertexShaderCode = BaseGame.defaultShader.toString()

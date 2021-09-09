@@ -15,17 +15,25 @@ abstract class BaseScreen3D : Screen, InputProcessor {
     protected var uiStage: Stage
     protected var uiTable: Table
     protected var foreground2DStage: Stage
+    protected var background2DStage: Stage
     protected var camera: OrthographicCamera
 
     init {
         mainStage3D = Stage3D()
         uiStage = Stage()
         foreground2DStage = Stage()
+        background2DStage = Stage()
 
         // foreground
         camera = foreground2DStage.camera as OrthographicCamera
         foreground2DStage.viewport = StretchViewport(BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT, camera)
         foreground2DStage.viewport.apply()
+        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f)
+
+        // background
+        camera = background2DStage.camera as OrthographicCamera
+        background2DStage.viewport = StretchViewport(BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT, camera)
+        background2DStage.viewport.apply()
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f)
 
         // ui
@@ -49,6 +57,7 @@ abstract class BaseScreen3D : Screen, InputProcessor {
         uiStage.act(delta)
         foreground2DStage.act(delta)
         mainStage3D.act(delta)
+        background2DStage.act(delta)
 
         // defined by game-specific classes
         update(delta)
@@ -59,9 +68,11 @@ abstract class BaseScreen3D : Screen, InputProcessor {
         Gdx.gl.glClearColor(.5f, .5f, .5f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT + GL20.GL_DEPTH_BUFFER_BIT)
 
+        this.background2DStage.batch.projectionMatrix = camera.combined
         this.foreground2DStage.batch.projectionMatrix = camera.combined
 
         // draw the graphics
+        background2DStage.draw()
         mainStage3D.draw()
         foreground2DStage.draw()
         uiStage.draw()
@@ -69,6 +80,7 @@ abstract class BaseScreen3D : Screen, InputProcessor {
 
     override fun resize(width: Int, height: Int) {
         foreground2DStage.viewport.update(width, height, true)
+        background2DStage.viewport.update(width, height, true)
         uiStage.viewport.update(width, height, true)
         mainStage3D.viewport.update(width, height)
         mainStage3D.camera.position.set(0f, 0f, 10f)

@@ -33,7 +33,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         val sphereMaterial = Material()
         val usageCode =
             VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
-        val radius = .5f
+        val radius = if (isShadowBall) .0f else .5f
         val model = modelBuilder.createSphere(
             radius,
             radius * Gdx.graphics.width / Gdx.graphics.height,
@@ -48,12 +48,12 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         setBasePolygon()
 
         // miscellaneous
-        if (!isShadowBall) {
+        if (isShadowBall) {
+            setColor(Color.PURPLE)
+            loadTexture("invisible")
+        } else {
             BaseGame.startSound!!.play(BaseGame.soundVolume)
             setColor(Color.LIGHT_GRAY)
-        } else {
-            setColor(Color.PURPLE)
-            loadTexture("invisible") // TODO: This only makes the ball pitch black, need a real solution here..
         }
         setSpeed(ballSpeed / 2)
         setMotionAngle(270f)

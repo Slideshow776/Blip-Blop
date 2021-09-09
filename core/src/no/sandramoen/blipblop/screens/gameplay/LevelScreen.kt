@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
 import no.sandramoen.blipblop.ui.*
+import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
 
@@ -33,7 +34,8 @@ class LevelScreen : BaseScreen3D() {
         ball = Ball(0f, 0f, 0f, mainStage3D)
 
         // background
-        Background(s = mainStage3D).setPosition(Vector3(0f, 0f, -1f))
+        // Background(s = mainStage3D).setPosition(Vector3(0f, 0f, -1f))
+        Background2D(0f, 0f, background2DStage)
 
         // middle line
         val line = Box(0f, 0f, 0f, mainStage3D)
