@@ -29,16 +29,12 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
 
     init {
         // set-up
-        if (bottomPlayer) {
-            loadImage("touchToPlay!")
-            color = Color.FIREBRICK
-        } else {
-            loadImage("touchToPlay!")
-            color = Color(0.052f,0.329f,1f, 1f)
-        }
+        if (bottomPlayer) { color = Color.FIREBRICK }
+        else { color = Color(0.052f,0.329f,1f, 1f) }
+        loadImage("touchToPlay!")
 
         setPosition(0f, 0f)
-        setSize(35f, 8f * Gdx.graphics.width / Gdx.graphics.height)
+        setSize(37f, 8f * Gdx.graphics.width / Gdx.graphics.height)
         setOrigin(Align.center)
         var originalRotation =
             if (Gdx.app.type == Application.ApplicationType.Android && !bottomPlayer) 180f

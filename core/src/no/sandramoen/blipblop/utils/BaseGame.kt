@@ -48,12 +48,15 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         var shockwaveShader: String? = null
         var backgroundShader: String? = null
         var glowShader: String? = null
-        var levelMusic1: Music? = null
+        var levelMusic: Music? = null
         var blipSound: Sound? = null
         var blopSound: Sound? = null
         var startSound: Sound? = null
         var deflectSound: Sound? = null
         var clickSound: Sound? = null
+        var gameStartSound: Sound? = null
+        var win01Sound: Sound? = null
+        var win02Sound: Sound? = null
         var vibrations: Boolean = false
         var green = Color(0.113f, 0.968f, 0.282f, 1f)
         var yellow = Color(0.968f, 0.815f, 0.113f, 1f)
@@ -94,12 +97,17 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             assetManager = AssetManager()
             assetManager.setErrorListener(this)
             assetManager.load("images/included/packed/blipBlop.pack.atlas", TextureAtlas::class.java)
-            // assetManager.load("audio/music/AlexBeroza_-_Drive.mp3", Music::class.java)
+
+            assetManager.load("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)
+
             assetManager.load("audio/sound/blip.wav", Sound::class.java)
             assetManager.load("audio/sound/blop.wav", Sound::class.java)
             assetManager.load("audio/sound/start.wav", Sound::class.java)
             assetManager.load("audio/sound/deflect.wav", Sound::class.java)
             assetManager.load("audio/sound/click1.wav", Sound::class.java)
+            assetManager.load("audio/sound/gameStart.wav", Sound::class.java)
+            assetManager.load("audio/sound/270331__littlerobotsoundfactory__jingle-achievement-00.wav", Sound::class.java)
+            assetManager.load("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
 
             // assetManager.load("skins/default/uiskin.json", Skin::class.java)
 
@@ -117,12 +125,16 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             textureAtlas = assetManager.get("images/included/packed/blipBlop.pack.atlas") // all images are found in this global static variable
 
             // audio
-            // levelMusic1 = assetManager.get("audio/music/AlexBeroza_-_Drive.mp3", Music::class.java)
+            levelMusic = assetManager.get("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)
+
             blipSound = assetManager.get("audio/sound/blip.wav", Sound::class.java)
             blopSound = assetManager.get("audio/sound/blop.wav", Sound::class.java)
             startSound = assetManager.get("audio/sound/start.wav", Sound::class.java)
             deflectSound = assetManager.get("audio/sound/deflect.wav", Sound::class.java)
             clickSound = assetManager.get("audio/sound/click1.wav", Sound::class.java)
+            gameStartSound = assetManager.get("audio/sound/gameStart.wav", Sound::class.java)
+            win01Sound = assetManager.get("audio/sound/270331__littlerobotsoundfactory__jingle-achievement-00.wav", Sound::class.java)
+            win02Sound = assetManager.get("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()
@@ -163,8 +175,8 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             textButtonStyle = TextButtonStyle()
             val buttonTexUp = textureAtlas!!.findRegion("button")
             val buttonTexDown = textureAtlas!!.findRegion("button-pressed")
-            val buttonPatchUp = NinePatch(buttonTexUp, 24, 24, 24, 24)
-            val buttonPatchDown = NinePatch(buttonTexDown, 24, 24, 24, 24)
+            val buttonPatchUp = NinePatch(buttonTexUp, 44, 24, 24, 24)
+            val buttonPatchDown = NinePatch(buttonTexDown, 44, 24, 24, 24)
             textButtonStyle!!.up = NinePatchDrawable(buttonPatchUp)
             textButtonStyle!!.down = NinePatchDrawable(buttonPatchDown)
             textButtonStyle!!.font = buttonCustomFont

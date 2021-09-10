@@ -2,6 +2,7 @@ package no.sandramoen.blipblop.screens.gameplay
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.utils.Array
@@ -9,6 +10,7 @@ import no.sandramoen.blipblop.actors.*
 import no.sandramoen.blipblop.ui.*
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
+import no.sandramoen.blipblop.utils.GameUtils
 
 class LevelScreen : BaseScreen3D() {
     private val tag = "LevelScreen"
@@ -48,11 +50,15 @@ class LevelScreen : BaseScreen3D() {
 
         gameMenu.restart.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
-                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                BaseGame.gameStartSound!!.play(BaseGame.soundVolume)
                 restart()
                 resume()
             }
         })
+
+        // audio
+        BaseGame.levelMusic!!.play()
+        BaseGame.levelMusic!!.volume = BaseGame.musicVolume
     }
 
     override fun update(dt: Float) {
@@ -83,12 +89,16 @@ class LevelScreen : BaseScreen3D() {
             score.setScore(players[1].score, players[0].score)
             // reportHitRating()
             games++
-            if (players[0].score >= 10) {
-                winner.bottomPlayerLabel.isVisible = true
+            if (players[0].score >= 1) {
+                winner.playAnimation(top = false)
                 gameOver()
-            } else if (players[1].score >= 10) {
-                winner.topPlayerLabel.isVisible = true
+                if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
+                else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
+            } else if (players[1].score >= 1) {
+                winner.playAnimation(top = true)
                 gameOver()
+                if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
+                else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
             }
 
             // ball
@@ -163,7 +173,7 @@ class LevelScreen : BaseScreen3D() {
             player.enableAI = true
         }
         score.setScore(players[1].score, players[0].score)
-        winner.reset()
+        winner.resetAnimation()
         ball.reset()
         if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
         if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
