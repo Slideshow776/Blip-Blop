@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector3
+import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.Stage3D
@@ -48,13 +49,8 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         setBasePolygon()
 
         // miscellaneous
-        if (isShadowBall) {
-            setColor(Color.PURPLE)
-            loadTexture("invisible")
-        } else {
-            BaseGame.startSound!!.play(BaseGame.soundVolume)
-            setColor(Color.LIGHT_GRAY)
-        }
+        if (isShadowBall) { setColor(Color.PURPLE) }
+        else { BaseGame.startSound!!.play(BaseGame.soundVolume) }
         setSpeed(ballSpeed / 2)
         setMotionAngle(270f)
     }
@@ -69,7 +65,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
 
             // vertical bounce
             if (getPosition().x >= 6.4f || getPosition().x <= -6.4f)
-                wallBounce()
+                wallBounce() // TODO: BUG: ball can get stuck in the wall..
 
             // horizontal out of bounds
             if (!isShadowBall && getPosition().y >= 6.5f || getPosition().y <= -6.5f)
@@ -119,7 +115,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         if (this.velocityVec.x < 0)
             setPosition(
                 Vector3(
-                    getPosition().x + .15f,
+                    getPosition().x + .5f,
                     getPosition().y,
                     getPosition().z
                 )

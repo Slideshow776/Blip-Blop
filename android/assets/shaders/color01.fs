@@ -15,6 +15,7 @@ void main() {
 
     vec3 color = vec3(0.);
     color = vec3(st.x,st.y,abs(sin(u_time*.1)));
+    color *= vec3(.3);
 
-    gl_FragColor = vec4(color,0.6);
+    gl_FragColor = vec4(color,1.0);
 }

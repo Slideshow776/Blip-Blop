@@ -111,7 +111,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             assetManager.load(AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()))
-            assetManager.load(AssetDescriptor("shaders/shadertoy.fs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load(AssetDescriptor("shaders/color01.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.finishLoading()
 
             textureAtlas = assetManager.get("images/included/packed/blipBlop.pack.atlas") // all images are found in this global static variable
@@ -128,7 +128,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()
             shockwaveShader = assetManager.get("shaders/shockwave.fs", Text::class.java).getString()
             glowShader = assetManager.get("shaders/glow-pulse.fs", Text::class.java).getString()
-            backgroundShader = assetManager.get("shaders/shadertoy.fs", Text::class.java).getString()
+            backgroundShader = assetManager.get("shaders/color01.fs", Text::class.java).getString()
 
             // skins
             skin = Skin(Gdx.files.internal("skins/default/uiskin.json"))

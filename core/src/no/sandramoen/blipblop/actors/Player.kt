@@ -18,7 +18,7 @@ import kotlin.math.abs
 
 open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: Stage, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
     private val tag = "Player"
-    private val touchDeadZone = .00f
+    private val touchDeadZone = .01f
     private val speedPlayerAndroid = 40f
     private val speedPlayerDesktop = 3f
     private var accelerationPlayerDesktop = 1f
@@ -36,6 +36,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
     private var shouldRunBallImpactAnimation = false
     private var ballImpactAnimationPercent = 0f
     private var label: PlayerLabel
+    private var turnInterpolation = 0f
 
     val bottomPlayer: Boolean = bottomPlayer
     val width = 1.875f
@@ -153,6 +154,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
     private fun moveLeft() {
         if (getPosition().x >= leftWorldBounds) {
             if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
+                setTurnAngle(0f)
                 val entitySpeed = if (enableAI) speedAI else speedPlayerDesktop
                 var entityAcceleration = if (enableAI) accelerationAI else accelerationPlayerDesktop
 
@@ -163,12 +165,14 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
                 val speed = speedPlayerAndroid * abs(normalizedTouchX - normalizedXPosition) // smooths movement
                 moveBy(rotation.transform(Vector3(-speed, 0f, 0f)).scl(.1f))
             }
+            tilt(left = true)
         }
     }
 
     private fun moveRight() {
         if (getPosition().x <= rightWorldBounds) {
             if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
+                setTurnAngle(0f)
                 val entitySpeed = if (enableAI) speedAI else speedPlayerDesktop
                 var entityAcceleration = if (enableAI) accelerationAI else accelerationPlayerDesktop
 
@@ -179,12 +183,15 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
                 val speed = speedPlayerAndroid * abs(normalizedTouchX - normalizedXPosition) // smooths movement
                 moveBy(rotation.transform(Vector3(speed, 0f, 0f)).scl(.1f))
             }
+            tilt(left = false)
         }
     }
 
     private fun standStill() {
         accelerationPlayerDesktop = 1f
         accelerationAI = 1f
+        turnInterpolation = 0f
+        setTurnAngle(turnInterpolation)
     }
 
     private fun ballImpactAnimation() {
@@ -196,5 +203,24 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
         val scaleX = MathUtils.lerp(1f, 1.125f, ballImpactAnimationPercent)
         val scaleY = MathUtils.lerp(1f, .75f, ballImpactAnimationPercent)
         setScale(scaleX, scaleY, 1f)
+    }
+
+    private fun tilt(left: Boolean) {
+        // tilt
+        val max = 5f
+        val amount = .05f
+        if (left) {
+            if (turnInterpolation < 0) turnInterpolation = 0f
+            if (turnInterpolation < max) turnInterpolation += amount
+            setTurnAngle(turnInterpolation)
+        } else {
+            if (turnInterpolation > 0) turnInterpolation = 0f
+            if (turnInterpolation > -max) turnInterpolation -= amount
+            setTurnAngle(turnInterpolation)
+        }
+
+        // reset y position
+        if (bottomPlayer) setPosition(Vector3(getPosition().x, bottomPlayerYPosition, 0f))
+        else setPosition(Vector3(getPosition().x, topPlayerYPosition, 0f))
     }
 }

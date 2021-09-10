@@ -2,14 +2,11 @@ package no.sandramoen.blipblop.screens.gameplay
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
 import no.sandramoen.blipblop.ui.*
-import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
 
@@ -21,6 +18,7 @@ class LevelScreen : BaseScreen3D() {
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
     private var games = 1
+    private var resetBall = true
 
     override fun initialize() {
         // miscellaneous
@@ -34,13 +32,10 @@ class LevelScreen : BaseScreen3D() {
         ball = Ball(0f, 0f, 0f, mainStage3D)
 
         // background
-        // Background(s = mainStage3D).setPosition(Vector3(0f, 0f, -1f))
-        Background2D(0f, 0f, background2DStage)
+        Background(0f, 0f, background2DStage)
 
         // middle line
-        val line = Box(0f, 0f, 0f, mainStage3D)
-        line.setScale(15f, .02f, .02f)
-        line.setColor(Color.WHITE)
+        MiddleWhiteLine(0f, 0f, foreground2DStage)
 
         // camera
         mainStage3D.setCameraPosition(0f, 0f, 10f)
@@ -76,7 +71,7 @@ class LevelScreen : BaseScreen3D() {
         }
 
         // ball
-        if (!ball.inPlay) {
+        if (!ball.inPlay) { // WARNING: this code should only run once, and not 60x/s
             // score
             if (ball.getPosition().y > 0f) {
                 players[0].score++
@@ -104,7 +99,6 @@ class LevelScreen : BaseScreen3D() {
             // shadow ball
             if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
             if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
-
         }
     }
 

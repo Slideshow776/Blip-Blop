@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.utils.BaseActor
@@ -29,14 +30,15 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
     init {
         // set-up
         if (bottomPlayer) {
-            loadImage("p1Missing")
+            loadImage("touchToPlay!")
             color = Color.FIREBRICK
         } else {
-            loadImage("p2Missing")
-            color = Color.CYAN
+            loadImage("touchToPlay!")
+            color = Color(0.052f,0.329f,1f, 1f)
         }
+
         setPosition(0f, 0f)
-        setSize(15f, 15f * Gdx.graphics.width / Gdx.graphics.height)
+        setSize(35f, 8f * Gdx.graphics.width / Gdx.graphics.height)
         setOrigin(Align.center)
         var originalRotation =
             if (Gdx.app.type == Application.ApplicationType.Android && !bottomPlayer) 180f
@@ -45,18 +47,20 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
 
         // animation
         val wobbleDuration = .05f
+        val wobbleAmount = 2.5f
+        val wobbleFrequency = 5f
         addAction(
             Actions.forever(
                 Actions.sequence( // wobbling
-                    Actions.rotateBy(5f, wobbleDuration),
+                    Actions.rotateBy(wobbleAmount, wobbleDuration),
                     Actions.rotateTo(originalRotation, wobbleDuration),
-                    Actions.rotateBy(-5f, wobbleDuration),
+                    Actions.rotateBy(-wobbleAmount, wobbleDuration),
                     Actions.rotateTo(originalRotation, wobbleDuration),
-                    Actions.rotateBy(5f, wobbleDuration),
+                    Actions.rotateBy(wobbleAmount, wobbleDuration),
                     Actions.rotateTo(originalRotation, wobbleDuration),
-                    Actions.rotateBy(-5f, wobbleDuration),
+                    Actions.rotateBy(-wobbleAmount, wobbleDuration),
                     Actions.rotateTo(originalRotation, wobbleDuration),
-                    Actions.delay(5f)
+                    Actions.delay(wobbleFrequency)
                 )
             )
         )
@@ -91,10 +95,10 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
     }
 
     fun calculatePosition(x: Float, bottomPlayer: Boolean) {
-        val yPosition = if (bottomPlayer) 1f else 92f
+        val yPosition = if (bottomPlayer) 3f else 93f
         setPosition(x * 100 - width / 2, yPosition)
 
-        if (this.x < 0) this.x = 0f
-        else if (this.x + width > 100) this.x = 100f - width
+        if (this.x < 1) this.x = 1f
+        else if (this.x + width > 99) this.x = 99f - width
     }
 }

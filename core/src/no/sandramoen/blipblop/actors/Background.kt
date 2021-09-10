@@ -1,23 +1,53 @@
 package no.sandramoen.blipblop.actors
 
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.VertexAttributes
-import com.badlogic.gdx.graphics.g3d.Material
-import com.badlogic.gdx.graphics.g3d.ModelInstance
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
-import com.badlogic.gdx.math.Vector3
-import no.sandramoen.blipblop.utils.BaseActor3D
-import no.sandramoen.blipblop.utils.Stage3D
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Stage
+import no.sandramoen.blipblop.utils.BaseActor
+import no.sandramoen.blipblop.utils.BaseGame
 
-open class Background (x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D) : BaseActor3D(x, y, z, s) {
+class Background(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+    private val tag = "Background"
+    private var vertexShaderCode: String
+    private var fragmenterShaderCode: String
+    private var shaderProgram: ShaderProgram
+    private var time = .0f
+    private var disabled = false
+
     init {
-        val modelBuilder = ModelBuilder()
-        val boxMaterial = Material()
-        val usageCode = VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
-        val boxModel = modelBuilder.createBox(14.3f, 14.3f, .5f, boxMaterial, usageCode.toLong())
-        val position = Vector3(0f, 0f, 0f)
-        setModelInstance(ModelInstance(boxModel, position))
-        setBaseRectangle()
-        setColor(Color.BLACK)
+        loadImage("whitePixel")
+
+        setPosition(x, y)
+        setSize(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+
+        ShaderProgram.pedantic = false
+        vertexShaderCode = BaseGame.defaultShader.toString()
+        fragmenterShaderCode = BaseGame.backgroundShader.toString()
+        shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
+        if (!shaderProgram.isCompiled)
+            Gdx.app.error("Background", "Shader compile error: " + shaderProgram.log)
+    }
+
+    override fun draw(batch: Batch, parentAlpha: Float) {
+        if (disabled) {
+            super.draw(batch, parentAlpha)
+        } else {
+            try {
+                batch.shader = shaderProgram
+                shaderProgram.setUniformf("u_time", time)
+                shaderProgram.setUniformf("u_resolution", Vector2(width, height))
+                super.draw(batch, parentAlpha)
+                batch.shader = null
+            } catch (error: Error) {
+                super.draw(batch, parentAlpha)
+            }
+        }
+    }
+
+    override fun act(dt: Float) {
+        super.act(dt)
+        time += dt
     }
 }
