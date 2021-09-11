@@ -9,7 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
+import no.sandramoen.blipblop.screens.gameplay.LevelScreen
+import no.sandramoen.blipblop.screens.shell.MenuScreen
 import no.sandramoen.blipblop.utils.BaseGame
+import no.sandramoen.blipblop.utils.GameUtils
 
 class GameMenu(uiTable: Table) {
     private val tag = "GameMenu"
@@ -27,6 +30,7 @@ class GameMenu(uiTable: Table) {
         restart.padRight(offset * scale)
         restart.color = Color.GREEN
         restart.color.a = 0f
+        GameUtils.addTextButtonEnterExitEffect(restart)
 
         mainMenu = TextButton("Main Menu", BaseGame.textButtonStyle)
         mainMenu.isTransform = true
@@ -36,10 +40,13 @@ class GameMenu(uiTable: Table) {
         mainMenu.color.a = 0f
         mainMenu.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
-                // TODO: set screen to main menu
-                Gdx.app.error(tag, "mainMenu button touched!")
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                // TODO: screen transition
+                BaseGame.setActiveScreen(MenuScreen())
             }
         })
+        GameUtils.addTextButtonEnterExitEffect(mainMenu)
+
         disappear()
 
         // positioning
@@ -64,9 +71,15 @@ class GameMenu(uiTable: Table) {
     }
 
     fun appear() {
-        restart.addAction(Actions.fadeIn(.5f))
+        restart.addAction(Actions.sequence(
+            Actions.delay(1f),
+            Actions.fadeIn(1.5f)
+        ))
         restart.touchable = Touchable.enabled
-        mainMenu.addAction(Actions.fadeIn(.5f))
+        mainMenu.addAction(Actions.sequence(
+            Actions.delay(1f),
+            Actions.fadeIn(1.5f)
+        ))
         mainMenu.touchable = Touchable.enabled
     }
 

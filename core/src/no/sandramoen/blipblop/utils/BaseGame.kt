@@ -21,6 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import kotlin.system.measureTimeMillis
+import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter
+
+import com.badlogic.gdx.utils.ObjectMap
+
 
 abstract class BaseGame() : Game(), AssetErrorListener {
     private val tag = "BaseGame.kt"
@@ -38,6 +42,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         const val WORLD_HEIGHT = 100f
         const val scale = 1.0f
         var RATIO = 0f
+        val lightPink = Color(1f, .816f, .94f, 1f)
 
         // game assets
         var labelStyle: LabelStyle? = null
@@ -58,9 +63,6 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         var win01Sound: Sound? = null
         var win02Sound: Sound? = null
         var vibrations: Boolean = false
-        var green = Color(0.113f, 0.968f, 0.282f, 1f)
-        var yellow = Color(0.968f, 0.815f, 0.113f, 1f)
-        var red = Color(0.968f, 0.113f, 0.113f, 1f)
 
         // game state
         var prefs: Preferences? = null
@@ -70,13 +72,8 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         var soundVolume = .75f
         var musicVolume = .125f
 
-        fun setActiveScreen(s: BaseScreen) {
-            game?.setScreen(s)
-        }
-
-        fun setActiveScreen(s: BaseScreen3D) {
-            game?.setScreen(s)
-        }
+        fun setActiveScreen(s: BaseScreen) { game?.setScreen(s) }
+        fun setActiveScreen(s: BaseScreen3D) { game?.setScreen(s) }
     }
 
     override fun create() {
@@ -109,20 +106,24 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             assetManager.load("audio/sound/270331__littlerobotsoundfactory__jingle-achievement-00.wav", Sound::class.java)
             assetManager.load("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
 
-            // assetManager.load("skins/default/uiskin.json", Skin::class.java)
-
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
             assetManager.setLoader(BitmapFont::class.java, ".ttf", FreetypeFontLoader(resolver))
             assetManager.setLoader(Text::class.java, TextLoader(InternalFileHandleResolver()))
 
-            assetManager.load(AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()))
-            assetManager.load(AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()))
-            assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()))
-            assetManager.load(AssetDescriptor("shaders/color01.fs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load( AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()) )
+            assetManager.load( AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()) )
+            assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()) )
+            assetManager.load(AssetDescriptor("shaders/color01.fs", Text::class.java, TextLoader.TextParameter()) )
+
+            assetManager.load("skins/arcade/arcade_test.json", Skin::class.java)
+
             assetManager.finishLoading()
 
             textureAtlas = assetManager.get("images/included/packed/blipBlop.pack.atlas") // all images are found in this global static variable
+
+            // skin
+            skin = assetManager.get("skins/arcade/arcade_test.json", Skin::class.java)
 
             // audio
             levelMusic = assetManager.get("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)
@@ -142,14 +143,12 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             glowShader = assetManager.get("shaders/glow-pulse.fs", Text::class.java).getString()
             backgroundShader = assetManager.get("shaders/color01.fs", Text::class.java).getString()
 
-            // skins
-            skin = Skin(Gdx.files.internal("skins/default/uiskin.json"))
-
             // fonts
             FreeTypeFontGenerator.setMaxTextureSize(2048) // solves font bug that won't show some characters like "." and "," in android
-            val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("fonts/arcade.ttf"))
+            val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("fonts/ARCADE_R.TTF"))
             val fontParameters = FreeTypeFontParameter()
-            fontParameters.size = (.038f * Gdx.graphics.height).toInt() // Font size is based on width of screen...
+            fontParameters.size =
+                (.038f * Gdx.graphics.height).toInt() // Font size is based on width of screen...
             fontParameters.color = Color.WHITE
             fontParameters.borderWidth = 2f
             fontParameters.borderColor = Color.BLACK
@@ -160,7 +159,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
 
             val buttonFontParameters = FreeTypeFontParameter()
             buttonFontParameters.size =
-                    (.04f * Gdx.graphics.height).toInt() // If the resolutions height is 1440 then the font size becomes 86
+                (.04f * Gdx.graphics.height).toInt() // If the resolutions height is 1440 then the font size becomes 86
             buttonFontParameters.color = Color.WHITE
             buttonFontParameters.borderWidth = 2f
             buttonFontParameters.borderColor = Color.BLACK
@@ -173,14 +172,27 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             labelStyle!!.font = customFont
 
             textButtonStyle = TextButtonStyle()
-            val buttonTexUp = textureAtlas!!.findRegion("button")
-            val buttonTexDown = textureAtlas!!.findRegion("button-pressed")
+            val buttonTexUp = textureAtlas!!.findRegion("blankPixel") // button
+            // val buttonTexDown = textureAtlas!!.findRegion("button-pressed")
             val buttonPatchUp = NinePatch(buttonTexUp, 44, 24, 24, 24)
-            val buttonPatchDown = NinePatch(buttonTexDown, 44, 24, 24, 24)
+            // val buttonPatchDown = NinePatch(buttonTexDown, 44, 24, 24, 24)
             textButtonStyle!!.up = NinePatchDrawable(buttonPatchUp)
-            textButtonStyle!!.down = NinePatchDrawable(buttonPatchDown)
+            // textButtonStyle!!.down = NinePatchDrawable(buttonPatchDown)
             textButtonStyle!!.font = buttonCustomFont
             textButtonStyle!!.fontColor = Color.WHITE
+
+            // skins
+            //skin = Skin(Gdx.files.internal("skins/default/uiskin.json"))
+            //skin!!.add("font", gameFont)
+
+            /* Create the ObjectMap and add the fonts to it */
+            /*val fontMap = ObjectMap<String, Any>()
+            fontMap.put("font1", gameFont)
+
+            *//* Create the SkinParameter and supply the ObjectMap to it *//*
+            val parameter = SkinParameter(fontMap)
+            assetManager.load("skins/default/uiskin.json", Skin::class.java, parameter)
+            skin = assetManager.get("skins/default/uiskin.json")*/
         }
         Gdx.app.log(tag, "Asset manager took $time ms to load all game assets.")
     }

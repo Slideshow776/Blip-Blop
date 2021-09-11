@@ -22,7 +22,7 @@ class Winner(uiTable: Table) {
 
     init {
         // initialize
-        val scale = .5f
+        val scale = 1.0f
         topPlayerLabel = Label("Winner!", BaseGame.labelStyle)
         topPlayerLabel.setAlignment(Align.center)
         topPlayerLabel.setFontScale(scale)
@@ -49,8 +49,6 @@ class Winner(uiTable: Table) {
 
         // add
         uiTable.add(table).width(Gdx.graphics.width * .125f)
-
-        println("$tag: top => x: ${topPlayerLabel.x}, y: ${topPlayerLabel.y}")
     }
 
     fun playAnimation(top: Boolean) {

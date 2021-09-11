@@ -35,10 +35,10 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
     private var shadowBall: Ball
     private var shouldRunBallImpactAnimation = false
     private var ballImpactAnimationPercent = 0f
-    private var label: PlayerLabel
     private var turnInterpolation = 0f
 
     val bottomPlayer: Boolean = bottomPlayer
+    var label: PlayerLabel
     val width = 1.875f
     var enableAI = true
     var normalizedTouchX = .5f

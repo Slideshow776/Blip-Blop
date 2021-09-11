@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
@@ -55,10 +56,6 @@ class LevelScreen : BaseScreen3D() {
                 resume()
             }
         })
-
-        // audio
-        BaseGame.levelMusic!!.play()
-        BaseGame.levelMusic!!.volume = BaseGame.musicVolume
     }
 
     override fun update(dt: Float) {
@@ -92,13 +89,9 @@ class LevelScreen : BaseScreen3D() {
             if (players[0].score >= 1) {
                 winner.playAnimation(top = false)
                 gameOver()
-                if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
-                else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
             } else if (players[1].score >= 1) {
                 winner.playAnimation(top = true)
                 gameOver()
-                if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
-                else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
             }
 
             // ball
@@ -171,6 +164,7 @@ class LevelScreen : BaseScreen3D() {
         for (player in players) {
             player.score = 0
             player.enableAI = true
+            player.label.addAction(Actions.fadeIn(.125f))
         }
         score.setScore(players[1].score, players[0].score)
         winner.resetAnimation()
@@ -181,8 +175,13 @@ class LevelScreen : BaseScreen3D() {
     }
 
     private fun gameOver() {
-        for (player in players) player.pause = true
+        for (player in players) {
+            player.pause = true
+            player.label.addAction(Actions.fadeOut(.125f))
+        }
         ball.pause = true
         gameMenu.appear()
+        if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
+        else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
     }
 }
