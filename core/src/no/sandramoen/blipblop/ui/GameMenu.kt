@@ -70,14 +70,14 @@ class GameMenu(uiTable: Table) {
         // scoreTable.debug = true
     }
 
-    fun appear() {
+    fun appear(delay: Float = 1f) {
         restart.addAction(Actions.sequence(
-            Actions.delay(1f),
+            Actions.delay(delay),
             Actions.fadeIn(1.5f)
         ))
         restart.touchable = Touchable.enabled
         mainMenu.addAction(Actions.sequence(
-            Actions.delay(1f),
+            Actions.delay(delay),
             Actions.fadeIn(1.5f)
         ))
         mainMenu.touchable = Touchable.enabled

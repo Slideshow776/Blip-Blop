@@ -26,7 +26,7 @@ import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter
 import com.badlogic.gdx.utils.ObjectMap
 
 
-abstract class BaseGame() : Game(), AssetErrorListener {
+abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), AssetErrorListener {
     private val tag = "BaseGame.kt"
 
     init {
@@ -45,6 +45,7 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         val lightPink = Color(1f, .816f, .94f, 1f)
 
         // game assets
+        var gps: GooglePlayServices? = null
         var labelStyle: LabelStyle? = null
         var textButtonStyle: TextButtonStyle? = null
         var textureAtlas: TextureAtlas? = null
@@ -67,10 +68,9 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         // game state
         var prefs: Preferences? = null
         var loadPersonalParameters = false
-        var highScore: Int = 0
-        var mysteryKinksterScore: Int = 250_000
         var soundVolume = .75f
         var musicVolume = .125f
+        var disableGPS = false
 
         fun setActiveScreen(s: BaseScreen) { game?.setScreen(s) }
         fun setActiveScreen(s: BaseScreen3D) { game?.setScreen(s) }
@@ -80,14 +80,13 @@ abstract class BaseGame() : Game(), AssetErrorListener {
         Gdx.input.inputProcessor = InputMultiplexer() // discrete input
 
         // global variables
-        RATIO = Gdx.graphics.width.toFloat() / Gdx.graphics.height
-
-        // GameUtils.loadGameState()
+        gps = this.googlePlayServices
+        GameUtils.loadGameState()
         if (!loadPersonalParameters) {
             soundVolume = .75f
             musicVolume = .25f
-            vibrations = true
         }
+        RATIO = Gdx.graphics.width.toFloat() / Gdx.graphics.height
 
         // asset manager
         val time = measureTimeMillis {
@@ -116,14 +115,14 @@ abstract class BaseGame() : Game(), AssetErrorListener {
             assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()) )
             assetManager.load(AssetDescriptor("shaders/color01.fs", Text::class.java, TextLoader.TextParameter()) )
 
-            assetManager.load("skins/arcade/arcade_test.json", Skin::class.java)
+            assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
             assetManager.finishLoading()
 
             textureAtlas = assetManager.get("images/included/packed/blipBlop.pack.atlas") // all images are found in this global static variable
 
             // skin
-            skin = assetManager.get("skins/arcade/arcade_test.json", Skin::class.java)
+            skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
 
             // audio
             levelMusic = assetManager.get("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)

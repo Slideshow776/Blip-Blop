@@ -1,6 +1,8 @@
 package no.sandramoen.blipblop.screens.shell
 
+import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -147,7 +149,7 @@ class OptionsScreen : BaseScreen() {
         optionsUseGPSCheckBox.image.setScaling(Scaling.fill)
         optionsUseGPSCheckBox.imageCell.size(optionsWidgetWidth * .1f)
         optionsUseGPSCheckBox.imageCell.padRight(Gdx.graphics.width * .02f)
-        optionsUseGPSCheckBox.label.setFontScale(.75f)
+        optionsUseGPSCheckBox.label.setFontScale(1.3f)
         optionsUseGPSCheckBox.setOrigin(optionsWidgetWidth / 2, optionsWidgetHeight / 2)
         optionsUseGPSCheckBox.addListener(object : ClickListener() {
             override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
@@ -185,7 +187,7 @@ class OptionsScreen : BaseScreen() {
         buttonsTable.add(musicLabel).width(optionsWidgetWidth * 1 / 6)
             .padLeft(Gdx.graphics.width * .11f).row()
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
-        buttonsTable.add(optionsUseGPSCheckBox).colspan(2).row()
+        if (Gdx.app.type == Application.ApplicationType.Android) buttonsTable.add(optionsUseGPSCheckBox).colspan(2).row()
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
         buttonsTable.add(backButton).colspan(2)
         buttonsTable.debug = false
@@ -205,4 +207,10 @@ class OptionsScreen : BaseScreen() {
     }
 
     override fun update(dt: Float) {}
+
+    override fun keyDown(keycode: Int): Boolean {
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACKSPACE)
+            BaseGame.setActiveScreen(MenuScreen())
+        return false
+    }
 }

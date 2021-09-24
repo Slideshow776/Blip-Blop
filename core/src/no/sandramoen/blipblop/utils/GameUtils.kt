@@ -1,5 +1,6 @@
 package no.sandramoen.blipblop.utils
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -23,18 +24,20 @@ class GameUtils {
             music!!.isLooping = true
         }
 
-        fun saveGameState() { // TODO
-            /*BaseGame.prefs!!.putBoolean("googlePlayServices", BaseGame.disableGPS)
+        fun saveGameState() {
+            BaseGame.prefs!!.putBoolean("loadPersonalParameters", true)
+            BaseGame.prefs!!.putBoolean("googlePlayServices", BaseGame.disableGPS)
             BaseGame.prefs!!.putFloat("musicVolume", BaseGame.musicVolume)
             BaseGame.prefs!!.putFloat("soundVolume", BaseGame.soundVolume)
-            BaseGame.prefs!!.flush()*/
+            BaseGame.prefs!!.flush()
         }
 
-        fun loadGameState() { // TODO
-            /*BaseGame.prefs = Gdx.app.getPreferences("spankFuryGameState")
+        fun loadGameState() {
+            BaseGame.prefs = Gdx.app.getPreferences("blipBlopGameState")
+            BaseGame.loadPersonalParameters = BaseGame.prefs!!.getBoolean("loadPersonalParameters")
             BaseGame.disableGPS = BaseGame.prefs!!.getBoolean("googlePlayServices")
             BaseGame.musicVolume = BaseGame.prefs!!.getFloat("musicVolume")
-            BaseGame.soundVolume = BaseGame.prefs!!.getFloat("soundVolume")*/
+            BaseGame.soundVolume = BaseGame.prefs!!.getFloat("soundVolume")
         }
 
         fun stopAllMusic() {

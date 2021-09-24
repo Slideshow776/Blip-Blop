@@ -1,5 +1,7 @@
 package no.sandramoen.blipblop.screens.shell
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -26,11 +28,11 @@ class SplashScreen : BaseScreen() {
             Actions.sequence(
                 Actions.fadeIn(0f),
                 Actions.fadeOut(totalDurationInSeconds / 4),
-                /*Actions.run {
+                Actions.run {
                     // google play services sign in
                     if (Gdx.app.type == Application.ApplicationType.Android && !BaseGame.disableGPS)
                         BaseGame.gps!!.signIn()
-                },*/
+                },
                 Actions.delay(totalDurationInSeconds / 4),
                 Actions.fadeIn(totalDurationInSeconds / 4)
             )

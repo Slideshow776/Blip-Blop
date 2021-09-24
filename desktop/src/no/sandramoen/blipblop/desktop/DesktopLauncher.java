@@ -15,6 +15,6 @@ public class DesktopLauncher {
 		config.width = (int) (LGg8ThinQWidth / scale);
 		config.height = (int) (LGg8ThinQHeight / scale);
 		config.resizable = false;
-		new LwjglApplication(new BlipBlopGame(), config);
+		new LwjglApplication(new BlipBlopGame(null), config);
 	}
 }

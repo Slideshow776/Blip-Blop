@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
+import no.sandramoen.blipblop.screens.shell.MenuScreen
 import no.sandramoen.blipblop.ui.*
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
@@ -68,13 +69,13 @@ class LevelScreen : BaseScreen3D() {
 
                 if (player.bottomPlayer && players[1].enableAI) players[1].spawnShadowBall(ball)
                 else if (!player.bottomPlayer && players[0].enableAI) players[0].spawnShadowBall(
-                    ball
+                        ball
                 )
             }
         }
 
         // ball
-        if (!ball.inPlay) { // WARNING: this code should only run once, and not 60x/s
+        if (!ball.inPlay) { // WARNING: this code should only run once
             // score
             if (ball.getPosition().y > 0f) {
                 players[0].score++
@@ -86,10 +87,10 @@ class LevelScreen : BaseScreen3D() {
             score.setScore(players[1].score, players[0].score)
             // reportHitRating()
             games++
-            if (players[0].score >= 1) {
+            if (players[0].score >= 10) {
                 winner.playAnimation(top = false)
                 gameOver()
-            } else if (players[1].score >= 1) {
+            } else if (players[1].score >= 10) {
                 winner.playAnimation(top = true)
                 gameOver()
             }
@@ -118,6 +119,7 @@ class LevelScreen : BaseScreen3D() {
     override fun keyDown(keycode: Int): Boolean {
         if (keycode == Keys.RIGHT || keycode == Keys.LEFT) players[0].disableAI()
         if (keycode == Keys.A || keycode == Keys.D) players[1].disableAI()
+        if (keycode == Keys.BACK || keycode == Keys.ESCAPE || keycode == Keys.BACKSPACE) exitGame()
         return false
     }
 
@@ -183,5 +185,20 @@ class LevelScreen : BaseScreen3D() {
         gameMenu.appear()
         if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
         else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
+    }
+
+    private fun exitGame() {
+        // screen transition
+        if (ball.pause) {
+            // TODO: transition
+            BaseGame.setActiveScreen(MenuScreen())
+        } else {
+            for (player in players) {
+                player.pause = true
+                player.label.addAction(Actions.fadeOut(.125f))
+            }
+            ball.pause = true
+            gameMenu.appear(delay = 0f)
+        }
     }
 }
