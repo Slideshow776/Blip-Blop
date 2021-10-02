@@ -140,3 +140,5 @@ These three resources helped me to a great extent implementing GPS.
 * How to implement [achievements in Android games](https://developers.google.com/games/services/android/achievements).
 
 For project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
+
+[Go back to the top](#blip-blop).
