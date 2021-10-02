@@ -9,11 +9,15 @@ import no.sandramoen.blipblop.actors.ShockwaveBackground
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen
+import no.sandramoen.blipblop.utils.GameUtils
 
 class SplashScreen : BaseScreen() {
+    private lateinit var tag: String
     private lateinit var shock: ShockwaveBackground
 
     override fun initialize() {
+        tag = "SplashScreen"
+
         // image with effect
         shock = ShockwaveBackground(0f, 0f, "images/excluded/splash.jpg", mainStage)
 
@@ -30,7 +34,8 @@ class SplashScreen : BaseScreen() {
                 Actions.fadeOut(totalDurationInSeconds / 4),
                 Actions.run {
                     // google play services sign in
-                    if (Gdx.app.type == Application.ApplicationType.Android && !BaseGame.disableGPS)
+                    GameUtils.loadGameState()
+                    if (Gdx.app.type == Application.ApplicationType.Android && BaseGame.isGPS)
                         BaseGame.gps!!.signIn()
                 },
                 Actions.delay(totalDurationInSeconds / 4),

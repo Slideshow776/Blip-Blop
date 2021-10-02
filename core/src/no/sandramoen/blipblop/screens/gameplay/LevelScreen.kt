@@ -1,8 +1,10 @@
 package no.sandramoen.blipblop.screens.gameplay
 
+import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.MathUtils.ceil
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
@@ -13,6 +15,7 @@ import no.sandramoen.blipblop.ui.*
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
 import no.sandramoen.blipblop.utils.GameUtils
+import kotlin.math.floor
 
 class LevelScreen : BaseScreen3D() {
     private val tag = "LevelScreen"
@@ -22,7 +25,8 @@ class LevelScreen : BaseScreen3D() {
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
     private var games = 1
-    private var resetBall = true
+    private var incrementAchievement = false
+    private var gameTime = BaseGame.gameTime
 
     override fun initialize() {
         // miscellaneous
@@ -60,6 +64,25 @@ class LevelScreen : BaseScreen3D() {
     }
 
     override fun update(dt: Float) {
+        // register achievement increment at appropriate time intervals
+        if (!ball.pause &&
+                Gdx.app.type == Application.ApplicationType.Android &&
+                gameTime < BaseGame.biggestAchievementTime) {
+            gameTime += dt
+            if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
+                try {
+                    BaseGame.gps!!.incrementAchievements()
+                } catch (error: Error) {
+                    Gdx.app.error(tag, "Could not increment achievement, error: $error")
+                }
+                BaseGame.gameTime = gameTime
+                GameUtils.saveGameState()
+                incrementAchievement = false
+            } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
+                incrementAchievement = true
+            }
+        }
+
         // player
         for (player in players) {
             if (ball.overlaps(player)) {
@@ -87,10 +110,10 @@ class LevelScreen : BaseScreen3D() {
             score.setScore(players[1].score, players[0].score)
             // reportHitRating()
             games++
-            if (players[0].score >= 10) {
+            if (players[0].score >= 11) {
                 winner.playAnimation(top = false)
                 gameOver()
-            } else if (players[1].score >= 10) {
+            } else if (players[1].score >= 11) {
                 winner.playAnimation(top = true)
                 gameOver()
             }

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="no.sandramoen.blipblop" >
-
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:isGame="true"
-        android:appCategory="game"
-        android:label="@string/app_name"
-        android:theme="@style/GdxTheme" >
+            android:allowBackup="true"
+            android:icon="@drawable/ic_launcher"
+            android:isGame="true"
+            android:appCategory="game"
+            android:label="@string/app_name"
+            android:theme="@style/GdxTheme" >
         <meta-data android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
         <activity
-            android:name="no.sandramoen.blipblop.AndroidLauncher"
-            android:label="@string/app_name" 
-            android:screenOrientation="portrait"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout">
+                android:name="no.sandramoen.blipblop.AndroidLauncher"
+                android:label="@string/app_name"
+                android:screenOrientation="portrait"
+                android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,4 +26,5 @@
         </activity>
     </application>
 
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 </manifest>

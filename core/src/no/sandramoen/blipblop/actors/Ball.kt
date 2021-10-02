@@ -37,7 +37,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         val radius = if (isShadowBall) .0f else .5f
         val model = modelBuilder.createSphere(
             radius,
-            radius * Gdx.graphics.width / Gdx.graphics.height,
+            radius * BaseGame.RATIO,
             radius,
             32,
             32,

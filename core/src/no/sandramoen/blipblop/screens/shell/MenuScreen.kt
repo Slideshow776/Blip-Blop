@@ -45,14 +45,6 @@ class MenuScreen : BaseScreen() {
         Background(0f, 0f, mainStage)
 
         // title
-        /*title0 = BaseActor(10f, 0f, mainStage)
-        title0.loadImage("title0")
-        title0.setSize(Gdx.graphics.width.toFloat() * .16f, Gdx.graphics.height.toFloat() * .01f)
-        val title0Padding = (100 - title0.width) / 2
-        title0.setPosition(
-            title0Padding,
-            100 - title0.height - (title0Padding * Gdx.graphics.width / Gdx.graphics.height)
-        )*/
         val titleScale = 0.4f
         titleBlipLabel = Label("Blip", BaseGame.labelStyle)
         val titleBlipGroup = Group()
@@ -70,9 +62,9 @@ class MenuScreen : BaseScreen() {
         val ballSpace = Gdx.graphics.width - padding - (titleBlipLabel.prefWidth * (1 + titleScale)) - (titleBlopLabel.prefWidth * (1 + titleScale))
 
         val titleTable = Table()
-        titleTable.add(titleBlipGroup).width(titleBlipLabel.prefWidth * (1 + titleScale)).height(labelHeight).left().padLeft(padding).padTop(padding * Gdx.graphics.width / Gdx.graphics.height)
+        titleTable.add(titleBlipGroup).width(titleBlipLabel.prefWidth * (1 + titleScale)).height(labelHeight).left().padLeft(padding).padTop(padding * BaseGame.RATIO)
         titleTable.add().width(ballSpace)// .height(labelHeight)
-        titleTable.add(titleBlopGroup).width(titleBlopLabel.prefWidth * (1 + titleScale)).height(labelHeight).right().padRight(padding).padTop(padding * Gdx.graphics.width / Gdx.graphics.height)
+        titleTable.add(titleBlopGroup).width(titleBlopLabel.prefWidth * (1 + titleScale)).height(labelHeight).right().padRight(padding).padTop(padding * BaseGame.RATIO)
         // titleTable.debug = true
 
         // animated ball
@@ -80,7 +72,7 @@ class MenuScreen : BaseScreen() {
         ball.loadImage("whitePixel")
         ball.color = Color.GREEN
         val ballSize = Gdx.graphics.width * .03f
-        ball.setSize(ballSize, Gdx.graphics.height * .03f * Gdx.graphics.width / Gdx.graphics.height)
+        ball.setSize(ballSize, Gdx.graphics.height * .03f * BaseGame.RATIO)
         ball.setPosition(titleBlipLabel.prefWidth * (1 + titleScale) + ballSize / 2, Gdx.graphics.height * .95f)
 
         leftBallBounds = titleBlipLabel.prefWidth * (1 + titleScale)

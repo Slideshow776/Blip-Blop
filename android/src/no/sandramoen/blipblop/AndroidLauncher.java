@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.games.*;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import no.sandramoen.blipblop.utils.GooglePlayServices;
 
@@ -23,10 +24,11 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 	private static final int RC_SIGN_IN = 9001;
 	private static final int RC_UNUSED = 5001;
 	private static final int RC_LEADERBOARD_UI = 9004;
+	private static final int RC_ACHIEVEMENT_UI = 9003;
 
 	private GoogleSignInClient mGoogleSignInClient;
 	private GoogleSignInAccount mGoogleSignInAccount;
-	private LeaderboardsClient mLeaderboardsClient;
+	private AchievementsClient mAchievementClient;
 	private PlayersClient mPlayersClient;
 
 	@Override
@@ -61,17 +63,17 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 				popup();
 
 				// fetch clients
-				mLeaderboardsClient = Games.getLeaderboardsClient(this, mGoogleSignInAccount);
 				mPlayersClient = Games.getPlayersClient(this, mGoogleSignInAccount);
+				mAchievementClient = Games.getAchievementsClient(this, mGoogleSignInAccount);
 			} else {
 				String message = result.getStatus().getStatusMessage();
 				System.out.println("AndroidLauncher.java: " + result.getStatus());
 				// Status{statusCode=SIGN_IN_REQUIRED, resolution=null}
-				if (message == null || message.isEmpty()) {
+				/*if (message == null || message.isEmpty()) {
 					message = "There was an issue with sign in: " + result.getStatus();
 				}
 				new AlertDialog.Builder(this).setMessage(message)
-						.setNeutralButton(android.R.string.ok, null).show();
+						.setNeutralButton(android.R.string.ok, null).show();*/
 			}
 		}
 	}
@@ -91,7 +93,7 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 				new OnCompleteListener<Void>() {
 					@Override
 					public void onComplete(@NonNull Task<Void> task) {
-						mLeaderboardsClient = null;
+						mAchievementClient = null;
 						mPlayersClient = null;
 					}
 				});
@@ -102,23 +104,36 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 		startSignInIntent();
 	}
 
-	@Override
-	public void getLeaderboard() {
+	public void incrementAchievements() {
+		// popup view
+		GamesClient gamesClient = Games.getGamesClient(AndroidLauncher.this, mGoogleSignInAccount);
+		gamesClient.setGravityForPopups(Gravity.CENTER_HORIZONTAL);
+		gamesClient.setViewForPopups(((AndroidGraphics) AndroidLauncher.this.getGraphics()).getView());
 
+		// achievement increment
+		mAchievementClient.increment(getString(R.string.classicBronzeAchievement), 1);
+	}
+
+	public void showAchievements() {
+		mAchievementClient
+				.getAchievementsIntent()
+				.addOnSuccessListener(new OnSuccessListener<Intent>() {
+					@Override
+					public void onSuccess(Intent intent) {
+						startActivityForResult(intent, RC_ACHIEVEMENT_UI);
+					}
+				});
 	}
 
 	@Override
-	public void fetchHighScore() {
-
-	}
+	public void getLeaderboard() {}
 
 	@Override
-	public int getHighScore() {
-		return 0;
-	}
+	public void fetchHighScore() {}
 
 	@Override
-	public void submitScore(int score) {
+	public int getHighScore() {return 0;}
 
-	}
+	@Override
+	public void submitScore(int score) {}
 }

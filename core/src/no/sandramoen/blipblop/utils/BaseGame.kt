@@ -63,14 +63,16 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var gameStartSound: Sound? = null
         var win01Sound: Sound? = null
         var win02Sound: Sound? = null
-        var vibrations: Boolean = false
+        var gameTime: Float = 0f
 
         // game state
         var prefs: Preferences? = null
         var loadPersonalParameters = false
         var soundVolume = .75f
         var musicVolume = .125f
-        var disableGPS = false
+        var isGPS = false
+        var registerAchievementFrequency: Float = 3 * 60f   // three minutes
+        var biggestAchievementTime: Float = 60 * 60f        // one hour
 
         fun setActiveScreen(s: BaseScreen) { game?.setScreen(s) }
         fun setActiveScreen(s: BaseScreen3D) { game?.setScreen(s) }
@@ -81,7 +83,6 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
 
         // global variables
         gps = this.googlePlayServices
-        GameUtils.loadGameState()
         if (!loadPersonalParameters) {
             soundVolume = .75f
             musicVolume = .25f
@@ -179,28 +180,14 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             // textButtonStyle!!.down = NinePatchDrawable(buttonPatchDown)
             textButtonStyle!!.font = buttonCustomFont
             textButtonStyle!!.fontColor = Color.WHITE
-
-            // skins
-            //skin = Skin(Gdx.files.internal("skins/default/uiskin.json"))
-            //skin!!.add("font", gameFont)
-
-            /* Create the ObjectMap and add the fonts to it */
-            /*val fontMap = ObjectMap<String, Any>()
-            fontMap.put("font1", gameFont)
-
-            *//* Create the SkinParameter and supply the ObjectMap to it *//*
-            val parameter = SkinParameter(fontMap)
-            assetManager.load("skins/default/uiskin.json", Skin::class.java, parameter)
-            skin = assetManager.get("skins/default/uiskin.json")*/
         }
-        Gdx.app.log(tag, "Asset manager took $time ms to load all game assets.")
+        Gdx.app.error(tag, "Asset manager took $time ms to load all game assets.")
     }
 
     override fun dispose() {
+        GameUtils.saveGameState()
         super.dispose()
-
-        assetManager.dispose()
-        fontGenerator.dispose()
+        gps!!.signOut()
         /*try { // TODO: uncomment this when development is done
             assetManager.dispose()
             fontGenerator.dispose()

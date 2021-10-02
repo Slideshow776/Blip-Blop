@@ -26,18 +26,26 @@ class GameUtils {
 
         fun saveGameState() {
             BaseGame.prefs!!.putBoolean("loadPersonalParameters", true)
-            BaseGame.prefs!!.putBoolean("googlePlayServices", BaseGame.disableGPS)
+            BaseGame.prefs!!.putBoolean("googlePlayServices", BaseGame.isGPS)
             BaseGame.prefs!!.putFloat("musicVolume", BaseGame.musicVolume)
             BaseGame.prefs!!.putFloat("soundVolume", BaseGame.soundVolume)
+            BaseGame.prefs!!.putBoolean("googlePlayServices", BaseGame.isGPS)
+            try {
+                BaseGame.prefs!!.putFloat("gameTime", BaseGame.gameTime)
+            } catch (error: Error) {
+                BaseGame.prefs!!.putFloat("gameTime", Float.MAX_VALUE)
+            }
             BaseGame.prefs!!.flush()
         }
 
         fun loadGameState() {
             BaseGame.prefs = Gdx.app.getPreferences("blipBlopGameState")
             BaseGame.loadPersonalParameters = BaseGame.prefs!!.getBoolean("loadPersonalParameters")
-            BaseGame.disableGPS = BaseGame.prefs!!.getBoolean("googlePlayServices")
+            BaseGame.isGPS = BaseGame.prefs!!.getBoolean("googlePlayServices")
             BaseGame.musicVolume = BaseGame.prefs!!.getFloat("musicVolume")
             BaseGame.soundVolume = BaseGame.prefs!!.getFloat("soundVolume")
+            BaseGame.isGPS = BaseGame.prefs!!.getBoolean("googlePlayServices")
+            BaseGame.gameTime = BaseGame.prefs!!.getFloat("gameTime")
         }
 
         fun stopAllMusic() {
@@ -51,22 +59,22 @@ class GameUtils {
         fun addTextButtonEnterExitEffect(button: TextButton, enterColor: Color = BaseGame.lightPink, exitColor: Color = Color.WHITE) {
             button.addListener(object : ClickListener() {
                 override fun enter(
-                    event: InputEvent?,
-                    x: Float,
-                    y: Float,
-                    pointer: Int,
-                    fromActor: Actor?
+                        event: InputEvent?,
+                        x: Float,
+                        y: Float,
+                        pointer: Int,
+                        fromActor: Actor?
                 ) {
                     button.label.color = enterColor
                     super.enter(event, x, y, pointer, fromActor)
                 }
 
                 override fun exit(
-                    event: InputEvent?,
-                    x: Float,
-                    y: Float,
-                    pointer: Int,
-                    toActor: Actor?
+                        event: InputEvent?,
+                        x: Float,
+                        y: Float,
+                        pointer: Int,
+                        toActor: Actor?
                 ) {
                     button.label.color = exitColor
                     super.exit(event, x, y, pointer, toActor)
@@ -77,22 +85,22 @@ class GameUtils {
         fun addLabelButtonEnterExitEffect(label: Label, enter: Color = BaseGame.lightPink, exit: Color = Color.WHITE) {
             label.addListener(object : ClickListener() {
                 override fun enter(
-                    event: InputEvent?,
-                    x: Float,
-                    y: Float,
-                    pointer: Int,
-                    fromActor: Actor?
+                        event: InputEvent?,
+                        x: Float,
+                        y: Float,
+                        pointer: Int,
+                        fromActor: Actor?
                 ) {
                     label.color = enter
                     super.enter(event, x, y, pointer, fromActor)
                 }
 
                 override fun exit(
-                    event: InputEvent?,
-                    x: Float,
-                    y: Float,
-                    pointer: Int,
-                    toActor: Actor?
+                        event: InputEvent?,
+                        x: Float,
+                        y: Float,
+                        pointer: Int,
+                        toActor: Actor?
                 ) {
                     label.color = exit
                     super.exit(event, x, y, pointer, toActor)

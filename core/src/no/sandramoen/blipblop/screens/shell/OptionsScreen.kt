@@ -12,9 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
-import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import no.sandramoen.blipblop.actors.Background
-import no.sandramoen.blipblop.screens.gameplay.LevelScreen
 import no.sandramoen.blipblop.ui.MadeByLabel
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen
@@ -22,25 +21,31 @@ import no.sandramoen.blipblop.utils.GameUtils
 
 class OptionsScreen : BaseScreen() {
     private lateinit var tag: String
+    private lateinit var achievementButton: TextButton
+    private lateinit var achievementImage: Image
+    private lateinit var onImage: Image
+    private lateinit var offImage: Image
+    private lateinit var toggleGPS: Button
+    /*private var checkGPSSignIn = false*/
 
     override fun initialize() {
-        tag = "MenuScreen.kt"
+        tag = "OptionsScreen.kt"
 
-        // background
+        // background ---------------------------------------------------------------------------------------------
         Background(0f, 0f, mainStage)
 
-        // main label
+        // main label ---------------------------------------------------------------------------------------------
         val mainLabel = Label("Options", BaseGame.labelStyle)
         mainLabel.setFontScale(1.5f)
 
         val optionsWidgetWidth =
-            Gdx.graphics.width * .6f // value must be pre-determined for scaling
+                Gdx.graphics.width * .6f // value must be pre-determined for scaling
         val optionsWidgetHeight =
-            Gdx.graphics.height * .015f // value must be pre-determined for scaling
+                Gdx.graphics.height * .015f // value must be pre-determined for scaling
         val optionsSliderScale =
-            Gdx.graphics.height * .002f // makes sure scale is device adjustable-ish
+                Gdx.graphics.height * .002f // makes sure scale is device adjustable-ish
 
-        // music
+        // music -------------------------------------------------------------------------------------------------
         val musicLabel = Label("Music", BaseGame.labelStyle)
         musicLabel.setFontScale(.5f)
         musicLabel.addListener(object : ClickListener() {
@@ -48,6 +53,7 @@ class OptionsScreen : BaseScreen() {
                 musicLabel.color = BaseGame.lightPink
                 super.enter(event, x, y, pointer, fromActor)
             }
+
             override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
                 musicLabel.color = Color.WHITE
                 super.exit(event, x, y, pointer, toActor)
@@ -66,8 +72,8 @@ class OptionsScreen : BaseScreen() {
         val optionsMusicSliderContainer = Container(optionsMusicSlider)
         optionsMusicSliderContainer.isTransform = true
         optionsMusicSliderContainer.setOrigin(
-            (optionsWidgetWidth * 5 / 6) / 2,
-            optionsWidgetHeight / 2
+                (optionsWidgetWidth * 5 / 6) / 2,
+                optionsWidgetHeight / 2
         )
         optionsMusicSliderContainer.setScale(optionsSliderScale)
         optionsMusicSliderContainer.addListener(object : ClickListener() {
@@ -75,13 +81,14 @@ class OptionsScreen : BaseScreen() {
                 musicLabel.color = BaseGame.lightPink
                 super.enter(event, x, y, pointer, fromActor)
             }
+
             override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
                 musicLabel.color = Color.WHITE
                 super.exit(event, x, y, pointer, toActor)
             }
         })
 
-        // sound
+        // sound -------------------------------------------------------------------------------------------------
         val soundLabel = Label("Sound", BaseGame.labelStyle)
         soundLabel.setFontScale(.5f)
         soundLabel.addListener(object : ClickListener() {
@@ -108,91 +115,126 @@ class OptionsScreen : BaseScreen() {
         val optionsSoundSliderContainer = Container(optionsSoundSlider)
         optionsSoundSliderContainer.isTransform = true
         optionsSoundSliderContainer.setOrigin(
-            (optionsWidgetWidth * 5 / 6) / 2,
-            optionsWidgetHeight / 2
+                (optionsWidgetWidth * 5 / 6) / 2,
+                optionsWidgetHeight / 2
         )
         optionsSoundSliderContainer.setScale(optionsSliderScale)
         optionsSoundSliderContainer.addListener(object : ClickListener() {
-            override fun enter( event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
+            override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
                 soundLabel.color = BaseGame.lightPink
                 super.enter(event, x, y, pointer, fromActor)
             }
+
             override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
                 soundLabel.color = Color.WHITE
                 super.exit(event, x, y, pointer, toActor)
             }
         })
 
-        // google play services
-        val optionsUseGPSCheckBox = CheckBox("Google Play", BaseGame.skin)
-        // optionsUseGPSCheckBox.isDisabled = true
-        /*optionsUseGPSCheckBox.isChecked = !BaseGame.disableGPS
-        optionsUseGPSCheckBox.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent?, actor: Actor?) {
-                BaseGame.disableGPS = !BaseGame.disableGPS
+        // display achievements ----------------------------------------------------------------------------------------
+        achievementButton = TextButton("Achievements", BaseGame.textButtonStyle)
+        achievementButton.label.setFontScale(.5f)
+        achievementButton.addListener(object : ActorGestureListener() {
+            override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
-                GameUtils.saveGameState()
-
-                if (!BaseGame.disableGPS) {
-                    BaseGame.gps!!.signIn()
-                    BaseGame.gps!!.submitScore(BaseGame.highScore)
-                    optionsShowScore.touchable = Touchable.enabled
-                    optionsShowScore.color.a = 1f
-                } else {
-                    BaseGame.gps!!.signOut()
-                    optionsShowScore.touchable = Touchable.disabled
-                    optionsShowScore.color.a = .75f
-                }
-            }
-        })*/
-        optionsUseGPSCheckBox.isTransform = true
-        optionsUseGPSCheckBox.image.setScaling(Scaling.fill)
-        optionsUseGPSCheckBox.imageCell.size(optionsWidgetWidth * .1f)
-        optionsUseGPSCheckBox.imageCell.padRight(Gdx.graphics.width * .02f)
-        optionsUseGPSCheckBox.label.setFontScale(1.3f)
-        optionsUseGPSCheckBox.setOrigin(optionsWidgetWidth / 2, optionsWidgetHeight / 2)
-        optionsUseGPSCheckBox.addListener(object : ClickListener() {
-            override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
-                optionsUseGPSCheckBox.label.color = BaseGame.lightPink
-                super.enter(event, x, y, pointer, fromActor)
-            }
-            override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
-                optionsUseGPSCheckBox.label.color = Color.WHITE
-                super.exit(event, x, y, pointer, toActor)
+                achievementButton.label.color = BaseGame.lightPink
+                if (BaseGame.gps!!.isSignedIn())
+                    BaseGame.gps!!.showAchievements()
             }
         })
+        GameUtils.addTextButtonEnterExitEffect(achievementButton)
 
-        // back
+        achievementImage = Image(BaseGame.textureAtlas!!.findRegion("achievements-google-play-achievements-icon"))
+        if (BaseGame.gps!!.isSignedIn()) {
+            achievementButton.touchable = Touchable.enabled
+        } else {
+            achievementImage.color = Color.DARK_GRAY
+            achievementButton.touchable = Touchable.disabled
+            achievementButton.label.color = Color.DARK_GRAY
+        }
+
+        val achievementTable = Table()
+        achievementTable.add(achievementButton)
+        achievementTable.add(achievementImage).width(Gdx.graphics.width * .06f).height(Gdx.graphics.height * .045f)
+
+        // google play services --------------------------------------------------------------------------------------
+        val gpsLabel = Label("Google Play Services", BaseGame.labelStyle)
+        gpsLabel.setFontScale(.5f)
+
+        onImage = Image(BaseGame.textureAtlas!!.findRegion("gpsOn"))
+        offImage = Image(BaseGame.textureAtlas!!.findRegion("gpsOff"))
+
+        val up = BaseGame.textureAtlas!!.findRegion("on")
+        val down = BaseGame.textureAtlas!!.findRegion("off")
+        val buttonStyle = Button.ButtonStyle()
+        buttonStyle.up = TextureRegionDrawable(up)
+        buttonStyle.checked = TextureRegionDrawable(down)
+        toggleGPS = Button(buttonStyle)
+        toggleGPS.isChecked = !BaseGame.gps!!.isSignedIn()
+        toggleGPS.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                BaseGame.isGPS = !BaseGame.isGPS
+                if (BaseGame.isGPS) {
+                    BaseGame.gps!!.signIn()
+                    achievementButton.touchable = Touchable.enabled
+                    achievementButton.label.color = Color.WHITE
+                    achievementImage.color = Color.WHITE
+                } else {
+                    BaseGame.gps!!.signOut()
+                    achievementButton.touchable = Touchable.disabled
+                    achievementButton.label.color = Color.DARK_GRAY
+                    achievementImage.color = Color.DARK_GRAY
+                }
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                GameUtils.saveGameState()
+                setToggleButtonColors(toggleGPS, onImage, offImage)
+            }
+        })
+        setToggleButtonColors(toggleGPS, onImage, offImage)
+
+        val gpsTable = Table()
+        gpsTable.add(gpsLabel).colspan(3).padBottom(Gdx.graphics.height * .03f).row()
+        gpsTable.add(offImage).width(Gdx.graphics.width * .1f).height(Gdx.graphics.height * .045f).right()
+        gpsTable.add(toggleGPS).width(Gdx.graphics.width * .15f).height(Gdx.graphics.height * .037f)
+        gpsTable.add(onImage).width(Gdx.graphics.width * .1f).height(Gdx.graphics.height * .045f).left()
+        // gpsTable.debug = true
+
+        // back button -------------------------------------------------------------------------------------------------
         val backButton = TextButton("Back", BaseGame.textButtonStyle)
         backButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
                 backButton.label.color = BaseGame.lightPink
                 backButton.addAction(Actions.sequence(
-                    Actions.delay(.5f),
-                    Actions.run { BaseGame.setActiveScreen(MenuScreen()) }
+                        Actions.delay(.5f),
+                        Actions.run { BaseGame.setActiveScreen(MenuScreen()) }
                 ))
             }
         })
         GameUtils.addTextButtonEnterExitEffect(backButton)
 
-        val buttonsTable = Table()
+        val buttonsTable = Table() // -----------------------------------------------------------------------------------
         buttonsTable.add(optionsSoundSliderContainer).width(optionsWidgetWidth * 5 / 6)
-            .height(optionsWidgetHeight)
+                .height(optionsWidgetHeight)
         buttonsTable.add(soundLabel).width(optionsWidgetWidth * 1 / 6)
-            .padLeft(Gdx.graphics.width * .11f).row()
+                .padLeft(Gdx.graphics.width * .11f).row()
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
         buttonsTable.add(optionsMusicSliderContainer).width(optionsWidgetWidth * 5 / 6)
-            .height(optionsWidgetHeight)
+                .height(optionsWidgetHeight)
         buttonsTable.add(musicLabel).width(optionsWidgetWidth * 1 / 6)
-            .padLeft(Gdx.graphics.width * .11f).row()
+                .padLeft(Gdx.graphics.width * .11f).row()
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
-        if (Gdx.app.type == Application.ApplicationType.Android) buttonsTable.add(optionsUseGPSCheckBox).colspan(2).row()
+
+        if (Gdx.app.type == Application.ApplicationType.Android) {
+            buttonsTable.add(gpsTable).colspan(2).row()
+            buttonsTable.add(achievementTable).padTop(Gdx.graphics.height * .03f).colspan(2).row()
+        }
+
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
         buttonsTable.add(backButton).colspan(2)
         buttonsTable.debug = false
 
-        // gui setup
+        // gui setup -------------------------------------------------------------------------------------------------
         val table = Table()
         table.add(mainLabel).padTop(Gdx.graphics.height * .015f)
         table.row()
@@ -206,11 +248,37 @@ class OptionsScreen : BaseScreen() {
         // screen transition
     }
 
-    override fun update(dt: Float) {}
+    override fun update(dt: Float) {
+        /*if (Gdx.app.type == Application.ApplicationType.Android) { // check if user actually did or didn't sign in
+            Gdx.app.error(tag, "BaseGame.gps!!.isSignedIn(): ${BaseGame.gps!!.isSignedIn()}")
+            if (BaseGame.gps!!.isSignedIn()) {
+                toggleGPS.isChecked = false
+                achievementButton.touchable = Touchable.enabled
+                achievementButton.label.color = Color.WHITE
+                achievementImage.color = Color.WHITE
+            } else {
+                toggleGPS.isChecked = true
+                achievementButton.touchable = Touchable.disabled
+                achievementButton.label.color = Color.DARK_GRAY
+                achievementImage.color = Color.DARK_GRAY
+            }
+            setToggleButtonColors(toggleGPS, onImage, offImage)
+        }*/
+    }
 
     override fun keyDown(keycode: Int): Boolean {
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACKSPACE)
             BaseGame.setActiveScreen(MenuScreen())
         return false
+    }
+
+    private fun setToggleButtonColors(toggleButton: Button, onImage: Image, offImage: Image) {
+        if (!toggleButton.isChecked) {
+            onImage.color = Color.WHITE
+            offImage.color = Color.DARK_GRAY
+        } else {
+            onImage.color = Color.DARK_GRAY
+            offImage.color = Color.WHITE
+        }
     }
 }

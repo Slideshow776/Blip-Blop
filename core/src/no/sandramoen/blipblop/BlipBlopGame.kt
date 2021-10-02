@@ -12,9 +12,9 @@ class BlipBlopGame(googlePlayServices: GooglePlayServices?) : BaseGame(googlePla
     override fun create() {
         super.create()
 
-        // setActiveScreen(SplashScreen()) // TODO: @release: change to this
+        setActiveScreen(SplashScreen()) // TODO: @release: change to this
         // setActiveScreen(LevelScreen())
-        setActiveScreen(MenuScreen())
+        // setActiveScreen(MenuScreen())
         // setActiveScreen(OptionsScreen())
     }
 }

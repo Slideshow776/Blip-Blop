@@ -14,6 +14,7 @@ import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GameUtils
 
 class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : BaseActor(x, y, s) {
+    private var tag: String = "ShockwaveBackground"
     private var vertexShaderCode: String
     private var fragmenterShaderCode: String
     var shaderProgram: ShaderProgram
@@ -25,6 +26,7 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
 
     init {
         if (texturePath.isNotBlank()) loadTexture(texturePath)
+        else Gdx.app.error(tag, "texturePath is blank!")
         setSize(BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT)
 
         ShaderProgram.pedantic = false
