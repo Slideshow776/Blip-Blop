@@ -112,6 +112,9 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 
 		// achievement increment
 		mAchievementClient.increment(getString(R.string.classicBronzeAchievement), 1);
+		mAchievementClient.increment(getString(R.string.classicBronzeAchievement), 1);
+		mAchievementClient.increment(getString(R.string.classicSilverAchievement), 1);
+		mAchievementClient.increment(getString(R.string.classicGoldeAchievement), 1);
 	}
 
 	public void showAchievements() {

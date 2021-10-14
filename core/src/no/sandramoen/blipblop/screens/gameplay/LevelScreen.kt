@@ -64,24 +64,7 @@ class LevelScreen : BaseScreen3D() {
     }
 
     override fun update(dt: Float) {
-        // register achievement increment at appropriate time intervals
-        if (!ball.pause &&
-                Gdx.app.type == Application.ApplicationType.Android &&
-                gameTime < BaseGame.biggestAchievementTime) {
-            gameTime += dt
-            if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
-                try {
-                    BaseGame.gps!!.incrementAchievements()
-                } catch (error: Error) {
-                    Gdx.app.error(tag, "Could not increment achievement, error: $error")
-                }
-                BaseGame.gameTime = gameTime
-                GameUtils.saveGameState()
-                incrementAchievement = false
-            } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
-                incrementAchievement = true
-            }
-        }
+        registerAchievements(dt)
 
         // player
         for (player in players) {
@@ -222,6 +205,26 @@ class LevelScreen : BaseScreen3D() {
             }
             ball.pause = true
             gameMenu.appear(delay = 0f)
+        }
+    }
+
+    private fun registerAchievements(dt: Float) {
+        if (!ball.pause &&
+                Gdx.app.type == Application.ApplicationType.Android &&
+                gameTime < BaseGame.biggestAchievementTime) {
+            gameTime += dt
+            if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
+                try {
+                    BaseGame.gps!!.incrementAchievements()
+                } catch (error: Error) {
+                    Gdx.app.error(tag, "Could not increment achievement, error: $error")
+                }
+                BaseGame.gameTime = gameTime
+                GameUtils.saveGameState()
+                incrementAchievement = false
+            } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
+                incrementAchievement = true
+            }
         }
     }
 }
