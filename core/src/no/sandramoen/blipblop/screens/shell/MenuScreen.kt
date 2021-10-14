@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import no.sandramoen.blipblop.actors.Background
+import no.sandramoen.blipblop.screens.gameplay.AdventureScreen
+import no.sandramoen.blipblop.screens.gameplay.ClassicScreen
 import no.sandramoen.blipblop.screens.gameplay.LevelScreen
 import no.sandramoen.blipblop.ui.MadeByLabel
 import no.sandramoen.blipblop.utils.BaseActor
@@ -24,7 +26,8 @@ class MenuScreen : BaseScreen() {
     private lateinit var tag: String
     private lateinit var title0: BaseActor
     private lateinit var madeByLabel: Label
-    private lateinit var startButton: TextButton
+    private lateinit var startClassicButton: TextButton
+    private lateinit var startAdventureButton: TextButton
     private lateinit var optionsButton: TextButton
     private lateinit var exitButton: TextButton
     private lateinit var titleBlipLabel: Label
@@ -83,16 +86,27 @@ class MenuScreen : BaseScreen() {
 
         // menu
         val buttonScale = .75f
-        startButton = TextButton("Start", BaseGame.textButtonStyle)
-        startButton.label.setFontScale(buttonScale)
-        startButton.addListener(object : ActorGestureListener() {
+        startClassicButton = TextButton("Classic", BaseGame.textButtonStyle)
+        startClassicButton.label.setFontScale(buttonScale)
+        startClassicButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
-                startButton.label.color = BaseGame.lightPink
-                startTheGame()
+                startClassicButton.label.color = BaseGame.lightPink
+                startClassicMode()
             }
         })
-        GameUtils.addTextButtonEnterExitEffect(startButton)
+        GameUtils.addTextButtonEnterExitEffect(startClassicButton)
+
+        startAdventureButton = TextButton("Adventure", BaseGame.textButtonStyle)
+        startAdventureButton.label.setFontScale(buttonScale)
+        startAdventureButton.addListener(object : ActorGestureListener() {
+            override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                startAdventureButton.label.color = BaseGame.lightPink
+                startAdventureMode()
+            }
+        })
+        GameUtils.addTextButtonEnterExitEffect(startAdventureButton)
 
         optionsButton = TextButton("Options", BaseGame.textButtonStyle)
         optionsButton.label.setFontScale(buttonScale)
@@ -106,7 +120,8 @@ class MenuScreen : BaseScreen() {
         GameUtils.addTextButtonEnterExitEffect(optionsButton)
 
         val buttonsTable = Table()
-        buttonsTable.add(startButton).row()
+        buttonsTable.add(startClassicButton).row()
+        buttonsTable.add(startAdventureButton).row()
         buttonsTable.add(optionsButton).row()
 
         // gui setup
@@ -143,15 +158,23 @@ class MenuScreen : BaseScreen() {
         if (keycode == Keys.BACK || keycode == Keys.ESCAPE || keycode == Keys.BACKSPACE)
             exitGame()
         else if (keycode == Keys.ENTER)
-            startTheGame()
+            startClassicMode()
         return false
     }
 
-    private fun startTheGame() {
+    private fun startClassicMode() {
         // screen transition
-        startButton.addAction(Actions.sequence(
+        startClassicButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
-                Actions.run { BaseGame.setActiveScreen(LevelScreen()) }
+                Actions.run { BaseGame.setActiveScreen(ClassicScreen()) }
+        ))
+    }
+
+    private fun startAdventureMode() {
+        // screen transition
+        startClassicButton.addAction(Actions.sequence(
+                Actions.delay(.5f),
+                Actions.run { BaseGame.setActiveScreen(AdventureScreen()) }
         ))
     }
 

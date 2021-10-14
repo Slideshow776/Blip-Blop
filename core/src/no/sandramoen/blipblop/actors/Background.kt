@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 
-class Background(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+class Background(x: Float, y: Float, s: Stage, fragmentShaderCode: String = BaseGame.backgroundShader.toString()) : BaseActor(x, y, s) {
     private val tag = "Background"
     private var vertexShaderCode: String
     private var fragmenterShaderCode: String
@@ -24,7 +24,7 @@ class Background(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         ShaderProgram.pedantic = false
         vertexShaderCode = BaseGame.defaultShader.toString()
-        fragmenterShaderCode = BaseGame.backgroundShader.toString()
+        fragmenterShaderCode = fragmentShaderCode
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
         if (!shaderProgram.isCompiled)
             Gdx.app.error("Background", "Shader compile error: " + shaderProgram.log)

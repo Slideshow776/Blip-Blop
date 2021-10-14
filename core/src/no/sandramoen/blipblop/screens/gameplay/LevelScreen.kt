@@ -17,19 +17,22 @@ import no.sandramoen.blipblop.utils.BaseScreen3D
 import no.sandramoen.blipblop.utils.GameUtils
 import kotlin.math.floor
 
-class LevelScreen : BaseScreen3D() {
-    private val tag = "LevelScreen"
-    private lateinit var ball: Ball
+open class LevelScreen : BaseScreen3D() {
+    var background: Background? = null
+    lateinit var ball: Ball
+
+    private var tag = "LevelScreen"
+    private var games = 1
+    private var incrementAchievement = false
+    private var gameTime = BaseGame.gameTime
     private lateinit var players: Array<Player>
     private lateinit var score: Score
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
-    private var games = 1
-    private var incrementAchievement = false
-    private var gameTime = BaseGame.gameTime
 
     override fun initialize() {
         // miscellaneous
+        tag = "LevelScreen"
         players = Array()
 
         // players
@@ -38,9 +41,6 @@ class LevelScreen : BaseScreen3D() {
 
         // ball
         ball = Ball(0f, 0f, 0f, mainStage3D)
-
-        // background
-        Background(0f, 0f, background2DStage)
 
         // middle line
         MiddleWhiteLine(0f, 0f, foreground2DStage)
@@ -68,15 +68,15 @@ class LevelScreen : BaseScreen3D() {
 
         // player
         for (player in players) {
-            if (ball.overlaps(player)) {
+            if (ball.overlaps(player) && !ball.pause) {
                 ball.playerImpact(player)
 
                 player.ballImpact()
 
-                if (player.bottomPlayer && players[1].enableAI) players[1].spawnShadowBall(ball)
-                else if (!player.bottomPlayer && players[0].enableAI) players[0].spawnShadowBall(
-                        ball
-                )
+                if (player.bottomPlayer && players[1].enableAI)
+                    players[1].spawnShadowBall(ball)
+                else if (!player.bottomPlayer && players[0].enableAI)
+                    players[0].spawnShadowBall(ball)
             }
         }
 
@@ -160,15 +160,22 @@ class LevelScreen : BaseScreen3D() {
         gameMenu.disappear()
     }
 
-    private fun reportHitRating() {
-        val player1HitRating = players[1].hit.toDouble() / (players[1].hit + players[1].miss)
-        val player0HitRating = players[0].hit.toDouble() / (players[0].hit + players[0].miss)
-        println("\nGames: $games")
-        println("top player: hit rating: ${String.format("%.2f", player1HitRating)}")
-        println("bottom player: hit rating: ${String.format("%.2f", player0HitRating)}")
+    open fun exitGame() {
+        // screen transition
+        if (ball.pause) {
+            // TODO: transition
+            BaseGame.setActiveScreen(MenuScreen())
+        } else {
+            for (player in players) {
+                player.pause = true
+                player.label.addAction(Actions.fadeOut(.125f))
+            }
+            ball.pause = true
+            gameMenu.appear(delay = 0f)
+        }
     }
 
-    private fun restart() {
+    open fun restart() {
         for (player in players) {
             player.score = 0
             player.enableAI = true
@@ -182,6 +189,14 @@ class LevelScreen : BaseScreen3D() {
         gameMenu.disappear()
     }
 
+    private fun reportHitRating() {
+        val player1HitRating = players[1].hit.toDouble() / (players[1].hit + players[1].miss)
+        val player0HitRating = players[0].hit.toDouble() / (players[0].hit + players[0].miss)
+        println("\nGames: $games")
+        println("top player: hit rating: ${String.format("%.2f", player1HitRating)}")
+        println("bottom player: hit rating: ${String.format("%.2f", player0HitRating)}")
+    }
+
     private fun gameOver() {
         for (player in players) {
             player.pause = true
@@ -191,21 +206,6 @@ class LevelScreen : BaseScreen3D() {
         gameMenu.appear()
         if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
         else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
-    }
-
-    private fun exitGame() {
-        // screen transition
-        if (ball.pause) {
-            // TODO: transition
-            BaseGame.setActiveScreen(MenuScreen())
-        } else {
-            for (player in players) {
-                player.pause = true
-                player.label.addAction(Actions.fadeOut(.125f))
-            }
-            ball.pause = true
-            gameMenu.appear(delay = 0f)
-        }
     }
 
     private fun registerAchievements(dt: Float) {

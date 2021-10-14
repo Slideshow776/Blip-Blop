@@ -1,5 +1,7 @@
 package no.sandramoen.blipblop
 
+import no.sandramoen.blipblop.screens.gameplay.AdventureScreen
+import no.sandramoen.blipblop.screens.gameplay.ClassicScreen
 import no.sandramoen.blipblop.screens.gameplay.LevelScreen
 import no.sandramoen.blipblop.screens.shell.MenuScreen
 import no.sandramoen.blipblop.screens.shell.OptionsScreen
@@ -12,9 +14,12 @@ class BlipBlopGame(googlePlayServices: GooglePlayServices?) : BaseGame(googlePla
     override fun create() {
         super.create()
 
-        setActiveScreen(SplashScreen()) // TODO: @release: change to this
-        // setActiveScreen(LevelScreen())
+        // setActiveScreen(SplashScreen()) // TODO: @release: change to this
+
         // setActiveScreen(MenuScreen())
         // setActiveScreen(OptionsScreen())
+
+        // setActiveScreen(ClassicScreen())
+        setActiveScreen(AdventureScreen())
     }
 }
