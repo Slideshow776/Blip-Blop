@@ -15,9 +15,8 @@ class AdventureScreen : LevelScreen() {
     private var tag = "AdventureScreen"
     private var time = 0f
     private var isChallenge = false
-    private val challengeFrequency = 6f
+    private val challengeFrequency = 5f + 1 // 1 is offset, so we can see the top number
 
-    // private lateinit var challenges: ArrayList<BaseActor>
     private var currentChallenge: BaseActor? = null
     private lateinit var veilChallenge: VeilChallenge
 
@@ -33,9 +32,6 @@ class AdventureScreen : LevelScreen() {
 
         // middle effect
         veilChallenge = VeilChallenge(50f, 50f, foreground2DStage)
-
-        // challenges = ArrayList()
-        // challenges.add(veilChallenge)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -71,16 +67,9 @@ class AdventureScreen : LevelScreen() {
                 challengeCountdownLabel.setText("$countDown")
         }
 
-        if (isChallenge && currentChallenge!!.finished) resetChallenge()
-
         // check if challenge is finished
-        /*for (challenge in challenges) {
-            if (challenge.finished && isChallenge) {
-                reset(challenge)
-            }
-        }*/
-
-        println(currentChallenge)
+        if (isChallenge && currentChallenge!!.finished)
+            resetChallenge()
     }
 
     override fun exitGame() {
@@ -100,13 +89,28 @@ class AdventureScreen : LevelScreen() {
 
     private fun giveRandomChallenge() {
         isChallenge = true
-        challengeTextLabel.addAction(Actions.fadeOut(1f))
-        challengeCountdownLabel.addAction(Actions.fadeOut(1f))
 
-        if (MathUtils.random(1, 1) == 1) {
-            veilChallenge.startChallenge()
-            currentChallenge = veilChallenge
+        when (MathUtils.random(1, 1)) {
+            1 -> {
+                veilChallenge.startChallenge()
+                currentChallenge = veilChallenge
+            }
         }
+
+        // labels
+        challengeTextLabel.addAction(
+                Actions.sequence(
+                        Actions.fadeOut(.25f),
+                        Actions.run { challengeTextLabel.setText(currentChallenge!!.title) },
+                        Actions.delay(1f),
+                        Actions.fadeIn(.5f),
+                        Actions.delay(1f),
+                        Actions.fadeOut(1f),
+                        Actions.delay(1f),
+                        Actions.run { challengeTextLabel.setText("Challenge!") }
+                )
+        )
+        challengeCountdownLabel.addAction(Actions.fadeOut(.25f))
     }
 
     private fun resetChallenge() {

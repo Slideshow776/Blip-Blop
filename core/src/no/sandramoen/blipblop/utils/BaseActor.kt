@@ -33,6 +33,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
     var animationHeight = height
     var collisionEnabled = true
     var finished = false
+    open var title = ""
 
     init {
         this.x = x

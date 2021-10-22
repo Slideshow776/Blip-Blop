@@ -7,7 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import no.sandramoen.blipblop.utils.BaseActor
 
 class VeilChallenge(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+    private var tag = "VeilChallenge"
     private var start = false
+    override var title = "Foggy Veil!"
 
     init {
         loadImage("whitePixel_BIG")
@@ -19,7 +21,7 @@ class VeilChallenge(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     override fun act(dt: Float) {
         super.act(dt)
-        if (start) {
+        if (start && !finished) {
             setSize(width, height + dt)
             setPosition(0f, 50f - height / 2)
 
@@ -30,19 +32,26 @@ class VeilChallenge(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     }
 
     fun startChallenge() {
-        addAction(Actions.alpha(1f, 2f, Interpolation.exp10Out))
+        addAction(Actions.sequence(
+                Actions.delay(3f),
+                Actions.alpha(1f, 2f, Interpolation.exp10Out))
+        )
         start = true
     }
 
     private fun endChallenge() {
-        finished = true
-        start = false
-        addAction(Actions.sequence(
-                Actions.fadeOut(1f),
-                Actions.run {
-                    setSize(100f, 25f)
-                    setPosition(0f, 50f - height / 2)
-                }
-        ))
+        if (actions.size == 0) {
+            addAction(Actions.sequence(
+                    Actions.fadeOut(1f),
+                    Actions.delay(4f),
+                    Actions.run {
+                        setSize(100f, 25f)
+                        setPosition(0f, 50f - height / 2)
+                        println("$tag: finished!")
+                        finished = true
+                        start = false
+                    }
+            ))
+        }
     }
 }
