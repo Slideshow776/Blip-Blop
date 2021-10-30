@@ -1,6 +1,5 @@
 package no.sandramoen.blipblop.actors
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Material
@@ -8,7 +7,6 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector3
-import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.Stage3D
@@ -19,14 +17,15 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
     BaseActor3D(x, y, z, s) {
     private val tag = "Ball"
     private val isShadowBall: Boolean = isShadowBall
+    private val ballSpeed = 12f
     private var shouldRunWallAnimation = false
     private var wallAnimationPercent = 0f
     private var shouldRunPlayerImpactAnimation = false
     private var playerImpactAnimationPercent = 0f
 
-    val ballSpeed = 12f
     var inPlay = true
     var pause = false
+    var index = 0
 
     init {
         // 3D model
@@ -56,8 +55,8 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
     }
 
     override fun act(dt: Float) {
-        if (pause) return
         super.act(dt)
+        if (pause) return
 
         // logic
         if (inPlay) {

@@ -71,11 +71,14 @@ class GameMenu(uiTable: Table) {
     }
 
     fun appear(delay: Float = 1f) {
+        restart.clearActions()
         restart.addAction(Actions.sequence(
             Actions.delay(delay),
             Actions.fadeIn(1.5f)
         ))
         restart.touchable = Touchable.enabled
+
+        mainMenu.clearActions()
         mainMenu.addAction(Actions.sequence(
             Actions.delay(delay),
             Actions.fadeIn(1.5f)
@@ -84,8 +87,11 @@ class GameMenu(uiTable: Table) {
     }
 
     fun disappear() {
+        restart.clearActions()
         restart.addAction(Actions.fadeOut(.25f))
         restart.touchable = Touchable.disabled
+        
+        mainMenu.clearActions()
         mainMenu.addAction(Actions.fadeOut(.25f))
         mainMenu.touchable = Touchable.disabled
     }

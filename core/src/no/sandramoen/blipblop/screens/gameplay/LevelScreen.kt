@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.MathUtils.ceil
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
@@ -20,6 +19,7 @@ import kotlin.math.floor
 open class LevelScreen : BaseScreen3D() {
     var background: Background? = null
     lateinit var ball: Ball
+    lateinit var balls: Array<Ball>
 
     private var tag = "LevelScreen"
     private var games = 1
@@ -33,14 +33,16 @@ open class LevelScreen : BaseScreen3D() {
     override fun initialize() {
         // miscellaneous
         tag = "LevelScreen"
-        players = Array()
 
         // players
+        players = Array()
         players.add(Player(s = mainStage3D, f = foreground2DStage, bottomPlayer = true))
         players.add(Player(s = mainStage3D, f = foreground2DStage, bottomPlayer = false))
 
         // ball
         ball = Ball(0f, 0f, 0f, mainStage3D)
+        balls = Array()
+        balls.add(ball)
 
         // middle line
         MiddleWhiteLine(0f, 0f, foreground2DStage)
@@ -68,47 +70,62 @@ open class LevelScreen : BaseScreen3D() {
 
         // player
         for (player in players) {
-            if (ball.overlaps(player) && !ball.pause) {
-                ball.playerImpact(player)
+            for (ball in balls) {
+                if (ball.overlaps(player) && !ball.pause) {
+                    ball.playerImpact(player)
 
-                player.ballImpact()
+                    player.ballImpact()
 
-                if (player.bottomPlayer && players[1].enableAI)
-                    players[1].spawnShadowBall(ball)
-                else if (!player.bottomPlayer && players[0].enableAI)
-                    players[0].spawnShadowBall(ball)
+                    if (player.bottomPlayer && players[1].enableAI)
+                        players[1].spawnShadowBall(ball)
+                    else if (!player.bottomPlayer && players[0].enableAI)
+                        players[0].spawnShadowBall(ball)
+                }
             }
         }
 
         // ball
-        if (!ball.inPlay) { // WARNING: this code should only run once
-            // score
-            if (ball.getPosition().y > 0f) {
-                players[0].score++
-                players[1].miss++
-            } else {
-                players[0].miss++
-                players[1].score++
-            }
-            score.setScore(players[1].score, players[0].score)
-            // reportHitRating()
-            games++
-            if (players[0].score >= 11) {
-                winner.playAnimation(top = false)
-                gameOver()
-            } else if (players[1].score >= 11) {
-                winner.playAnimation(top = true)
-                gameOver()
-            }
+        for (i in 0 until balls.size) {
+            if (!balls[i].inPlay && balls.size == 1) { // WARNING: this code should only run once
+                // score
+                if (balls[i].getPosition().y > 0f) {
+                    players[0].score++
+                    players[1].miss++
+                } else {
+                    players[0].miss++
+                    players[1].score++
+                }
+                score.setScore(players[1].score, players[0].score)
+                // reportHitRating()
+                games++
+                if (players[0].score >= 11) {
+                    winner.playAnimation(top = false)
+                    gameOver()
+                } else if (players[1].score >= 11) {
+                    winner.playAnimation(top = true)
+                    gameOver()
+                }
 
-            // ball
-            ball.reset()
-            players[0].aiShouldMoveToX = .5f
-            players[1].aiShouldMoveToX = .5f
+                // ball
+                balls[i].reset()
+                players[0].aiShouldMoveToX = .5f
+                players[1].aiShouldMoveToX = .5f
 
-            // shadow ball
-            if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
-            if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
+                // shadow ball
+                if (players[0].enableAI && balls[i].getVelocity().y < 0) players[0].spawnShadowBall(balls[i])
+                if (players[1].enableAI && balls[i].getVelocity().y > 0) players[1].spawnShadowBall(balls[i])
+            } else if (!balls[i].inPlay) { // in case of multi ball
+                var copy = Array<Ball>()
+                for (temp in balls) {
+                    if (temp.index == balls[i].index) {
+                        temp.remove()
+                    } else
+                        copy.add(temp)
+                }
+                balls = Array()
+                for (ball in copy) balls.add(ball)
+                return
+            }
         }
     }
 
@@ -125,7 +142,7 @@ open class LevelScreen : BaseScreen3D() {
     override fun keyDown(keycode: Int): Boolean {
         if (keycode == Keys.RIGHT || keycode == Keys.LEFT) players[0].disableAI()
         if (keycode == Keys.A || keycode == Keys.D) players[1].disableAI()
-        if (keycode == Keys.BACK || keycode == Keys.ESCAPE || keycode == Keys.BACKSPACE) exitGame()
+        if (keycode == Keys.BACK || keycode == Keys.ESCAPE || keycode == Keys.BACKSPACE) endGame()
         return false
     }
 
@@ -156,22 +173,24 @@ open class LevelScreen : BaseScreen3D() {
     override fun resume() {
         super.resume()
         for (player in players) player.pause = false
-        ball.pause = false
+        for (ball in balls) ball.pause = false
         gameMenu.disappear()
     }
 
-    open fun exitGame() {
+    open fun endGame() {
         // screen transition
-        if (ball.pause) {
-            // TODO: transition
-            BaseGame.setActiveScreen(MenuScreen())
-        } else {
-            for (player in players) {
-                player.pause = true
-                player.label.addAction(Actions.fadeOut(.125f))
+        for (ball in balls) {
+            if (ball.pause) {
+                // TODO: transition
+                BaseGame.setActiveScreen(MenuScreen())
+            } else {
+                for (player in players) {
+                    player.pause = true
+                    player.label.addAction(Actions.fadeOut(.125f))
+                }
+                ball.pause = true
+                gameMenu.appear(delay = 0f)
             }
-            ball.pause = true
-            gameMenu.appear(delay = 0f)
         }
     }
 
@@ -183,6 +202,10 @@ open class LevelScreen : BaseScreen3D() {
         }
         score.setScore(players[1].score, players[0].score)
         winner.resetAnimation()
+        for (ball in balls) ball.remove()
+        balls.clear()
+        ball = Ball(0f, 0f, 0f, mainStage3D)
+        balls.add(ball)
         ball.reset()
         if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
         if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
@@ -202,28 +225,30 @@ open class LevelScreen : BaseScreen3D() {
             player.pause = true
             player.label.addAction(Actions.fadeOut(.125f))
         }
-        ball.pause = true
+        for (ball in balls) ball.pause = true
         gameMenu.appear()
         if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
         else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
     }
 
     private fun registerAchievements(dt: Float) {
-        if (!ball.pause &&
-                Gdx.app.type == Application.ApplicationType.Android &&
-                gameTime < BaseGame.biggestAchievementTime) {
-            gameTime += dt
-            if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
-                try {
-                    BaseGame.gps!!.incrementAchievements()
-                } catch (error: Error) {
-                    Gdx.app.error(tag, "Could not increment achievement, error: $error")
+        for (ball in balls) {
+            if (!ball.pause &&
+                    Gdx.app.type == Application.ApplicationType.Android &&
+                    gameTime < BaseGame.biggestAchievementTime) {
+                gameTime += dt
+                if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
+                    try {
+                        BaseGame.gps!!.incrementAchievements()
+                    } catch (error: Error) {
+                        Gdx.app.error(tag, "Could not increment achievement, error: $error")
+                    }
+                    BaseGame.gameTime = gameTime
+                    GameUtils.saveGameState()
+                    incrementAchievement = false
+                } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
+                    incrementAchievement = true
                 }
-                BaseGame.gameTime = gameTime
-                GameUtils.saveGameState()
-                incrementAchievement = false
-            } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
-                incrementAchievement = true
             }
         }
     }

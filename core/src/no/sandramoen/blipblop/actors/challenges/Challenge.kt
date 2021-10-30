@@ -1,6 +1,5 @@
 package no.sandramoen.blipblop.actors.challenges
 
-import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import no.sandramoen.blipblop.utils.BaseActor
@@ -8,23 +7,28 @@ import no.sandramoen.blipblop.utils.BaseActor
 open class Challenge(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     private var tag = "Challenge"
     open var start = false
-    override var title = "Warning: Challenge have no title!"
+    open var pauseChallenge = false
+    override var title = "Warning: Challenge has no title!"
 
-    fun startChallenge() {
+    open fun startChallenge() {
         addAction(Actions.sequence(
                 Actions.delay(3f),
-                Actions.alpha(1f, 2f, Interpolation.exp10Out))
-        )
+                Actions.run { startChallengeLogic() }
+        ))
         start = true
     }
 
-    fun endChallenge() {
-        if (actions.size == 0) {
+    fun endChallenge(duration: Float = 1f) {
+        if (duration == 0f) {
+            resetChallengeLogic()
+            finished = true
+            start = false
+        } else if (actions.size == 0) {
             addAction(Actions.sequence(
                     Actions.fadeOut(1f),
                     Actions.delay(4f),
                     Actions.run {
-                        resetChallenge()
+                        resetChallengeLogic()
                         finished = true
                         start = false
                     }
@@ -32,5 +36,6 @@ open class Challenge(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         }
     }
 
-    open fun resetChallenge() {}
+    open fun startChallengeLogic() {}
+    open fun resetChallengeLogic() {}
 }

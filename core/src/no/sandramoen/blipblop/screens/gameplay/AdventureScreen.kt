@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.actors.Background
-import no.sandramoen.blipblop.actors.challenges.VeilChallenge
+import no.sandramoen.blipblop.actors.Ball
+import no.sandramoen.blipblop.actors.challenges.FoggyVeil
+import no.sandramoen.blipblop.actors.challenges.MultiBall
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 import kotlin.math.floor
@@ -15,11 +17,11 @@ class AdventureScreen : LevelScreen() {
     private var tag = "AdventureScreen"
     private var time = 0f
     private var isChallenge = false
+    private var currentChallenge: BaseActor? = null
     private val challengeFrequency = 5f + 1 // 1 is offset, so we can see the top number
 
-    private var currentChallenge: BaseActor? = null
-    private lateinit var veilChallenge: VeilChallenge
-
+    private lateinit var foggyVeil: FoggyVeil
+    private lateinit var multiBall: MultiBall
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -30,8 +32,9 @@ class AdventureScreen : LevelScreen() {
         // background
         background = Background(0f, 0f, background2DStage, "")
 
-        // middle effect
-        veilChallenge = VeilChallenge(50f, 50f, foreground2DStage)
+        // challenges
+        foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
+        multiBall = MultiBall(0f, 0f, foreground2DStage)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -68,32 +71,83 @@ class AdventureScreen : LevelScreen() {
         }
 
         // check if challenge is finished
-        if (isChallenge && currentChallenge!!.finished)
+        if (isChallenge && currentChallenge != null && currentChallenge!!.finished) {
+            println("$tag: loop => resetChallenge()")
             resetChallenge()
+        }
+
+        // challenges
+        if (currentChallenge == multiBall && multiBall.start && multiBall.shouldSpawn) {
+            multiBall.shouldSpawn = false
+
+            val ball0 = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
+            ball0.setMotionAngle(ball.getMotionAngle() + 30f)
+            ball0.setColor(Color.PINK) // TODO: remove?
+            ball0.index = 1
+            balls.add(ball0)
+
+            val ball1 = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
+            ball1.setMotionAngle(ball.getMotionAngle() - 30f)
+            ball1.setColor(Color.CYAN) // TODO: remove?
+            ball1.index = 2
+            balls.add(ball1)
+        }
+
+        if (balls.size == 1 && currentChallenge == multiBall)
+            multiBall.endChallenge()
     }
 
-    override fun exitGame() {
-        super.exitGame()
+    override fun endGame() {
+        super.endGame()
+        println("endGame()")
+        if (currentChallenge != null) {
+            foggyVeil.endChallenge(0f)
+            foggyVeil.isVisible = false
+            currentChallenge = null
+        }
         if (ball.pause) {
-            challengeTextLabel.addAction(Actions.fadeOut(.5f))
+            challengeTextLabel.clearActions()
+            challengeTextLabel.addAction(Actions.sequence(
+                    Actions.fadeOut(.5f),
+                    Actions.run { challengeTextLabel.setText("Challenge!") }
+            ))
+            challengeCountdownLabel.clearActions()
             challengeCountdownLabel.addAction(Actions.fadeOut(.5f))
         }
     }
 
     override fun restart() {
+        println("$tag: restart()")
         super.restart()
         challengeTextLabel.addAction(Actions.fadeIn(.5f))
         challengeCountdownLabel.addAction(Actions.fadeIn(.5f))
-        resetChallenge()
+        time = 0f
+        isChallenge = false
+
+        foggyVeil.remove()
+        multiBall.remove()
+        foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
+        multiBall = MultiBall(0f, 0f, foreground2DStage)
+        /*if (currentChallenge != null) {
+            currentChallenge!!.finished // TODO: is this right?
+            currentChallenge!!.pause = false
+            currentChallenge!!.setAnimationPaused(pause = false)
+            currentChallenge = null
+        }
+        resetChallenge()*/
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 1)) {
+        when (MathUtils.random(2, 2)) {
             1 -> {
-                veilChallenge.startChallenge()
-                currentChallenge = veilChallenge
+                foggyVeil.startChallenge()
+                currentChallenge = foggyVeil
+            }
+            2 -> {
+                multiBall.startChallenge()
+                currentChallenge = multiBall
             }
         }
 
@@ -114,10 +168,23 @@ class AdventureScreen : LevelScreen() {
     }
 
     private fun resetChallenge() {
+        println("$tag: resetChallenge()")
         isChallenge = false
-        currentChallenge!!.finished = false
+        if (currentChallenge != null)
+            currentChallenge!!.finished = false
         time = 0f
         challengeTextLabel.addAction(Actions.fadeIn(1f))
         challengeCountdownLabel.addAction(Actions.fadeIn(1f))
+
+        // end all challenges
+        /*foggyVeil.endChallenge(0f)
+        multiBall.endChallenge(0f)
+        if (balls.size > 1) { // multiball
+            for (ball in balls) ball.remove()
+            balls.clear()
+            ball = Ball(0f, 0f, 0f, mainStage3D)
+            balls.add(ball)
+        }*/
+        // println("$tag: resetChallenge(), currentChallenge!!.finished => ${currentChallenge!!.finished}")
     }
 }
