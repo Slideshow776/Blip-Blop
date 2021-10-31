@@ -20,7 +20,7 @@ class FoggyVeil(x: Float, y: Float, s: Stage) : Challenge(x, y, s) {
     override fun act(dt: Float) {
         super.act(dt)
         if (start && !finished) {
-            setSize(width, height + dt*4f)
+            setSize(width, height + dt)
             setPosition(0f, 50f - height / 2)
 
             if (height >= 50f) {

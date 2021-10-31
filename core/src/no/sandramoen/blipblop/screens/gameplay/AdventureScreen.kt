@@ -11,6 +11,7 @@ import no.sandramoen.blipblop.actors.challenges.FoggyVeil
 import no.sandramoen.blipblop.actors.challenges.MultiBall
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
+import no.sandramoen.blipblop.utils.GameUtils
 import kotlin.math.floor
 
 class AdventureScreen : LevelScreen() {
@@ -19,6 +20,7 @@ class AdventureScreen : LevelScreen() {
     private var isChallenge = false
     private var currentChallenge: BaseActor? = null
     private val challengeFrequency = 5f + 1 // 1 is offset, so we can see the top number
+    private var countDown: Int = 0
 
     private lateinit var foggyVeil: FoggyVeil
     private lateinit var multiBall: MultiBall
@@ -65,36 +67,18 @@ class AdventureScreen : LevelScreen() {
         if (time > challengeFrequency && !isChallenge) {
             giveRandomChallenge()
         } else {
-            val countDown = floor(challengeFrequency - time).toInt()
-            if (countDown >= 0)
-                challengeCountdownLabel.setText("$countDown")
+            countDown = floor(challengeFrequency - time).toInt()
+            if (countDown >= 0) challengeCountdownLabel.setText("$countDown")
         }
 
         // check if challenge is finished
         if (isChallenge && currentChallenge != null && currentChallenge!!.finished) {
-            println("$tag: loop => resetChallenge()")
             resetChallenge()
         }
 
         // challenges
-        if (currentChallenge == multiBall && multiBall.start && multiBall.shouldSpawn) {
-            multiBall.shouldSpawn = false
-
-            val ball0 = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
-            ball0.setMotionAngle(ball.getMotionAngle() + 30f)
-            ball0.setColor(Color.PINK) // TODO: remove?
-            ball0.index = 1
-            balls.add(ball0)
-
-            val ball1 = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
-            ball1.setMotionAngle(ball.getMotionAngle() - 30f)
-            ball1.setColor(Color.CYAN) // TODO: remove?
-            ball1.index = 2
-            balls.add(ball1)
-        }
-
-        if (balls.size == 1 && currentChallenge == multiBall)
-            multiBall.endChallenge()
+        if (currentChallenge == multiBall && multiBall.start && multiBall.shouldSpawn)
+            spawnBalls()
     }
 
     override fun endGame() {
@@ -140,7 +124,7 @@ class AdventureScreen : LevelScreen() {
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(2, 2)) {
+        when (MathUtils.random(1, 2)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -168,23 +152,25 @@ class AdventureScreen : LevelScreen() {
     }
 
     private fun resetChallenge() {
-        println("$tag: resetChallenge()")
         isChallenge = false
         if (currentChallenge != null)
             currentChallenge!!.finished = false
         time = 0f
         challengeTextLabel.addAction(Actions.fadeIn(1f))
         challengeCountdownLabel.addAction(Actions.fadeIn(1f))
+    }
 
-        // end all challenges
-        /*foggyVeil.endChallenge(0f)
-        multiBall.endChallenge(0f)
-        if (balls.size > 1) { // multiball
-            for (ball in balls) ball.remove()
-            balls.clear()
-            ball = Ball(0f, 0f, 0f, mainStage3D)
-            balls.add(ball)
-        }*/
-        // println("$tag: resetChallenge(), currentChallenge!!.finished => ${currentChallenge!!.finished}")
+    private fun spawnBalls() {
+        multiBall.shouldSpawn = false
+
+        val ball = balls[0]
+        val numBalls = MathUtils.random(3, 5)
+        for (i in 1 until numBalls) {
+            val newBall = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
+            newBall.setMotionAngle(ball.getMotionAngle() + MathUtils.random(-30f, 30f))
+            newBall.setColor(GameUtils.randomColor())
+            newBall.index = i
+            balls.add(newBall)
+        }
     }
 }

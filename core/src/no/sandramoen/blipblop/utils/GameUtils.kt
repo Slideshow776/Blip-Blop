@@ -3,6 +3,7 @@ package no.sandramoen.blipblop.utils
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -106,6 +107,41 @@ class GameUtils {
                     super.exit(event, x, y, pointer, toActor)
                 }
             })
+        }
+
+        fun randomColor(): Color {
+            when (MathUtils.random(28)) {
+                0 -> return Color.RED
+                1 -> return Color.BLUE
+                2 -> return Color.BROWN
+                3 -> return Color.CHARTREUSE
+                4 -> return Color.CORAL
+                5 -> return Color.CYAN
+                6 -> return Color.FIREBRICK
+                7 -> return Color.FOREST
+                8 -> return Color.GOLD
+                9 -> return Color.GOLDENROD
+                10 -> return Color.GREEN
+                11 -> return Color.LIME
+                12 -> return Color.MAGENTA
+                13 -> return Color.MAROON
+                14 -> return Color.NAVY
+                15 -> return Color.OLIVE
+                16 -> return Color.ORANGE
+                17 -> return Color.PINK
+                18 -> return Color.PURPLE
+                19 -> return Color.RED
+                20 -> return Color.ROYAL
+                21 -> return Color.SALMON
+                22 -> return Color.SCARLET
+                23 -> return Color.SKY
+                24 -> return Color.SLATE
+                25 -> return Color.TAN
+                26 -> return Color.TEAL
+                27 -> return Color.VIOLET
+                28 -> return Color.YELLOW
+            }
+            return Color.WHITE
         }
     }
 }
