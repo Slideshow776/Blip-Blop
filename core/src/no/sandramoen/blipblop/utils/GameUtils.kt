@@ -143,5 +143,11 @@ class GameUtils {
             }
             return Color.WHITE
         }
+
+        fun normalizeValues(x: Float, min: Float, max: Float) : Float {
+            val dividend = x - min
+            val divisor = max - min
+            return dividend / divisor
+        }
     }
 }

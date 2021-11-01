@@ -6,13 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.actors.Background
-import no.sandramoen.blipblop.actors.Ball
+import no.sandramoen.blipblop.actors.challenges.BlackHole
 import no.sandramoen.blipblop.actors.challenges.FoggyVeil
 import no.sandramoen.blipblop.actors.challenges.LongPlayer
 import no.sandramoen.blipblop.actors.challenges.MultiBall
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
-import no.sandramoen.blipblop.utils.GameUtils
 import kotlin.math.floor
 
 class AdventureScreen : LevelScreen() {
@@ -26,6 +25,7 @@ class AdventureScreen : LevelScreen() {
     private lateinit var foggyVeil: FoggyVeil
     private lateinit var multiBall: MultiBall
     private lateinit var longPlayer: LongPlayer
+    private lateinit var blackHole: BlackHole
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -38,8 +38,9 @@ class AdventureScreen : LevelScreen() {
 
         // challenges
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
-        multiBall = MultiBall(0f, 0f, foreground2DStage)
+        multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
+        blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -78,10 +79,6 @@ class AdventureScreen : LevelScreen() {
         if (isChallenge && currentChallenge != null && currentChallenge!!.finished) {
             resetChallenge()
         }
-
-        // challenges
-        if (currentChallenge == multiBall && multiBall.start && multiBall.shouldSpawn)
-            spawnBalls()
     }
 
     override fun endGame() {
@@ -89,6 +86,7 @@ class AdventureScreen : LevelScreen() {
         if (currentChallenge != null) {
             foggyVeil.endChallenge(0f)
             foggyVeil.isVisible = false
+            blackHole.endChallenge(0f)
             currentChallenge = null
         }
         if (ball.pause) {
@@ -103,7 +101,6 @@ class AdventureScreen : LevelScreen() {
     }
 
     override fun restart() {
-        println("$tag: restart()")
         super.restart()
         challengeTextLabel.addAction(Actions.fadeIn(.5f))
         challengeCountdownLabel.addAction(Actions.fadeIn(.5f))
@@ -113,15 +110,18 @@ class AdventureScreen : LevelScreen() {
         foggyVeil.remove()
         multiBall.remove()
         longPlayer.remove()
+        blackHole.endChallenge(0f)
+        blackHole.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
-        multiBall = MultiBall(0f, 0f, foreground2DStage)
+        multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
+        blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 3)) {
+        when (MathUtils.random(4, 4)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -133,6 +133,10 @@ class AdventureScreen : LevelScreen() {
             3 -> {
                 longPlayer.startChallenge()
                 currentChallenge = longPlayer
+            }
+            4 -> {
+                blackHole.startChallenge()
+                currentChallenge = blackHole
             }
         }
 
@@ -159,19 +163,5 @@ class AdventureScreen : LevelScreen() {
         time = 0f
         challengeTextLabel.addAction(Actions.fadeIn(1f))
         challengeCountdownLabel.addAction(Actions.fadeIn(1f))
-    }
-
-    private fun spawnBalls() {
-        multiBall.shouldSpawn = false
-
-        val ball = balls[0]
-        val numBalls = MathUtils.random(3, 5)
-        for (i in 1 until numBalls) {
-            val newBall = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
-            newBall.setMotionAngle(ball.getMotionAngle() + MathUtils.random(-25f, 25f))
-            newBall.setColor(GameUtils.randomColor())
-            newBall.index = i
-            balls.add(newBall)
-        }
     }
 }
