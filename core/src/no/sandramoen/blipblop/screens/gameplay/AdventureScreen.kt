@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.actors.Background
 import no.sandramoen.blipblop.actors.Ball
 import no.sandramoen.blipblop.actors.challenges.FoggyVeil
+import no.sandramoen.blipblop.actors.challenges.LongPlayer
 import no.sandramoen.blipblop.actors.challenges.MultiBall
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
@@ -24,6 +25,7 @@ class AdventureScreen : LevelScreen() {
 
     private lateinit var foggyVeil: FoggyVeil
     private lateinit var multiBall: MultiBall
+    private lateinit var longPlayer: LongPlayer
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -37,6 +39,7 @@ class AdventureScreen : LevelScreen() {
         // challenges
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage)
+        longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -83,7 +86,6 @@ class AdventureScreen : LevelScreen() {
 
     override fun endGame() {
         super.endGame()
-        println("endGame()")
         if (currentChallenge != null) {
             foggyVeil.endChallenge(0f)
             foggyVeil.isVisible = false
@@ -110,21 +112,16 @@ class AdventureScreen : LevelScreen() {
 
         foggyVeil.remove()
         multiBall.remove()
+        longPlayer.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage)
-        /*if (currentChallenge != null) {
-            currentChallenge!!.finished // TODO: is this right?
-            currentChallenge!!.pause = false
-            currentChallenge!!.setAnimationPaused(pause = false)
-            currentChallenge = null
-        }
-        resetChallenge()*/
+        longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 2)) {
+        when (MathUtils.random(1, 3)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -132,6 +129,10 @@ class AdventureScreen : LevelScreen() {
             2 -> {
                 multiBall.startChallenge()
                 currentChallenge = multiBall
+            }
+            3 -> {
+                longPlayer.startChallenge()
+                currentChallenge = longPlayer
             }
         }
 
@@ -167,7 +168,7 @@ class AdventureScreen : LevelScreen() {
         val numBalls = MathUtils.random(3, 5)
         for (i in 1 until numBalls) {
             val newBall = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
-            newBall.setMotionAngle(ball.getMotionAngle() + MathUtils.random(-30f, 30f))
+            newBall.setMotionAngle(ball.getMotionAngle() + MathUtils.random(-25f, 25f))
             newBall.setColor(GameUtils.randomColor())
             newBall.index = i
             balls.add(newBall)

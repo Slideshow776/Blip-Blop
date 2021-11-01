@@ -25,7 +25,7 @@ open class LevelScreen : BaseScreen3D() {
     private var games = 1
     private var incrementAchievement = false
     private var gameTime = BaseGame.gameTime
-    private lateinit var players: Array<Player>
+    lateinit var players: Array<Player>
     private lateinit var score: Score
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
