@@ -24,6 +24,7 @@ class AdventureScreen : LevelScreen() {
     private lateinit var longPlayer: LongPlayer
     private lateinit var blackHole: BlackHole
     private lateinit var portals: Portals
+    private lateinit var bricks: Bricks
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -40,6 +41,7 @@ class AdventureScreen : LevelScreen() {
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
+        bricks = Bricks(0f, 0f, foreground2DStage, balls, mainStage3D)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -87,6 +89,7 @@ class AdventureScreen : LevelScreen() {
             foggyVeil.isVisible = false
             blackHole.endChallenge(0f)
             portals.endChallenge(0f)
+            bricks.endChallenge(0f)
             currentChallenge = null
         }
         if (ball.pause) {
@@ -113,17 +116,19 @@ class AdventureScreen : LevelScreen() {
         blackHole.endChallenge(0f)
         blackHole.remove()
         portals.remove()
+        bricks.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
+        bricks = Bricks(0f, 0f, foreground2DStage, balls, mainStage3D)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 5)) {
+        when (MathUtils.random(1, 6)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -143,6 +148,10 @@ class AdventureScreen : LevelScreen() {
             5 -> {
                 portals.startChallenge()
                 currentChallenge = portals
+            }
+            6 -> {
+                bricks.startChallenge()
+                currentChallenge = bricks
             }
         }
 

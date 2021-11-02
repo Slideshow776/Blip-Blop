@@ -65,6 +65,10 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var win02Sound: Sound? = null
         var portal1Sound: Sound? = null
         var portal2Sound: Sound? = null
+        var brickExplosionSound0: Sound? = null
+        var brickExplosionSound1: Sound? = null
+        var brickExplosionSound2: Sound? = null
+        var brickExplosionSound3: Sound? = null
         var gameTime: Float = 0f
 
         // game state
@@ -109,6 +113,10 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
             assetManager.load("audio/sound/portal1.wav", Sound::class.java)
             assetManager.load("audio/sound/portal2.wav", Sound::class.java)
+            assetManager.load("audio/sound/explosion0.wav", Sound::class.java)
+            assetManager.load("audio/sound/explosion1.wav", Sound::class.java)
+            assetManager.load("audio/sound/explosion2.wav", Sound::class.java)
+            assetManager.load("audio/sound/explosion3.wav", Sound::class.java)
 
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
@@ -142,6 +150,10 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             win02Sound = assetManager.get("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
             portal1Sound = assetManager.get("audio/sound/portal1.wav", Sound::class.java)
             portal2Sound = assetManager.get("audio/sound/portal2.wav", Sound::class.java)
+            brickExplosionSound0 = assetManager.get("audio/sound/explosion0.wav", Sound::class.java)
+            brickExplosionSound1 = assetManager.get("audio/sound/explosion1.wav", Sound::class.java)
+            brickExplosionSound2 = assetManager.get("audio/sound/explosion2.wav", Sound::class.java)
+            brickExplosionSound3 = assetManager.get("audio/sound/explosion3.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()

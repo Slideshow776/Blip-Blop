@@ -48,7 +48,6 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
 
             for (ball in balls) {
                 if (ball.overlaps(blackHoleEntity)) {
-                    println("proximity alert! ${ball.getPosition().x - blackHoleEntity.getPosition().x}")
                     ball.setMotionAngle(
                             ball.getMotionAngle() + (ball.getPosition().x - blackHoleEntity.getPosition().x) * 1f
                     )
