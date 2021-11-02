@@ -139,6 +139,22 @@ These three resources helped me to a great extent implementing GPS.
 * The SHA-1 fingerprint is your general android development environment key found in `C:\Users\Sandra Moen\.android\debug.keystore`. To get the SHA-1 run `$keytool -list -v -keystore .\debug.keystore`, this is to be used in both `https://play.google.com/console` and `https://console.cloud.google.com`.
 * How to implement [achievements in Android games](https://developers.google.com/games/services/android/achievements).
 
-For project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
+## LibGDX sound
+I haven't seen this until now, you can change the pitch and pan when playing audio.
+```
+long play(float volume,
+          float pitch,
+          float pan)
+Plays the sound. If the sound is already playing, it will be played again, concurrently.
+Parameters:
+volume - the volume in the range [0,1]
+pitch - the pitch multiplier, 1 == default, >1 == faster, <1 == slower, the value has to be between 0.5 and 2.0
+pan - panning in the range -1 (full left) to 1 (full right). 0 is center position.
+Returns:
+the id of the sound instance if successful, or -1 on failure.
+```
+Which means you can do something like this: `explosionSound.play(soundVolume, MathUtils.random(0f, 2f), 0f)`, which produces alot of different explosion sounds from just one audio file.
+
+For other project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
 
 [Go back to the top](#blip-blop).
