@@ -63,6 +63,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var gameStartSound: Sound? = null
         var win01Sound: Sound? = null
         var win02Sound: Sound? = null
+        var portal1Sound: Sound? = null
+        var portal2Sound: Sound? = null
         var gameTime: Float = 0f
 
         // game state
@@ -105,6 +107,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/gameStart.wav", Sound::class.java)
             assetManager.load("audio/sound/270331__littlerobotsoundfactory__jingle-achievement-00.wav", Sound::class.java)
             assetManager.load("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
+            assetManager.load("audio/sound/portal1.wav", Sound::class.java)
+            assetManager.load("audio/sound/portal2.wav", Sound::class.java)
 
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
@@ -136,6 +140,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             gameStartSound = assetManager.get("audio/sound/gameStart.wav", Sound::class.java)
             win01Sound = assetManager.get("audio/sound/270331__littlerobotsoundfactory__jingle-achievement-00.wav", Sound::class.java)
             win02Sound = assetManager.get("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
+            portal1Sound = assetManager.get("audio/sound/portal1.wav", Sound::class.java)
+            portal2Sound = assetManager.get("audio/sound/portal2.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()

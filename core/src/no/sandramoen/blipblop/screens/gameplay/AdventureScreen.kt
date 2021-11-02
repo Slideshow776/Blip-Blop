@@ -6,10 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.actors.Background
-import no.sandramoen.blipblop.actors.challenges.BlackHole
-import no.sandramoen.blipblop.actors.challenges.FoggyVeil
-import no.sandramoen.blipblop.actors.challenges.LongPlayer
-import no.sandramoen.blipblop.actors.challenges.MultiBall
+import no.sandramoen.blipblop.actors.challenges.*
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 import kotlin.math.floor
@@ -26,6 +23,7 @@ class AdventureScreen : LevelScreen() {
     private lateinit var multiBall: MultiBall
     private lateinit var longPlayer: LongPlayer
     private lateinit var blackHole: BlackHole
+    private lateinit var portals: Portals
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -41,6 +39,7 @@ class AdventureScreen : LevelScreen() {
         multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
+        portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -87,6 +86,7 @@ class AdventureScreen : LevelScreen() {
             foggyVeil.endChallenge(0f)
             foggyVeil.isVisible = false
             blackHole.endChallenge(0f)
+            portals.endChallenge(0f)
             currentChallenge = null
         }
         if (ball.pause) {
@@ -112,16 +112,18 @@ class AdventureScreen : LevelScreen() {
         longPlayer.remove()
         blackHole.endChallenge(0f)
         blackHole.remove()
+        portals.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
+        portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(4, 4)) {
+        when (MathUtils.random(1, 5)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -137,6 +139,10 @@ class AdventureScreen : LevelScreen() {
             4 -> {
                 blackHole.startChallenge()
                 currentChallenge = blackHole
+            }
+            5 -> {
+                portals.startChallenge()
+                currentChallenge = portals
             }
         }
 

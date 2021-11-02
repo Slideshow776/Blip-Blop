@@ -106,7 +106,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         setSpeed(ballSpeed) // pixels / seconds
 
         collisionEnabled = false
-        Timer("EnablingCollision", false).schedule(500) { collisionEnabled = true }
+        Timer("EnablingCollision", false).schedule(250) { collisionEnabled = true }
         shouldRunPlayerImpactAnimation = true
     }
 

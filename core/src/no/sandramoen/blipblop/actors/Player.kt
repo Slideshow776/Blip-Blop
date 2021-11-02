@@ -29,8 +29,8 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
     private var enableAIWithDelay = false
     private var enableAiWithDelayCount = 0f
     private var enableAiWithDelayFrequency = 5f
-    private var topPlayerYPosition = 5.3f
-    private var bottomPlayerYPosition = -5.3f
+    private var topPlayerYPosition = 5.1f
+    private var bottomPlayerYPosition = -5.1f
     private var normalizedXPosition = .5f
     private var shadowBall: Ball
     private var shouldRunBallImpactAnimation = false
