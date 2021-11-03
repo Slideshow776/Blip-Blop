@@ -25,7 +25,7 @@ TODO:
     The game may be played solo, or with a friend sharing the same device. The game will also be integrated with `Google Play Services in Android, which only features some simple achievements.
         
     * **Describe the genre:**
-    The game is a table tennis–themed arcade sports video game.    
+    The game is a table tennis-themed arcade sports video game.    
     
     * **What is the target audience?**
     The game is appropriate for children and older and is thought to be enjoyed by casual gamers who want to share a game with their friends. The target platform is Android phones, but it will also be available for free on desktop.
@@ -62,7 +62,7 @@ TODO:
         Desktop menu controls are decided by the _mouse_, the `ESC` and `BACK` keys may also be used for navigation. Gameplay will be controlled with the `A` and `D` keys for the top player, and the `Left` and `Right` keys for the bottom player. The desktop will also feature controller support.
     
     * **What type of proficiency will the player need to develop to become proficient at the game?**
-    Players will need to outsmart the opponent by shooting the ball to where it is most likely to not be caught. This requires a basic understanding of the game's physics and mechanics. Letting the ball hit the edges of the paddle generates the most unpredictable angles as well as increasing the risk of missing the ball entirely.
+    Players will need to outsmart the opponent by shooting the ball to where it is most likely to not be caught. This requires a basic understanding of the game's physics and mechanics. Letting the ball hit the edges of the paddle generates the most unpredictable angles as well as increases the risk of missing the ball entirely.
         
     * **What gameplay data is displayed during the game?**
     Each players' score is shown on the right side of their own space in a tilted fashion for all to read equally.    
@@ -72,7 +72,7 @@ TODO:
     The options screen features control over audio and music, as well as in Android the ability to turn on/off `Google Play Services.
     
     * **How does the player interact with the game at the software level?**
-    The players may elect to leave the game by not playing, this will prompt the A.I to continue to play for them. The player may quit the game or navigate by the operating system controls `BACK` button, or `ESC` in desktop.
+    The players may elect to leave the game by not playing, this will prompt the A.I to continue to play for them. The player may quit the game or navigate by the operating system controls `BACK` button, or `ESC` on desktop.
     
 4. Aesthetics: the visual, audio, narrative, and psychological aspects of the game
     * **Describe the style and feel of the game.**
@@ -132,13 +132,29 @@ TODO:
 
 # Project comments
 ## Google Play Services (GPS)
-These three resources helped me to a great extent implementing GPS.
+These three resources helped me to a great extent implement GPS.
 * Leaderboards in Android Game: https://developers.google.com/games/services/android/leaderboards
 * Google Play Services for Libgdx: https://stackoverflow.com/questions/48135531/signinsilently-failure-when-trying-to-sign-in-to-googleplay-game-services-w/48135617#48135617
 * Implementing and using an interface for cross-platform usability: https://github.com/libgdx/libgdx/wiki/Interfacing-with-platform-specific-code
 * The SHA-1 fingerprint is your general android development environment key found in `C:\Users\Sandra Moen\.android\debug.keystore`. To get the SHA-1 run `$keytool -list -v -keystore .\debug.keystore`, this is to be used in both `https://play.google.com/console` and `https://console.cloud.google.com`.
 * How to implement [achievements in Android games](https://developers.google.com/games/services/android/achievements).
 
-For project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
+## LibGDX sound
+I haven't seen this until now, you can change the pitch and pan when playing audio.
+```
+long play(float volume,
+          float pitch,
+          float pan)
+Plays the sound. If the sound is already playing, it will be played again, concurrently.
+Parameters:
+volume - the volume in the range [0,1]
+pitch - the pitch multiplier, 1 == default, >1 == faster, <1 == slower, the value has to be between 0.5 and 2.0
+pan - panning in the range -1 (full left) to 1 (full right). 0 is center position.
+Returns:
+the id of the sound instance if successful, or -1 on failure.
+```
+This means you can do something like this: `explosionSound.play(soundVolume, MathUtils.random(0f, 2f), 0f)`, which produces a lot of different explosion sounds from just one audio file.
+
+For other project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
 
 [Go back to the top](#blip-blop).
