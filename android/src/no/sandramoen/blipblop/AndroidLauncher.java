@@ -104,7 +104,7 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 		startSignInIntent();
 	}
 
-	public void incrementAchievements() {
+	public void incrementClassicAchievements() {
 		// popup view
 		GamesClient gamesClient = Games.getGamesClient(AndroidLauncher.this, mGoogleSignInAccount);
 		gamesClient.setGravityForPopups(Gravity.CENTER_HORIZONTAL);
@@ -112,9 +112,20 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 
 		// achievement increment
 		mAchievementClient.increment(getString(R.string.classicBronzeAchievement), 1);
-		mAchievementClient.increment(getString(R.string.classicBronzeAchievement), 1);
 		mAchievementClient.increment(getString(R.string.classicSilverAchievement), 1);
 		mAchievementClient.increment(getString(R.string.classicGoldeAchievement), 1);
+	}
+
+	public void incrementChallengeAchievements() {
+		// popup view
+		GamesClient gamesClient = Games.getGamesClient(AndroidLauncher.this, mGoogleSignInAccount);
+		gamesClient.setGravityForPopups(Gravity.CENTER_HORIZONTAL);
+		gamesClient.setViewForPopups(((AndroidGraphics) AndroidLauncher.this.getGraphics()).getView());
+
+		// achievement increment
+		mAchievementClient.increment(getString(R.string.challengeBronzeAchievement), 1);
+		mAchievementClient.increment(getString(R.string.challengeSilverAchievement), 1);
+		mAchievementClient.increment(getString(R.string.challengeGoldeAchievement), 1);
 	}
 
 	public void showAchievements() {

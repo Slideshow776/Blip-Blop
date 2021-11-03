@@ -18,6 +18,7 @@ import kotlin.math.floor
 
 open class LevelScreen : BaseScreen3D() {
     var background: Background? = null
+    open var classicMode = true
     lateinit var ball: Ball
     lateinit var balls: Array<Ball>
 
@@ -66,7 +67,7 @@ open class LevelScreen : BaseScreen3D() {
     }
 
     override fun update(dt: Float) {
-        registerAchievements(dt)
+        registerClassicAchievements(dt)
 
         // player
         for (player in players) {
@@ -231,7 +232,7 @@ open class LevelScreen : BaseScreen3D() {
         else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
     }
 
-    private fun registerAchievements(dt: Float) {
+    private fun registerClassicAchievements(dt: Float) {
         for (ball in balls) {
             if (!ball.pause &&
                     Gdx.app.type == Application.ApplicationType.Android &&
@@ -239,7 +240,8 @@ open class LevelScreen : BaseScreen3D() {
                 gameTime += dt
                 if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
                     try {
-                        BaseGame.gps!!.incrementAchievements()
+                        if (classicMode) BaseGame.gps!!.incrementClassicAchievements()
+                        else BaseGame.gps!!.incrementChallengeAchievements()
                     } catch (error: Error) {
                         Gdx.app.error(tag, "Could not increment achievement, error: $error")
                     }

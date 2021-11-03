@@ -32,6 +32,7 @@ class ChallengeScreen : LevelScreen() {
     override fun initialize() {
         super.initialize()
         tag = "ChallengeScreen"
+        classicMode = false // for achievements..
 
         // background
         background = Background(0f, 0f, background2DStage, "")

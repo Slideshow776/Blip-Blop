@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Blip Blop</string>
+
     <string name="classicBronzeAchievement">CgkItYCk14wGEAIQAg</string>
     <string name="classicSilverAchievement">CgkItYCk14wGEAIQBA</string>
     <string name="classicGoldeAchievement">CgkItYCk14wGEAIQAw</string>
+
+    <string name="challengeBronzeAchievement">CgkItYCk14wGEAIQBQ</string>
+    <string name="challengeSilverAchievement">CgkItYCk14wGEAIQBg</string>
+    <string name="challengeGoldeAchievement">CgkItYCk14wGEAIQBw</string>
 
 </resources>
