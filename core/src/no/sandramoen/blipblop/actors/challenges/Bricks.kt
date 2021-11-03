@@ -50,12 +50,7 @@ class Bricks(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : C
                         if (ball.overlaps(brick)) {
                             ball.preventOverlap(brick)
                             ball.setVelocity(Vector2(ball.getVelocity().x, ball.getVelocity().y * -1))
-                            when (MathUtils.random(0, 3)) {
-                                0 -> BaseGame.brickExplosionSound0!!.play(BaseGame.soundVolume)
-                                1 -> BaseGame.brickExplosionSound1!!.play(BaseGame.soundVolume)
-                                2 -> BaseGame.brickExplosionSound2!!.play(BaseGame.soundVolume)
-                                3 -> BaseGame.brickExplosionSound3!!.play(BaseGame.soundVolume)
-                            }
+                            BaseGame.brickExplosionSound!!.play(BaseGame.soundVolume, MathUtils.random(0f, 2f), 0f)
                             brick.setPosition(Vector3(50f, 50f, 50f))
                             brick.remove()
                         }

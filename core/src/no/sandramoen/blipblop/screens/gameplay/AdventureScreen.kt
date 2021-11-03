@@ -25,6 +25,7 @@ class AdventureScreen : LevelScreen() {
     private lateinit var blackHole: BlackHole
     private lateinit var portals: Portals
     private lateinit var bricks: Bricks
+    private lateinit var bubbles: Bubbles
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -42,6 +43,7 @@ class AdventureScreen : LevelScreen() {
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
         bricks = Bricks(0f, 0f, foreground2DStage, balls, mainStage3D)
+        bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -90,6 +92,7 @@ class AdventureScreen : LevelScreen() {
             blackHole.endChallenge(0f)
             portals.endChallenge(0f)
             bricks.endChallenge(0f)
+            bubbles.endChallenge(0f)
             currentChallenge = null
         }
         if (ball.pause) {
@@ -115,20 +118,25 @@ class AdventureScreen : LevelScreen() {
         longPlayer.remove()
         blackHole.endChallenge(0f)
         blackHole.remove()
+        portals.endChallenge(0f)
         portals.remove()
+        bricks.endChallenge(0f)
         bricks.remove()
+        bubbles.endChallenge(0f)
+        bubbles.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
         bricks = Bricks(0f, 0f, foreground2DStage, balls, mainStage3D)
+        bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 6)) {
+        when (MathUtils.random(1, 7)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -152,6 +160,10 @@ class AdventureScreen : LevelScreen() {
             6 -> {
                 bricks.startChallenge()
                 currentChallenge = bricks
+            }
+            7 -> {
+                bubbles.startChallenge()
+                currentChallenge = bubbles
             }
         }
 

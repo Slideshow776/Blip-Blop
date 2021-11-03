@@ -91,7 +91,7 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
     }
 
     fun calculatePosition(x: Float, bottomPlayer: Boolean) {
-        val yPosition = if (bottomPlayer) 3f else 93f
+        val yPosition = if (bottomPlayer) 4f else 92f
         setPosition(x * 100 - width / 2, yPosition)
 
         if (this.x < 1) this.x = 1f
