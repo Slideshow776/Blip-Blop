@@ -1,6 +1,7 @@
 package no.sandramoen.blipblop
 
 import no.sandramoen.blipblop.screens.gameplay.ChallengeScreen
+import no.sandramoen.blipblop.screens.shell.SplashScreen
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GooglePlayServices
 

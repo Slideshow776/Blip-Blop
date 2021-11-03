@@ -242,8 +242,8 @@ class OptionsScreen : BaseScreen() {
         table.row()
         table.add(MadeByLabel().label).padBottom(Gdx.graphics.height * .01f)
         table.setFillParent(true)
-        uiTable.add(table).fill().expand()
         // table.debug = true
+        uiTable.add(table).fill().expand()
 
         // screen transition
     }

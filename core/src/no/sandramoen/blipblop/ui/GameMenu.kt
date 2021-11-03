@@ -59,7 +59,7 @@ class GameMenu(uiTable: Table) {
             table.setOrigin(Gdx.graphics.width * .25f / 2, table.prefHeight / 2)
             table.rotateBy(-90f)
 
-            uiTable.add(table).width(Gdx.graphics.width * .25f).padLeft(Gdx.graphics.width * .25f)
+            uiTable.add(table).width(Gdx.graphics.width * .25f).padLeft(Gdx.graphics.width * .4f).padRight(Gdx.graphics.width * .1f)
         } else if (Gdx.app.type == Application.ApplicationType.Desktop) {
             table.add(restart)
             table.row()
@@ -67,7 +67,7 @@ class GameMenu(uiTable: Table) {
 
             uiTable.add(table).width(Gdx.graphics.width * .25f).expandX().padLeft(Gdx.graphics.width * .25f)
         }
-        // scoreTable.debug = true
+        // table.debug = true
     }
 
     fun appear(delay: Float = 1f) {

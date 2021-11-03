@@ -1,7 +1,10 @@
 package no.sandramoen.blipblop.screens.gameplay
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -48,20 +51,47 @@ class ChallengeScreen : LevelScreen() {
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
-        challengeTextLabel.setFontScale(.1f)
         challengeTextLabel.color = Color.GOLDENROD
-        challengeTextLabel.setSize(100f, 10f)
-        challengeTextLabel.setAlignment(Align.center)
-        challengeTextLabel.setPosition(0f, 52.5f - challengeTextLabel.height / 2)
-        foreground2DStage.addActor(challengeTextLabel)
+        if (Gdx.app.type == Application.ApplicationType.Android) {
+            challengeTextLabel.setFontScale(.055f)
+
+            val challengeTextGroup = Group()
+            challengeTextGroup.isTransform = true
+            challengeTextGroup.rotateBy(-90f)
+            challengeTextGroup.addActor(challengeTextLabel)
+            challengeTextGroup.setOrigin(Align.center)
+            challengeTextGroup.setPosition(20f, 70f)
+
+            foreground2DStage.addActor(challengeTextGroup)
+        } else if (Gdx.app.type == Application.ApplicationType.Desktop) {
+            challengeTextLabel.setFontScale(.1f)
+            challengeTextLabel.setSize(100f, 10f)
+            challengeTextLabel.setAlignment(Align.center)
+            challengeTextLabel.setPosition(0f, 52.5f - challengeTextLabel.height / 2)
+            foreground2DStage.addActor(challengeTextLabel)
+        }
 
         challengeCountdownLabel = Label("$challengeFrequency", BaseGame.labelStyle)
-        challengeCountdownLabel.setFontScale(.1f)
         challengeCountdownLabel.color = Color.GOLDENROD
-        challengeCountdownLabel.setSize(100f, 10f)
-        challengeCountdownLabel.setAlignment(Align.center)
-        challengeCountdownLabel.setPosition(0f, 47.5f - challengeCountdownLabel.height / 2)
-        foreground2DStage.addActor(challengeCountdownLabel)
+        if (Gdx.app.type == Application.ApplicationType.Android) {
+
+            challengeCountdownLabel.setFontScale(.055f)
+
+            val challengeCountdownGroup = Group()
+            challengeCountdownGroup.isTransform = true
+            challengeCountdownGroup.rotateBy(-90f)
+            challengeCountdownGroup.addActor(challengeCountdownLabel)
+            challengeCountdownGroup.setOrigin(Align.center)
+            challengeCountdownGroup.setPosition(10f, 52f)
+
+            foreground2DStage.addActor(challengeCountdownGroup)
+        } else if (Gdx.app.type == Application.ApplicationType.Desktop) {
+            challengeCountdownLabel.setFontScale(.1f)
+            challengeCountdownLabel.setPosition(0f, 42f)
+            challengeCountdownLabel.setSize(100f, 10f)
+            challengeCountdownLabel.setAlignment(Align.center)
+            foreground2DStage.addActor(challengeCountdownLabel)
+        }
     }
 
     override fun update(dt: Float) {
