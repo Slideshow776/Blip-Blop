@@ -13,9 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import no.sandramoen.blipblop.actors.Background
-import no.sandramoen.blipblop.screens.gameplay.AdventureScreen
+import no.sandramoen.blipblop.screens.gameplay.ChallengeScreen
 import no.sandramoen.blipblop.screens.gameplay.ClassicScreen
-import no.sandramoen.blipblop.screens.gameplay.LevelScreen
 import no.sandramoen.blipblop.ui.MadeByLabel
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
@@ -27,7 +26,7 @@ class MenuScreen : BaseScreen() {
     private lateinit var title0: BaseActor
     private lateinit var madeByLabel: Label
     private lateinit var startClassicButton: TextButton
-    private lateinit var startAdventureButton: TextButton
+    private lateinit var startChallengeButton: TextButton
     private lateinit var optionsButton: TextButton
     private lateinit var exitButton: TextButton
     private lateinit var titleBlipLabel: Label
@@ -97,16 +96,16 @@ class MenuScreen : BaseScreen() {
         })
         GameUtils.addTextButtonEnterExitEffect(startClassicButton)
 
-        startAdventureButton = TextButton("Adventure", BaseGame.textButtonStyle)
-        startAdventureButton.label.setFontScale(buttonScale)
-        startAdventureButton.addListener(object : ActorGestureListener() {
+        startChallengeButton = TextButton("Challenge", BaseGame.textButtonStyle)
+        startChallengeButton.label.setFontScale(buttonScale)
+        startChallengeButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
-                startAdventureButton.label.color = BaseGame.lightPink
-                startAdventureMode()
+                startChallengeButton.label.color = BaseGame.lightPink
+                startChallengeMode()
             }
         })
-        GameUtils.addTextButtonEnterExitEffect(startAdventureButton)
+        GameUtils.addTextButtonEnterExitEffect(startChallengeButton)
 
         optionsButton = TextButton("Options", BaseGame.textButtonStyle)
         optionsButton.label.setFontScale(buttonScale)
@@ -121,7 +120,7 @@ class MenuScreen : BaseScreen() {
 
         val buttonsTable = Table()
         buttonsTable.add(startClassicButton).row()
-        buttonsTable.add(startAdventureButton).row()
+        buttonsTable.add(startChallengeButton).row()
         buttonsTable.add(optionsButton).row()
 
         // gui setup
@@ -170,11 +169,11 @@ class MenuScreen : BaseScreen() {
         ))
     }
 
-    private fun startAdventureMode() {
+    private fun startChallengeMode() {
         // screen transition
         startClassicButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
-                Actions.run { BaseGame.setActiveScreen(AdventureScreen()) }
+                Actions.run { BaseGame.setActiveScreen(ChallengeScreen()) }
         ))
     }
 

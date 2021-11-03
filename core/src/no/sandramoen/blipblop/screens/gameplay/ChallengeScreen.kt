@@ -11,8 +11,8 @@ import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 import kotlin.math.floor
 
-class AdventureScreen : LevelScreen() {
-    private var tag = "AdventureScreen"
+class ChallengeScreen : LevelScreen() {
+    private var tag = "ChallengeScreen"
     private var time = 0f
     private var isChallenge = false
     private var currentChallenge: BaseActor? = null
@@ -31,7 +31,7 @@ class AdventureScreen : LevelScreen() {
 
     override fun initialize() {
         super.initialize()
-        tag = "AdventureScreen"
+        tag = "ChallengeScreen"
 
         // background
         background = Background(0f, 0f, background2DStage, "")

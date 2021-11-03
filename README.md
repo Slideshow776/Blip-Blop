@@ -42,8 +42,8 @@ TODO:
     The players have no other abilities.    
     
     * **What obstacles or difficulties will the character face?**
-    The game will provide classic and adventure gameplay. In _classic mode_ there are no other difficulties other than besting your opponent by avoiding them to score a goal and to score your own goals against them.
-    In _adventure mode_, various new challenges per goal will be presented that change the gameplay ever so slightly in various interesting new ways: like a gravity field, extra-long paddles, fog of war in the middle of the playing field, etc.
+    The game will provide classic and challenge gameplay. In _classic mode_ there are no other difficulties other than besting your opponent by avoiding them to score a goal and to score your own goals against them.
+    In _challenge mode_, various new challenges per goal will be presented that change the gameplay ever so slightly in various interesting new ways: like a gravity field, extra-long paddles, fog of war in the middle of the playing field, etc.
     
     * **What items can the character obtain**
     The players may obtain no items.    
@@ -68,7 +68,7 @@ TODO:
     Each players' score is shown on the right side of their own space in a tilted fashion for all to read equally.    
     
     * **What menus, screens, or overlays will there be?**
-    A splash screen showing the author of the game. A menu screen showing the start game in classic or adventure mode, as well as options.
+    A splash screen showing the author of the game. A menu screen showing the start game in classic or challenge mode, as well as options.
     The options screen features control over audio and music, as well as in Android the ability to turn on/off `Google Play Services.
     
     * **How does the player interact with the game at the software level?**
@@ -92,7 +92,7 @@ TODO:
     Thoughtful relaxed concentration or flow-like state.
         
     * **What makes the game fun?**
-    The novelty of a long-forgotten game, besting the A.I or your friends in competitive gameplay, and the adventure mode features more modern challenges.
+    The novelty of a long-forgotten game, besting the A.I or your friends in competitive gameplay, and the challenge mode features more modern challenges.
     
     
 5. Development
