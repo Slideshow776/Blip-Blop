@@ -57,11 +57,9 @@ class MultiBall(x: Float, y: Float, s: Stage, balls: Array<Ball>, mainStage3D: S
                 val newBall = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, mainStage3D)
                 newBall.setMotionAngle(ball.getMotionAngle() + MathUtils.random(-25f, 25f))
                 newBall.setColor(GameUtils.randomColor())
-                newBall.index = MathUtils.random(1, 1:::_000_000)
+                newBall.index = MathUtils.random(1, 1_000_000)
                 balls.add(newBall)
             }
-            println("$tag: Created #$numBalls more balls:")
-            for (ball in balls) println("$tag: index => ${ball.index}")
         } else {
             Gdx.app.error(tag, "ball was null when attempting to spawn...")
         }
