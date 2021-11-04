@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
@@ -123,7 +124,7 @@ open class LevelScreen : BaseScreen3D() {
                     } else
                         copy.add(temp)
                 }
-                balls = Array()
+                balls.clear() // balls = Array()
                 for (ball in copy) balls.add(ball)
                 return
             }
