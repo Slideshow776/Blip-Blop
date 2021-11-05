@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
 import no.sandramoen.blipblop.screens.shell.MenuScreen
 import no.sandramoen.blipblop.ui.*
-import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
 import no.sandramoen.blipblop.utils.GameUtils
@@ -41,8 +40,8 @@ open class LevelScreen : BaseScreen3D() {
 
         // players
         players = Array()
-        players.add(Player(s = mainStage3D, f = foreground2DStage, bottomPlayer = true))
-        players.add(Player(s = mainStage3D, f = foreground2DStage, bottomPlayer = false))
+        players.add(Player(s = mainStage3D, stage2D = foreground2DStage, bottomPlayer = true))
+        players.add(Player(s = mainStage3D, stage2D = foreground2DStage, bottomPlayer = false))
 
         // ball
         ball = Ball(0f, 0f, 0f, mainStage3D)

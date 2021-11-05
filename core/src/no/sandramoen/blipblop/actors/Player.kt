@@ -12,11 +12,14 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
+import no.sandramoen.blipblop.actors.particleEffects.BallImpactBottomEffect
+import no.sandramoen.blipblop.actors.particleEffects.BallImpactTopEffect
+import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.Stage3D
 import kotlin.math.abs
 
-open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: Stage, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
+open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage2D: Stage, bottomPlayer: Boolean) : BaseActor3D(x, y, z, s) {
     private val tag = "Player"
     private val touchDeadZone = .01f
     private val speedPlayerAndroid = 40f
@@ -36,6 +39,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
     private var shouldRunBallImpactAnimation = false
     private var ballImpactAnimationPercent = 0f
     private var turnInterpolation = 0f
+    private var stage2D = stage2D
 
     val bottomPlayer: Boolean = bottomPlayer
     var label: PlayerLabel
@@ -69,7 +73,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
         setColor(Color.GREEN)
         if (bottomPlayer) setPosition(Vector3(0f, bottomPlayerYPosition, 0f))
         else setPosition(Vector3(0f, topPlayerYPosition, 0f))
-        label = PlayerLabel(x, y, f, bottomPlayer)
+        label = PlayerLabel(x, y, stage2D, bottomPlayer)
     }
 
     override fun act(dt: Float) {
@@ -149,6 +153,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
     fun ballImpact() {
         hit++
         shouldRunBallImpactAnimation = true
+        startEffect(stage2D)
     }
 
     private fun moveLeft() {
@@ -203,6 +208,15 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, f: St
         val scaleX = MathUtils.lerp(1f, 1.125f, ballImpactAnimationPercent)
         val scaleY = MathUtils.lerp(1f, .75f, ballImpactAnimationPercent)
         setScale(scaleX, scaleY, 1f)
+    }
+
+    private fun startEffect(stage: Stage) {
+        var effect: ParticleActor = if (bottomPlayer) BallImpactBottomEffect() else BallImpactTopEffect()
+        effect.setScale(Gdx.graphics.height * .00004f)
+        var yPosition = if (bottomPlayer) 13f else 87f
+        effect.setPosition(normalizedXPosition * 100 - width / 2, yPosition)
+        stage.addActor(effect)
+        effect.start()
     }
 
     private fun tilt(left: Boolean) {

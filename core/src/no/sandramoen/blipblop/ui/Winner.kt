@@ -2,12 +2,11 @@ package no.sandramoen.blipblop.ui
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
-import no.sandramoen.blipblop.actors.GoldDrizzleEffect
+import no.sandramoen.blipblop.actors.particleEffects.GoldDrizzleEffect
 import no.sandramoen.blipblop.utils.BaseGame
 
 

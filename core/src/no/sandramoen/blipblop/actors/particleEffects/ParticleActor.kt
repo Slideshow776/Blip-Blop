@@ -1,4 +1,4 @@
-package no.sandramoen.blipblop.actors
+package no.sandramoen.blipblop.actors.particleEffects
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch

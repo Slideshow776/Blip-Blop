@@ -155,7 +155,7 @@ class ChallengeScreen : LevelScreen() {
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(4, 4)) {
+        when (MathUtils.random(1, 7)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
