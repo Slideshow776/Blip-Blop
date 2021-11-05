@@ -12,8 +12,7 @@ import no.sandramoen.blipblop.actors.Ball
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.Stage3D
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
-
-
+import no.sandramoen.blipblop.utils.BaseGame
 
 
 class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : Challenge(x, y, s) {
@@ -44,7 +43,7 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
             }
 
             // black hole
-            blackHoleEntity.turnZ(1f)
+            blackHoleEntity.turnZ(.1f)
 
             for (ball in balls) {
                 if (ball.overlaps(blackHoleEntity)) {
@@ -67,8 +66,6 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
     }
 
     private fun initializeBlackHoleEntity() {
-        blackHoleEntity = BaseActor3D(0f, 0f, 0f, s3D)
-
         // 3D model
         val modelBuilder = ModelBuilder()
         val boxMaterial = Material()
@@ -76,12 +73,13 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
         val usageCode = VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
         val boxModel = modelBuilder.createBox(5f, 5f, .1f, boxMaterial, usageCode.toLong())
         val position = Vector3(0f, 0f, 0f)
+
+        blackHoleEntity = BaseActor3D(0f, 0f, 0f, s3D)
         blackHoleEntity.setModelInstance(ModelInstance(boxModel, position))
         blackHoleEntity.setBaseRectangle()
         blackHoleEntity.moveBy(Vector3(50f, 0f, 0f))
 
         // miscellaneous
-        // blackHoleEntity.loadTexture("black hole")
         blackHoleEntity.loadTexture("black hole")
     }
 }
