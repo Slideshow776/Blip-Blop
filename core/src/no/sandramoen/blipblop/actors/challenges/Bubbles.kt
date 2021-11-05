@@ -27,7 +27,7 @@ class Bubbles(x: Float, y: Float, s: Stage, balls: Array<Ball>, players: Array<P
     private var players = players
     private var bubbles: Array<BaseActor3D> = Array()
 
-    private val endTime = 30f
+    private val endTime = 20f
     private var time = 0f
     private var endFlag = false
 

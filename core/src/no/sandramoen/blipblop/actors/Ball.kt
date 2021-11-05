@@ -63,8 +63,8 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
             applyPhysics(dt)
 
             // vertical bounce
-            if (getPosition().x >= 6.4f || getPosition().x <= -6.4f)
-                wallBounce() // TODO: BUG: ball can get stuck in the wall..
+            /*if (getPosition().x >= 6.4f || getPosition().x <= -6.4f)
+                wallBounce() // TODO: BUG: ball can get stuck in the wall..*/
 
             // horizontal out of bounds
             if (!isShadowBall && getPosition().y >= 6.5f || getPosition().y <= -6.5f)
@@ -110,18 +110,8 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         shouldRunPlayerImpactAnimation = true
     }
 
-    private fun wallBounce() {
-        if (this.velocityVec.x < 0)
-            setPosition(
-                Vector3(
-                    getPosition().x + .5f,
-                    getPosition().y,
-                    getPosition().z
-                )
-            ) // offset position so ball doesn't get stuck
-        else
-            setPosition(Vector3(getPosition().x - .15f, getPosition().y, getPosition().z))
-
+    fun wallBounce(wall: Wall) {
+        this.preventOverlap(wall)
         if (!isShadowBall) BaseGame.deflectSound!!.play(BaseGame.soundVolume)
         this.velocityVec.x *= -1
 

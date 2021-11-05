@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
@@ -12,6 +11,7 @@ import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
 import no.sandramoen.blipblop.screens.shell.MenuScreen
 import no.sandramoen.blipblop.ui.*
+import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
 import no.sandramoen.blipblop.utils.GameUtils
@@ -32,6 +32,9 @@ open class LevelScreen : BaseScreen3D() {
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
 
+    private lateinit var leftWall: Wall
+    private lateinit var rightWall: Wall
+
     override fun initialize() {
         // miscellaneous
         tag = "LevelScreen"
@@ -48,6 +51,10 @@ open class LevelScreen : BaseScreen3D() {
 
         // middle line
         MiddleWhiteLine(0f, 0f, foreground2DStage)
+
+        // walls
+        leftWall = Wall(-9.1f, 0f, 0f, mainStage3D)
+        rightWall = Wall(9.1f, 0f, 0f, mainStage3D)
 
         // camera
         mainStage3D.setCameraPosition(0f, 0f, 10f)
@@ -88,6 +95,9 @@ open class LevelScreen : BaseScreen3D() {
 
         // ball
         for (i in 0 until balls.size) {
+            if (balls[i].overlaps(leftWall)) balls[i].wallBounce(leftWall)
+            else if (balls[i].overlaps(rightWall)) balls[i].wallBounce(rightWall)
+
             if (!balls[i].inPlay && balls.size == 1) { // WARNING: this code should only run once
                 // score
                 if (balls[i].getPosition().y > 0f) {
