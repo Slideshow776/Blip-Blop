@@ -224,15 +224,7 @@ open class LevelScreen : BaseScreen3D() {
         gameMenu.disappear()
     }
 
-    private fun reportHitRating() {
-        val player1HitRating = players[1].hit.toDouble() / (players[1].hit + players[1].miss)
-        val player0HitRating = players[0].hit.toDouble() / (players[0].hit + players[0].miss)
-        println("\nGames: $games")
-        println("top player: hit rating: ${String.format("%.2f", player1HitRating)}")
-        println("bottom player: hit rating: ${String.format("%.2f", player0HitRating)}")
-    }
-
-    private fun gameOver() {
+    open fun gameOver() {
         for (player in players) {
             player.pause = true
             player.label.addAction(Actions.fadeOut(.125f))
@@ -241,6 +233,14 @@ open class LevelScreen : BaseScreen3D() {
         gameMenu.appear()
         if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
         else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
+    }
+
+    private fun reportHitRating() {
+        val player1HitRating = players[1].hit.toDouble() / (players[1].hit + players[1].miss)
+        val player0HitRating = players[0].hit.toDouble() / (players[0].hit + players[0].miss)
+        println("\nGames: $games")
+        println("top player: hit rating: ${String.format("%.2f", player1HitRating)}")
+        println("bottom player: hit rating: ${String.format("%.2f", player0HitRating)}")
     }
 
     private fun registerClassicAchievements(dt: Float) {

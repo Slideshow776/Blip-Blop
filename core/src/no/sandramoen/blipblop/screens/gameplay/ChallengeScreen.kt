@@ -115,26 +115,14 @@ class ChallengeScreen : LevelScreen() {
         }
     }
 
+    override fun gameOver() {
+        super.gameOver()
+        endChallenges()
+    }
+
     override fun endGame() {
         super.endGame()
-        if (currentChallenge != null) {
-            foggyVeil.endChallenge(0f)
-            foggyVeil.isVisible = false
-            blackHole.endChallenge(0f)
-            portals.endChallenge(0f)
-            bricks.endChallenge(0f)
-            bubbles.endChallenge(0f)
-            currentChallenge = null
-        }
-        if (ball.pause) {
-            challengeTextLabel.clearActions()
-            challengeTextLabel.addAction(Actions.sequence(
-                    Actions.fadeOut(.5f),
-                    Actions.run { challengeTextLabel.setText("Challenge!") }
-            ))
-            challengeCountdownLabel.clearActions()
-            challengeCountdownLabel.addAction(Actions.fadeOut(.5f))
-        }
+        endChallenges()
     }
 
     override fun restart() {
@@ -221,5 +209,26 @@ class ChallengeScreen : LevelScreen() {
         time = 0f
         challengeTextLabel.addAction(Actions.fadeIn(1f))
         challengeCountdownLabel.addAction(Actions.fadeIn(1f))
+    }
+
+    private fun endChallenges() {
+        if (currentChallenge != null) {
+            foggyVeil.endChallenge(0f)
+            foggyVeil.isVisible = false
+            blackHole.endChallenge(0f)
+            portals.endChallenge(0f)
+            bricks.endChallenge(0f)
+            bubbles.endChallenge(0f)
+            currentChallenge = null
+        }
+        if (ball.pause) {
+            challengeTextLabel.clearActions()
+            challengeTextLabel.addAction(Actions.sequence(
+                    Actions.fadeOut(.5f),
+                    Actions.run { challengeTextLabel.setText("Challenge!") }
+            ))
+            challengeCountdownLabel.clearActions()
+            challengeCountdownLabel.addAction(Actions.fadeOut(.5f))
+        }
     }
 }

@@ -1,7 +1,6 @@
 package no.sandramoen.blipblop
 
 import no.sandramoen.blipblop.screens.gameplay.ChallengeScreen
-import no.sandramoen.blipblop.screens.gameplay.ClassicScreen
 import no.sandramoen.blipblop.screens.shell.SplashScreen
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GooglePlayServices
@@ -16,7 +15,7 @@ class BlipBlopGame(googlePlayServices: GooglePlayServices?) : BaseGame(googlePla
         // setActiveScreen(MenuScreen())
         // setActiveScreen(OptionsScreen())
 
-        setActiveScreen(ClassicScreen())
-        // setActiveScreen(ChallengeScreen())
+        // setActiveScreen(ClassicScreen())
+        setActiveScreen(ChallengeScreen())
     }
 }
