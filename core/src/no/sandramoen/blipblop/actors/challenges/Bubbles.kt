@@ -156,7 +156,7 @@ class Bubbles(x: Float, y: Float, s: Stage, balls: Array<Ball>, players: Array<P
     }
 
     private fun popBubble(bubble: BaseActor3D) {
-        BaseGame.bubblePopSound!!.play(BaseGame.soundVolume, MathUtils.random(0f, 2f), 0f)
+        BaseGame.bubblePopSound!!.play(BaseGame.soundVolume, MathUtils.random(.5f, 1.5f), 0f)
         bubble.setPosition(Vector3(50f, 50f, 50f))
         bubble.remove()
     }

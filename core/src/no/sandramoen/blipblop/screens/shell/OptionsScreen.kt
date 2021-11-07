@@ -138,14 +138,14 @@ class OptionsScreen : BaseScreen() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
                 achievementButton.label.color = BaseGame.lightPink
-                if (BaseGame.gps!!.isSignedIn())
+                if (BaseGame.gps != null && BaseGame.gps!!.isSignedIn())
                     BaseGame.gps!!.showAchievements()
             }
         })
         GameUtils.addTextButtonEnterExitEffect(achievementButton)
 
         achievementImage = Image(BaseGame.textureAtlas!!.findRegion("achievements-google-play-achievements-icon"))
-        if (BaseGame.gps!!.isSignedIn()) {
+        if (BaseGame.gps != null && BaseGame.gps!!.isSignedIn()) {
             achievementButton.touchable = Touchable.enabled
         } else {
             achievementImage.color = Color.DARK_GRAY
@@ -170,7 +170,7 @@ class OptionsScreen : BaseScreen() {
         buttonStyle.up = TextureRegionDrawable(up)
         buttonStyle.checked = TextureRegionDrawable(down)
         toggleGPS = Button(buttonStyle)
-        toggleGPS.isChecked = !BaseGame.gps!!.isSignedIn()
+        toggleGPS.isChecked = BaseGame.gps != null && !BaseGame.gps!!.isSignedIn()
         toggleGPS.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 BaseGame.isGPS = !BaseGame.isGPS
@@ -249,9 +249,9 @@ class OptionsScreen : BaseScreen() {
     }
 
     override fun update(dt: Float) {
-        /*if (Gdx.app.type == Application.ApplicationType.Android) { // check if user actually did or didn't sign in
+        /*if (Gdx.app.type == Application.ApplicationType.Android) { // TODO: check if user actually did or didn't sign in
             Gdx.app.error(tag, "BaseGame.gps!!.isSignedIn(): ${BaseGame.gps!!.isSignedIn()}")
-            if (BaseGame.gps!!.isSignedIn()) {
+            if (BaseGame.gps != null && BaseGame.gps!!.isSignedIn()) {
                 toggleGPS.isChecked = false
                 achievementButton.touchable = Touchable.enabled
                 achievementButton.label.color = Color.WHITE

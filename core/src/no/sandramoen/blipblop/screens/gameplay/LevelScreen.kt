@@ -31,8 +31,6 @@ open class LevelScreen : BaseScreen3D() {
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
 
-    private lateinit var leftWall: Wall
-    private lateinit var rightWall: Wall
 
     override fun initialize() {
         // miscellaneous
@@ -43,17 +41,13 @@ open class LevelScreen : BaseScreen3D() {
         players.add(Player(s = mainStage3D, stage2D = foreground2DStage, bottomPlayer = true))
         players.add(Player(s = mainStage3D, stage2D = foreground2DStage, bottomPlayer = false))
 
+        // middle line
+        MiddleWhiteLine(0f, 0f, foreground2DStage)
+
         // ball
         ball = Ball(0f, 0f, 0f, mainStage3D)
         balls = Array()
         balls.add(ball)
-
-        // middle line
-        MiddleWhiteLine(0f, 0f, foreground2DStage)
-
-        // walls
-        leftWall = Wall(-9.1f, 0f, 0f, mainStage3D)
-        rightWall = Wall(9.1f, 0f, 0f, mainStage3D)
 
         // camera
         mainStage3D.setCameraPosition(0f, 0f, 10f)
@@ -94,9 +88,6 @@ open class LevelScreen : BaseScreen3D() {
 
         // ball
         for (i in 0 until balls.size) {
-            if (balls[i].overlaps(leftWall)) balls[i].wallBounce(leftWall)
-            else if (balls[i].overlaps(rightWall)) balls[i].wallBounce(rightWall)
-
             if (!balls[i].inPlay && balls.size == 1) { // WARNING: this code should only run once
                 // score
                 if (balls[i].getPosition().y > 0f) {

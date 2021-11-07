@@ -1,9 +1,11 @@
 package no.sandramoen.blipblop.actors
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector3
@@ -14,7 +16,7 @@ import java.util.Timer
 import kotlin.concurrent.schedule
 
 class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = false) :
-    BaseActor3D(x, y, z, s) {
+        BaseActor3D(x, y, z, s) {
     private val tag = "Ball"
     private val isShadowBall: Boolean = isShadowBall
     private val ballSpeed = 12f
@@ -27,31 +29,43 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
     var pause = false
     var index = 0
 
+    private var leftWall: Wall
+    private var rightWall: Wall
+
     init {
         // 3D model
         val modelBuilder = ModelBuilder()
         val sphereMaterial = Material()
+        if (isShadowBall) sphereMaterial.set(BlendingAttribute(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA))
         val usageCode =
-            VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
+                VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
         val radius = if (isShadowBall) .0f else .5f
         val model = modelBuilder.createSphere(
-            radius,
-            radius * BaseGame.RATIO,
-            radius,
-            32,
-            32,
-            sphereMaterial,
-            usageCode.toLong()
+                radius,
+                radius * BaseGame.RATIO,
+                radius,
+                32,
+                32,
+                sphereMaterial,
+                usageCode.toLong()
         )
         val position = Vector3(0f, 0f, 0f)
         setModelInstance(ModelInstance(model, position))
         setBasePolygon()
 
         // miscellaneous
-        if (isShadowBall) { setColor(Color.PURPLE) }
-        else { BaseGame.startSound!!.play(BaseGame.soundVolume) }
+        if (isShadowBall) {
+            setColor(Color.PURPLE) // for debug
+            loadTexture("blankPixel") // makes ball invisible
+        } else {
+            BaseGame.startSound!!.play(BaseGame.soundVolume)
+        }
         setSpeed(ballSpeed / 2)
         setMotionAngle(270f)
+
+        // walls
+        leftWall = Wall(-9.1f, 0f, 0f, s)
+        rightWall = Wall(9.1f, 0f, 0f, s)
     }
 
     override fun act(dt: Float) {
@@ -62,9 +76,8 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
         if (inPlay) {
             applyPhysics(dt)
 
-            // vertical bounce
-            /*if (getPosition().x >= 6.4f || getPosition().x <= -6.4f)
-                wallBounce() // TODO: BUG: ball can get stuck in the wall..*/
+            if (this.overlaps(leftWall)) this.wallBounce(leftWall)
+            else if (this.overlaps(rightWall)) this.wallBounce(rightWall)
 
             // horizontal out of bounds
             if (!isShadowBall && getPosition().y >= 6.5f || getPosition().y <= -6.5f)
@@ -91,7 +104,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
     fun playerImpact(player: Player) {
         val ballCenterX = getPosition().x // TODO: not perfect, but good enough(?)
         var paddlePercentHit: Float =
-            (ballCenterX - (player.getPosition().x - (player.width / 2))) / player.width
+                (ballCenterX - (player.getPosition().x - (player.width / 2))) / player.width
         if (paddlePercentHit < 0f) paddlePercentHit = 0f
         else if (paddlePercentHit > 1f) paddlePercentHit = 1f
         var bounceAngle: Float
@@ -112,7 +125,7 @@ class Ball(x: Float, y: Float, z: Float, s: Stage3D, isShadowBall: Boolean = fal
 
     fun wallBounce(wall: Wall) {
         this.preventOverlap(wall)
-        if (!isShadowBall) BaseGame.deflectSound!!.play(BaseGame.soundVolume)
+        if (!isShadowBall) BaseGame.deflectSound!!.play(BaseGame.soundVolume, MathUtils.random(.8f, 1.2f), 0f)
         this.velocityVec.x *= -1
 
         shouldRunWallAnimation = true

@@ -21,13 +21,14 @@ class ChallengeScreen : LevelScreen() {
     private var currentChallenge: BaseActor? = null
     private val challengeFrequency = 5f + 1 // 1 is offset, so we can see the top number
     private var countDown: Int = 0
+    private var previousCount: Int = 0
 
     private lateinit var foggyVeil: FoggyVeil
     private lateinit var multiBall: MultiBall
     private lateinit var longPlayer: LongPlayer
     private lateinit var blackHole: BlackHole
     private lateinit var portals: Portals
-    private lateinit var bricks: Bricks
+    private lateinit var rectangles: Rectangles
     private lateinit var bubbles: Bubbles
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
@@ -46,7 +47,7 @@ class ChallengeScreen : LevelScreen() {
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
-        bricks = Bricks(0f, 0f, foreground2DStage, balls, mainStage3D)
+        rectangles = Rectangles(0f, 0f, foreground2DStage, balls, mainStage3D)
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
 
         // ui
@@ -107,6 +108,13 @@ class ChallengeScreen : LevelScreen() {
         } else {
             countDown = floor(challengeFrequency - time).toInt()
             if (countDown >= 0) challengeCountdownLabel.setText("$countDown")
+            if (previousCount != countDown && countDown >= 0) {
+                previousCount = countDown
+                when (countDown) {
+                    0 -> BaseGame.countDown1Sound!!.play(BaseGame.soundVolume)
+                    in 1..3 -> BaseGame.countDown0Sound!!.play(BaseGame.soundVolume)
+                }
+            }
         }
 
         // check if challenge is finished
@@ -139,8 +147,8 @@ class ChallengeScreen : LevelScreen() {
         blackHole.remove()
         portals.endChallenge(0f)
         portals.remove()
-        bricks.endChallenge(0f)
-        bricks.remove()
+        rectangles.endChallenge(0f)
+        rectangles.remove()
         bubbles.endChallenge(0f)
         bubbles.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
@@ -148,7 +156,7 @@ class ChallengeScreen : LevelScreen() {
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
         blackHole = BlackHole(0f, 0f, foreground2DStage, balls, mainStage3D)
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
-        bricks = Bricks(0f, 0f, foreground2DStage, balls, mainStage3D)
+        rectangles = Rectangles(0f, 0f, foreground2DStage, balls, mainStage3D)
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
     }
 
@@ -177,8 +185,8 @@ class ChallengeScreen : LevelScreen() {
                 currentChallenge = portals
             }
             6 -> {
-                bricks.startChallenge()
-                currentChallenge = bricks
+                rectangles.startChallenge()
+                currentChallenge = rectangles
             }
             7 -> {
                 bubbles.startChallenge()
@@ -190,8 +198,9 @@ class ChallengeScreen : LevelScreen() {
         challengeTextLabel.addAction(
                 Actions.sequence(
                         Actions.fadeOut(.25f),
-                        Actions.run { challengeTextLabel.setText(currentChallenge!!.title) },
+                        Actions.run { if (currentChallenge != null) challengeTextLabel.setText(currentChallenge!!.title) },
                         Actions.delay(1f),
+                        Actions.run { BaseGame.startChallengeSound!!.play(BaseGame.soundVolume) },
                         Actions.fadeIn(.5f),
                         Actions.delay(1f),
                         Actions.fadeOut(1f),
@@ -217,7 +226,7 @@ class ChallengeScreen : LevelScreen() {
             foggyVeil.isVisible = false
             blackHole.endChallenge(0f)
             portals.endChallenge(0f)
-            bricks.endChallenge(0f)
+            rectangles.endChallenge(0f)
             bubbles.endChallenge(0f)
             currentChallenge = null
         }

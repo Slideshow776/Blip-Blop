@@ -21,9 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import kotlin.system.measureTimeMillis
-import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter
-
-import com.badlogic.gdx.utils.ObjectMap
 
 
 abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), AssetErrorListener {
@@ -65,8 +62,11 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var win02Sound: Sound? = null
         var portal1Sound: Sound? = null
         var portal2Sound: Sound? = null
-        var brickExplosionSound: Sound? = null
+        var rectangleExplosionSound: Sound? = null
         var bubblePopSound: Sound? = null
+        var startChallengeSound: Sound? = null
+        var countDown0Sound: Sound? = null
+        var countDown1Sound: Sound? = null
         var gameTime: Float = 0f
 
         // game state
@@ -112,7 +112,10 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/portal1.wav", Sound::class.java)
             assetManager.load("audio/sound/portal2.wav", Sound::class.java)
             assetManager.load("audio/sound/386862__prof-mudkip__8-bit-explosion.wav", Sound::class.java)
-            assetManager.load("audio/sound/463392__vilkas-sound__vs-pop-8.mp3", Sound::class.java)
+            assetManager.load("audio/sound/pop.wav", Sound::class.java)
+            assetManager.load("audio/sound/Pickup_Coin21.wav", Sound::class.java)
+            assetManager.load("audio/sound/countDown0.wav", Sound::class.java)
+            assetManager.load("audio/sound/countDown1.wav", Sound::class.java)
 
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
@@ -146,8 +149,11 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             win02Sound = assetManager.get("audio/sound/270333__littlerobotsoundfactory__jingle-win-00.mp3", Sound::class.java)
             portal1Sound = assetManager.get("audio/sound/portal1.wav", Sound::class.java)
             portal2Sound = assetManager.get("audio/sound/portal2.wav", Sound::class.java)
-            brickExplosionSound = assetManager.get("audio/sound/386862__prof-mudkip__8-bit-explosion.wav", Sound::class.java)
-            bubblePopSound = assetManager.get("audio/sound/463392__vilkas-sound__vs-pop-8.mp3", Sound::class.java)
+            rectangleExplosionSound = assetManager.get("audio/sound/386862__prof-mudkip__8-bit-explosion.wav", Sound::class.java)
+            bubblePopSound = assetManager.get("audio/sound/pop.wav", Sound::class.java)
+            startChallengeSound = assetManager.get("audio/sound/Pickup_Coin21.wav", Sound::class.java)
+            countDown0Sound = assetManager.get("audio/sound/countDown0.wav", Sound::class.java)
+            countDown1Sound = assetManager.get("audio/sound/countDown1.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()
@@ -159,8 +165,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             FreeTypeFontGenerator.setMaxTextureSize(2048) // solves font bug that won't show some characters like "." and "," in android
             val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("fonts/ARCADE_R.TTF"))
             val fontParameters = FreeTypeFontParameter()
-            fontParameters.size =
-                (.038f * Gdx.graphics.height).toInt() // Font size is based on width of screen...
+            fontParameters.size = (.038f * Gdx.graphics.height).toInt() // Font size is based on width of screen...
             fontParameters.color = Color.WHITE
             fontParameters.borderWidth = 2f
             fontParameters.borderColor = Color.BLACK

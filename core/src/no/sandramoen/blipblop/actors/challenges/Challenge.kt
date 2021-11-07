@@ -3,6 +3,7 @@ package no.sandramoen.blipblop.actors.challenges
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import no.sandramoen.blipblop.utils.BaseActor
+import no.sandramoen.blipblop.utils.BaseGame
 
 open class Challenge(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     private var tag = "Challenge"
