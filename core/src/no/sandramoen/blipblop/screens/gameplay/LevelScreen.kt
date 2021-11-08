@@ -3,6 +3,7 @@ package no.sandramoen.blipblop.screens.gameplay
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -100,7 +101,12 @@ open class LevelScreen : BaseScreen3D() {
                 score.setScore(players[1].score, players[0].score)
                 // reportHitRating()
                 games++
-                if (players[0].score >= 11) {
+
+                if (players[0].score == 10)
+                    score.topScoreWarning(top = false)
+                else if (players[1].score == 10)
+                    score.topScoreWarning(top = true)
+                else if (players[0].score >= 11) {
                     winner.playAnimation(top = false)
                     gameOver()
                 } else if (players[1].score >= 11) {
@@ -192,6 +198,7 @@ open class LevelScreen : BaseScreen3D() {
                 }
                 ball.pause = true
                 gameMenu.appear(delay = 0f)
+                BaseGame.pauseSound!!.play(BaseGame.soundVolume)
             }
         }
     }

@@ -67,6 +67,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var startChallengeSound: Sound? = null
         var countDown0Sound: Sound? = null
         var countDown1Sound: Sound? = null
+        var scoreWarningSound: Sound? = null
+        var pauseSound: Sound? = null
         var gameTime: Float = 0f
 
         // game state
@@ -116,6 +118,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/Pickup_Coin21.wav", Sound::class.java)
             assetManager.load("audio/sound/countDown0.wav", Sound::class.java)
             assetManager.load("audio/sound/countDown1.wav", Sound::class.java)
+            assetManager.load("audio/sound/scoreWarning.wav", Sound::class.java)
+            assetManager.load("audio/sound/pause.wav", Sound::class.java)
 
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
@@ -154,6 +158,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             startChallengeSound = assetManager.get("audio/sound/Pickup_Coin21.wav", Sound::class.java)
             countDown0Sound = assetManager.get("audio/sound/countDown0.wav", Sound::class.java)
             countDown1Sound = assetManager.get("audio/sound/countDown1.wav", Sound::class.java)
+            scoreWarningSound = assetManager.get("audio/sound/scoreWarning.wav", Sound::class.java)
+            pauseSound = assetManager.get("audio/sound/pause.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()

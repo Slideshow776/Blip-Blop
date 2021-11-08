@@ -2,6 +2,8 @@ package no.sandramoen.blipblop.ui
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
@@ -39,5 +41,21 @@ class Score(uiTable: Table) {
     fun setScore(topScore: Int, bottomScore: Int) {
         topPlayerLabel.setText("$topScore")
         bottomPlayerLabel.setText("$bottomScore")
+    }
+
+    fun topScoreWarning(top: Boolean) {
+        BaseGame.scoreWarningSound!!.play(BaseGame.soundVolume)
+        val label = if (top) topPlayerLabel else bottomPlayerLabel
+        val duration = .1f
+        label.addAction(Actions.sequence(
+                Actions.color(Color.GOLD, duration),
+                Actions.color(Color.WHITE, duration),
+                Actions.color(Color.GOLD, duration),
+                Actions.color(Color.WHITE, duration),
+                Actions.color(Color.GOLD, duration),
+                Actions.color(Color.WHITE, duration),
+                Actions.color(Color.GOLD, duration),
+                Actions.color(Color.WHITE, duration)
+        ))
     }
 }
