@@ -1,5 +1,6 @@
 package no.sandramoen.blipblop.actors.challenges
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Material
@@ -12,6 +13,9 @@ import no.sandramoen.blipblop.actors.Ball
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.Stage3D
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
+import no.sandramoen.blipblop.actors.particleEffects.BlackHoleEffect
+import no.sandramoen.blipblop.actors.particleEffects.BubblePopEffect
+import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseGame
 
 
@@ -26,9 +30,11 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
 
     private val endTime = 40f
     private val s3D = s3D
+    private var effect: BlackHoleEffect
 
     init {
         initializeBlackHoleEntity()
+        effect = BlackHoleEffect()
     }
 
     override fun act(dt: Float) {
@@ -59,10 +65,16 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
         super.startChallengeLogic()
         showBlackHole = true
         blackHoleEntity.moveBy(Vector3(-50f, 0f, 0f))
+
+        effect.setScale(Gdx.graphics.height * .00004f)
+        effect.setPosition(50f, 50f)
+        stage.addActor(effect)
+        effect.start()
     }
 
     override fun resetChallengeLogic() {
         blackHoleEntity.moveBy(Vector3(50f, 0f, 0f))
+        effect.stop()
     }
 
     private fun initializeBlackHoleEntity() {

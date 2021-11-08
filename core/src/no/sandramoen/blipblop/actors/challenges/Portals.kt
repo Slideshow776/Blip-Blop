@@ -1,5 +1,6 @@
 package no.sandramoen.blipblop.actors.challenges
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.VertexAttributes
@@ -8,12 +9,17 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
+import no.sandramoen.blipblop.actors.particleEffects.BluePortalEffect
+import no.sandramoen.blipblop.actors.particleEffects.OrangePortalEffect
+import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
+import no.sandramoen.blipblop.utils.GameUtils
 import no.sandramoen.blipblop.utils.Stage3D
 
 class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : Challenge(x, y, s) {
@@ -32,9 +38,15 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
     private var portalScale = 0f
     private var portalOpen = false
 
+    private var bluePortalEffect: ParticleActor
+    private var orangePortalEffect: ParticleActor
+
     init {
         orangePortal = createPortal(Color(1f, 0.603f, 0f, 1f))
         bluePortal = createPortal(Color(0f, 0.635f, 1f, 1f))
+
+        bluePortalEffect = BluePortalEffect()
+        orangePortalEffect = OrangePortalEffect()
     }
 
     override fun act(dt: Float) {
@@ -56,28 +68,30 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
                     if (ball.overlaps(orangePortal)) {
                         setPortalOffset(ball)
                         ball.setPosition(Vector3(bluePortal.getPosition().x, bluePortal.getPosition().y + portalOffset, ball.getPosition().z))
-                        BaseGame.portal1Sound!!.play(BaseGame.soundVolume)
+                        BaseGame.portal1Sound!!.play(BaseGame.soundVolume * .5f)
                     } else if (ball.overlaps(bluePortal)) {
                         setPortalOffset(ball)
                         ball.setPosition(Vector3(orangePortal.getPosition().x, orangePortal.getPosition().y + portalOffset, ball.getPosition().z))
-                        BaseGame.portal2Sound!!.play(BaseGame.soundVolume)
+                        BaseGame.portal2Sound!!.play(BaseGame.soundVolume * .5f)
                     }
                 }
             }
         } else {
             closePortal(orangePortal, dt)
             closePortal(bluePortal, dt)
+            orangePortalEffect.stop()
+            bluePortalEffect.stop()
         }
     }
 
     override fun startChallengeLogic() {
         super.startChallengeLogic()
         orangePortal.moveBy(Vector3(0f, -0f, -50f))
-        setPortalRandomPosition(orangePortal, top = true)
+        setPortalsRandomPosition(orangePortal, top = true)
         orangePortal.setScale(0f, 0f, 0f)
 
         bluePortal.moveBy(Vector3(-0f, 0f, -50f))
-        setPortalRandomPosition(bluePortal, top = false)
+        setPortalsRandomPosition(bluePortal, top = false)
         bluePortal.setScale(0f, 0f, 0f)
     }
 
@@ -114,7 +128,7 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
         else if (ball.getVelocity().y > 0) portalOffset = .25f
     }
 
-    private fun setPortalRandomPosition(portal: BaseActor3D, top: Boolean) {
+    private fun setPortalsRandomPosition(portal: BaseActor3D, top: Boolean) {
         if (top)
             portal.setPosition(Vector3(
                     MathUtils.random(-5f, 5f),
@@ -135,6 +149,9 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
             portal.setScale(portalScale, portalScale, portalScale)
         } else if (portalScale >= 1f) {
             portalOpen = true
+            BaseGame.portalWorkingSound!!.play(BaseGame.soundVolume)
+            startPortalParticleEffects(orangePortal, orangePortal = true)
+            startPortalParticleEffects(bluePortal, orangePortal = false)
         }
     }
 
@@ -146,6 +163,25 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
                 portalOpen = false
             }
             portal.setScale(portalScale, portalScale, portalScale)
+        }
+    }
+
+    private fun startPortalParticleEffects(portal: BaseActor3D, orangePortal: Boolean) {
+        val portalPosition2D = Vector2(
+                GameUtils.normalizeValues(portal.getPosition().x, -9.1f, 9.1f) * 100 - 2.0f / 2,
+                GameUtils.normalizeValues(portal.getPosition().y, -6.5f, 6.5f) * 100
+        )
+
+        if (orangePortal) {
+            orangePortalEffect.setScale(Gdx.graphics.height * .00004f)
+            orangePortalEffect.setPosition(portalPosition2D.x, portalPosition2D.y)
+            stage.addActor(orangePortalEffect)
+            orangePortalEffect.start()
+        } else {
+            bluePortalEffect.setScale(Gdx.graphics.height * .00004f)
+            bluePortalEffect.setPosition(portalPosition2D.x, portalPosition2D.y)
+            stage.addActor(bluePortalEffect)
+            bluePortalEffect.start()
         }
     }
 }

@@ -1,5 +1,6 @@
 package no.sandramoen.blipblop.actors.challenges
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelInstance
@@ -10,6 +11,8 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
+import no.sandramoen.blipblop.actors.particleEffects.BubblePopEffect
+import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GameUtils
@@ -48,8 +51,22 @@ class Rectangles(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D)
                 for (ball in balls) {
                     for (rectangle in rectangles) {
                         if (ball.overlaps(rectangle)) {
+                            // ball
                             ball.preventOverlap(rectangle)
                             ball.setVelocity(Vector2(ball.getVelocity().x, ball.getVelocity().y * -1))
+
+                            // effect
+                            val position2D = Vector2(
+                                    GameUtils.normalizeValues(rectangle.getPosition().x, -9.1f, 9.1f) * 100 - 2.0f / 2,
+                                    GameUtils.normalizeValues(rectangle.getPosition().y, -6.5f, 6.5f) * 100
+                            )
+                            var effect: ParticleActor = BubblePopEffect()
+                            effect.setScale(Gdx.graphics.height * .00004f)
+                            effect.setPosition(position2D.x, position2D.y)
+                            stage.addActor(effect)
+                            effect.start()
+
+                            // miscellaneous
                             BaseGame.rectangleExplosionSound!!.play(BaseGame.soundVolume, MathUtils.random(.5f, 1.5f), 0f)
                             rectangle.setPosition(Vector3(50f, 50f, 50f))
                             rectangle.remove()

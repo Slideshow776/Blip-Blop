@@ -69,6 +69,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var countDown1Sound: Sound? = null
         var scoreWarningSound: Sound? = null
         var pauseSound: Sound? = null
+        var portalWorkingSound: Sound? = null
         var gameTime: Float = 0f
 
         // game state
@@ -125,6 +126,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/countDown1.wav", Sound::class.java)
             assetManager.load("audio/sound/scoreWarning.wav", Sound::class.java)
             assetManager.load("audio/sound/pause.wav", Sound::class.java)
+            assetManager.load("audio/sound/portalWorking.wav", Sound::class.java)
 
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
@@ -165,6 +167,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             countDown1Sound = assetManager.get("audio/sound/countDown1.wav", Sound::class.java)
             scoreWarningSound = assetManager.get("audio/sound/scoreWarning.wav", Sound::class.java)
             pauseSound = assetManager.get("audio/sound/pause.wav", Sound::class.java)
+            portalWorkingSound = assetManager.get("audio/sound/portalWorking.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()

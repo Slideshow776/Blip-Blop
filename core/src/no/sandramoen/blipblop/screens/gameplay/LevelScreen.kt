@@ -46,7 +46,7 @@ open class LevelScreen : BaseScreen3D() {
         MiddleWhiteLine(0f, 0f, foreground2DStage)
 
         // ball
-        ball = Ball(0f, 0f, 0f, mainStage3D)
+        ball = Ball(0f, 0f, 0f, foreground2DStage, mainStage3D)
         balls = Array()
         balls.add(ball)
 
@@ -106,7 +106,8 @@ open class LevelScreen : BaseScreen3D() {
                     score.topScoreWarning(top = false)
                 else if (players[1].score == 10)
                     score.topScoreWarning(top = true)
-                else if (players[0].score >= 11) {
+
+                if (players[0].score >= 11) {
                     winner.playAnimation(top = false)
                     gameOver()
                 } else if (players[1].score >= 11) {
@@ -213,7 +214,7 @@ open class LevelScreen : BaseScreen3D() {
         winner.resetAnimation()
         for (ball in balls) ball.remove()
         balls.clear()
-        ball = Ball(0f, 0f, 0f, mainStage3D)
+        ball = Ball(0f, 0f, 0f, foreground2DStage, mainStage3D)
         balls.add(ball)
         ball.reset()
         if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)

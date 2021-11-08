@@ -1,5 +1,6 @@
 package no.sandramoen.blipblop.actors.challenges
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.Material
@@ -13,6 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
 import no.sandramoen.blipblop.actors.Player
+import no.sandramoen.blipblop.actors.particleEffects.BallImpactLeftEffect
+import no.sandramoen.blipblop.actors.particleEffects.BallImpactRightEffect
+import no.sandramoen.blipblop.actors.particleEffects.BubblePopEffect
+import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GameUtils
@@ -156,6 +161,18 @@ class Bubbles(x: Float, y: Float, s: Stage, balls: Array<Ball>, players: Array<P
     }
 
     private fun popBubble(bubble: BaseActor3D) {
+        // effect
+        val position2D = Vector2(
+                GameUtils.normalizeValues(bubble.getPosition().x, -9.1f, 9.1f) * 100 - 2.0f / 2,
+                GameUtils.normalizeValues(bubble.getPosition().y, -6.5f, 6.5f) * 100
+        )
+        var effect: ParticleActor = BubblePopEffect()
+        effect.setScale(Gdx.graphics.height * .00004f)
+        effect.setPosition(position2D.x, position2D.y)
+        stage.addActor(effect)
+        effect.start()
+
+        // miscellaneous
         BaseGame.bubblePopSound!!.play(BaseGame.soundVolume, MathUtils.random(.5f, 1.5f), 0f)
         bubble.setPosition(Vector3(50f, 50f, 50f))
         bubble.remove()

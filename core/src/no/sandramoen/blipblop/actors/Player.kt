@@ -16,6 +16,7 @@ import no.sandramoen.blipblop.actors.particleEffects.BallImpactBottomEffect
 import no.sandramoen.blipblop.actors.particleEffects.BallImpactTopEffect
 import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseActor3D
+import no.sandramoen.blipblop.utils.GameUtils
 import no.sandramoen.blipblop.utils.Stage3D
 import kotlin.math.abs
 
@@ -63,7 +64,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
         setBaseRectangle()
 
         // shadow ball
-        shadowBall = Ball(0f, 0f, 0f, this.stage, isShadowBall = true)
+        shadowBall = Ball(0f, 0f, 0f, stage2D, this.stage, isShadowBall = true)
         shadowBall.setVelocity(Vector2(0f, 0f))
         shadowBall.setPosition(Vector3(-10f, -10f, 0f))
         shadowBall.inPlay = false
@@ -81,7 +82,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
         super.act(dt)
 
         // controls
-        normalizedXPosition = (getPosition().x - leftWorldBounds) / (rightWorldBounds - leftWorldBounds)
+        normalizedXPosition = GameUtils.normalizeValues(x = getPosition().x, min = leftWorldBounds, max = rightWorldBounds)
         if (enableAI) {
             when {
                 aiShouldMoveToX > getPosition().x + width / 4 -> moveRight()
