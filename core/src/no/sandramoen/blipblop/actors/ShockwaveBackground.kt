@@ -20,8 +20,8 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
     var shaderProgram: ShaderProgram
 
     private var time = .0f
-    private var shockWavePositionX = .0f
-    private var shockWavePositionY = .0f
+    private var shockWavePositionX = -5.0f
+    private var shockWavePositionY = -5.0f
     private var disabled = false
 
     init {
@@ -49,7 +49,7 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
     override fun draw(batch: Batch, parentAlpha: Float) {
         if (disabled)
             super.draw(batch, parentAlpha)
-        else {
+        if (BaseGame.enableCustomShaders) {
             try {
                 batch.shader = shaderProgram
                 shaderProgram.setUniformf("time", time)
@@ -60,7 +60,8 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
             } catch (error: Error) {
                 super.draw(batch, parentAlpha)
             }
-        }
+        } else
+            super.draw(batch, parentAlpha)
     }
 
     override fun act(dt: Float) {

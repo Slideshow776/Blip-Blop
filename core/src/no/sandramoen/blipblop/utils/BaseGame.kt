@@ -34,12 +34,12 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         private var game: BaseGame? = null
 
         lateinit var assetManager: AssetManager
-        lateinit var fontGenerator: FreeTypeFontGenerator
         const val WORLD_WIDTH = 100f
         const val WORLD_HEIGHT = 100f
         const val scale = 1.0f
         var RATIO = 0f
         val lightPink = Color(1f, .816f, .94f, 1f)
+        var enableCustomShaders = true
 
         // game assets
         var gps: GooglePlayServices? = null
@@ -80,8 +80,13 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var registerAchievementFrequency: Float = 3 * 60f   // three minutes
         var biggestAchievementTime: Float = 60 * 60f        // one hour
 
-        fun setActiveScreen(s: BaseScreen) { game?.setScreen(s) }
-        fun setActiveScreen(s: BaseScreen3D) { game?.setScreen(s) }
+        fun setActiveScreen(s: BaseScreen) {
+            game?.setScreen(s)
+        }
+
+        fun setActiveScreen(s: BaseScreen3D) {
+            game?.setScreen(s)
+        }
     }
 
     override fun create() {
@@ -126,10 +131,10 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.setLoader(BitmapFont::class.java, ".ttf", FreetypeFontLoader(resolver))
             assetManager.setLoader(Text::class.java, TextLoader(InternalFileHandleResolver()))
 
-            assetManager.load( AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()) )
-            assetManager.load( AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()) )
-            assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()) )
-            assetManager.load(AssetDescriptor("shaders/color01.fs", Text::class.java, TextLoader.TextParameter()) )
+            assetManager.load(AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load(AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load(AssetDescriptor("shaders/color01.fs", Text::class.java, TextLoader.TextParameter()))
 
             assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
@@ -182,7 +187,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
 
             val buttonFontParameters = FreeTypeFontParameter()
             buttonFontParameters.size =
-                (.04f * Gdx.graphics.height).toInt() // If the resolutions height is 1440 then the font size becomes 86
+                    (.04f * Gdx.graphics.height).toInt() // If the resolutions height is 1440 then the font size becomes 86
             buttonFontParameters.color = Color.WHITE
             buttonFontParameters.borderWidth = 2f
             buttonFontParameters.borderColor = Color.BLACK

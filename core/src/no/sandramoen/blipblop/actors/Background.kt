@@ -33,7 +33,7 @@ class Background(x: Float, y: Float, s: Stage, fragmentShaderCode: String = Base
     override fun draw(batch: Batch, parentAlpha: Float) {
         if (disabled) {
             super.draw(batch, parentAlpha)
-        } else {
+        } else if (BaseGame.enableCustomShaders) {
             try {
                 batch.shader = shaderProgram
                 shaderProgram.setUniformf("u_time", time)
