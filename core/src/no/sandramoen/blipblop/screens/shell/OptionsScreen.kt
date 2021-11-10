@@ -26,10 +26,10 @@ class OptionsScreen : BaseScreen() {
     private lateinit var onImage: Image
     private lateinit var offImage: Image
     private lateinit var toggleGPS: Button
-    /*private var checkGPSSignIn = false*/
 
     override fun initialize() {
         tag = "OptionsScreen.kt"
+        transition.fadeOut()
 
         // background ---------------------------------------------------------------------------------------------
         Background(0f, 0f, mainStage)
@@ -244,8 +244,6 @@ class OptionsScreen : BaseScreen() {
         table.setFillParent(true)
         // table.debug = true
         uiTable.add(table).fill().expand()
-
-        // screen transition
     }
 
     override fun update(dt: Float) {

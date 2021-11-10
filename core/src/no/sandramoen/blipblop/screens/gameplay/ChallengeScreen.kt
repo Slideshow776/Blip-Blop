@@ -12,6 +12,7 @@ import no.sandramoen.blipblop.actors.Background
 import no.sandramoen.blipblop.actors.challenges.*
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
+import no.sandramoen.blipblop.utils.Transition
 import kotlin.math.floor
 
 class ChallengeScreen : LevelScreen() {

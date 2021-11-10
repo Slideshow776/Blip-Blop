@@ -3,7 +3,6 @@ package no.sandramoen.blipblop.screens.gameplay
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -15,6 +14,7 @@ import no.sandramoen.blipblop.ui.*
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
 import no.sandramoen.blipblop.utils.GameUtils
+import no.sandramoen.blipblop.utils.Transition
 import kotlin.math.floor
 
 open class LevelScreen : BaseScreen3D() {
@@ -31,7 +31,7 @@ open class LevelScreen : BaseScreen3D() {
     private lateinit var score: Score
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
-
+    private lateinit var transition: Transition
 
     override fun initialize() {
         // miscellaneous
@@ -66,6 +66,10 @@ open class LevelScreen : BaseScreen3D() {
                 resume()
             }
         })
+
+        // transition
+        transition = Transition(0f, 0f, transitionStage)
+        transition.fadeOut()
     }
 
     override fun update(dt: Float) {
@@ -190,8 +194,8 @@ open class LevelScreen : BaseScreen3D() {
         // screen transition
         for (ball in balls) {
             if (ball.pause) {
-                // TODO: transition
-                BaseGame.setActiveScreen(MenuScreen())
+                transition.fadeInToMenuScreen()
+                break
             } else {
                 for (player in players) {
                     player.pause = true

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport
 
 abstract class BaseScreen3D : Screen, InputProcessor {
     protected var mainStage3D: Stage3D
+    protected var transitionStage: Stage
     protected var uiStage: Stage
     protected var uiTable: Table
     protected var foreground2DStage: Stage
@@ -20,9 +21,16 @@ abstract class BaseScreen3D : Screen, InputProcessor {
 
     init {
         mainStage3D = Stage3D()
+        transitionStage = Stage()
         uiStage = Stage()
         foreground2DStage = Stage()
         background2DStage = Stage()
+
+        // trnsition
+        camera = transitionStage.camera as OrthographicCamera
+        transitionStage.viewport = StretchViewport(BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT, camera)
+        transitionStage.viewport.apply()
+        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f)
 
         // foreground
         camera = foreground2DStage.camera as OrthographicCamera
@@ -54,6 +62,7 @@ abstract class BaseScreen3D : Screen, InputProcessor {
         var delta = Math.min(dt, 1/30f)
 
         // act methods
+        transitionStage.act(delta)
         uiStage.act(delta)
         foreground2DStage.act(delta)
         mainStage3D.act(delta)
@@ -76,12 +85,14 @@ abstract class BaseScreen3D : Screen, InputProcessor {
         mainStage3D.draw()
         foreground2DStage.draw()
         uiStage.draw()
+        transitionStage.draw()
     }
 
     override fun resize(width: Int, height: Int) {
         foreground2DStage.viewport.update(width, height, true)
         background2DStage.viewport.update(width, height, true)
         uiStage.viewport.update(width, height, true)
+        transitionStage.viewport.update(width, height, true)
         mainStage3D.viewport.update(width, height)
         mainStage3D.camera.position.set(0f, 0f, 10f)
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f);

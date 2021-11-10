@@ -39,6 +39,7 @@ class MenuScreen : BaseScreen() {
 
     override fun initialize() {
         tag = "MenuScreen.kt"
+        transition.fadeOut()
 
         // audio
         GameUtils.playAndLoopMusic(BaseGame.levelMusic)
@@ -165,7 +166,7 @@ class MenuScreen : BaseScreen() {
         // screen transition
         startClassicButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
-                Actions.run { BaseGame.setActiveScreen(ClassicScreen()) }
+                Actions.run { transition.fadeInToClassicScreen() }
         ))
     }
 
@@ -173,7 +174,7 @@ class MenuScreen : BaseScreen() {
         // screen transition
         startClassicButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
-                Actions.run { BaseGame.setActiveScreen(ChallengeScreen()) }
+                Actions.run { transition.fadeInToChallengeScreen() }
         ))
     }
 
@@ -181,7 +182,7 @@ class MenuScreen : BaseScreen() {
         // screen transition
         optionsButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
-                Actions.run { BaseGame.setActiveScreen(OptionsScreen()) }
+                Actions.run { transition.fadeInToOptionsScreen() }
         ))
     }
 

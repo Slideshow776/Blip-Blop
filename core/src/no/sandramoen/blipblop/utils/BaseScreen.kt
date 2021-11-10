@@ -14,14 +14,15 @@ import com.badlogic.gdx.utils.viewport.*
 abstract class BaseScreen : Screen, InputProcessor {
     protected var mainStage: Stage
     protected var uiStage: Stage
+    private var transitionStage: Stage
     protected var uiTable: Table
     protected var camera: OrthographicCamera
-
-    // var worldCoordinates = Vector3()
+    var transition: Transition
 
     init {
         mainStage = Stage()
         uiStage = Stage()
+        transitionStage = Stage()
 
         uiTable = Table()
         uiTable.setFillParent(true)
@@ -35,6 +36,10 @@ abstract class BaseScreen : Screen, InputProcessor {
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f)
         // Gdx.input.inputProcessor = this // TODO: do I need this?
 
+        transitionStage.viewport = StretchViewport(BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT, camera)
+        transitionStage.viewport.apply()
+        transition = Transition(0f, 0f, transitionStage)
+
         initialize()
     }
 
@@ -43,6 +48,7 @@ abstract class BaseScreen : Screen, InputProcessor {
 
     override fun render(dt: Float) {
         // act methods
+        transitionStage.act(dt)
         uiStage.act(dt)
         mainStage.act(dt)
 
@@ -60,6 +66,7 @@ abstract class BaseScreen : Screen, InputProcessor {
         // draw the graphics
         mainStage.draw()
         uiStage.draw()
+        transitionStage.draw()
     }
 
     override fun show() {
