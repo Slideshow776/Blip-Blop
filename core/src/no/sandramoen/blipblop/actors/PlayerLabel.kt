@@ -78,14 +78,18 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        try {
-            batch.shader = shaderProgram
-            shaderProgram!!.setUniformf("u_time", time)
-            shaderProgram!!.setUniformf("u_imageSize", Vector2(width, height))
-            shaderProgram!!.setUniformi("u_glowRadius", 7)
-            super.draw(batch, parentAlpha)
-            batch.shader = null
-        } catch (error: Error) {
+        if (BaseGame.enableCustomShaders) {
+            try {
+                batch.shader = shaderProgram
+                shaderProgram!!.setUniformf("u_time", time)
+                shaderProgram!!.setUniformf("u_imageSize", Vector2(width, height))
+                shaderProgram!!.setUniformi("u_glowRadius", 7)
+                super.draw(batch, parentAlpha)
+                batch.shader = null
+            } catch (error: Error) {
+                super.draw(batch, parentAlpha)
+            }
+        } else {
             super.draw(batch, parentAlpha)
         }
     }
