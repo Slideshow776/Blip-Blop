@@ -74,7 +74,7 @@ abstract class BaseScreen3D : Screen, InputProcessor {
         camera.update()
 
         // clear the screen
-        Gdx.gl.glClearColor(.5f, .5f, .5f, 1f)
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT + GL20.GL_DEPTH_BUFFER_BIT)
 
         this.background2DStage.batch.projectionMatrix = camera.combined

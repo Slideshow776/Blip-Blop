@@ -22,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import kotlin.system.measureTimeMillis
 
-
 abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), AssetErrorListener {
     private val tag = "BaseGame.kt"
 
