@@ -36,6 +36,7 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
+		config.useImmersiveMode = true;
 		initialize(new BlipBlopGame(this), config);
 	}
 

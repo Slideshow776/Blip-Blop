@@ -4,6 +4,8 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
@@ -26,6 +28,10 @@ class OptionsScreen : BaseScreen() {
     private lateinit var onImage: Image
     private lateinit var offImage: Image
     private lateinit var toggleGPS: Button
+
+    private var attemptedToSignIn = false
+    private lateinit var up: TextureRegion
+    private lateinit var down: TextureRegion
 
     override fun initialize() {
         tag = "OptionsScreen.kt"
@@ -164,8 +170,8 @@ class OptionsScreen : BaseScreen() {
         onImage = Image(BaseGame.textureAtlas!!.findRegion("gpsOn"))
         offImage = Image(BaseGame.textureAtlas!!.findRegion("gpsOff"))
 
-        val up = BaseGame.textureAtlas!!.findRegion("on")
-        val down = BaseGame.textureAtlas!!.findRegion("off")
+        up = BaseGame.textureAtlas!!.findRegion("on")
+        down = BaseGame.textureAtlas!!.findRegion("off")
         val buttonStyle = Button.ButtonStyle()
         buttonStyle.up = TextureRegionDrawable(up)
         buttonStyle.checked = TextureRegionDrawable(down)
@@ -173,21 +179,23 @@ class OptionsScreen : BaseScreen() {
         toggleGPS.isChecked = BaseGame.gps != null && !BaseGame.gps!!.isSignedIn()
         toggleGPS.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                BaseGame.isGPS = !BaseGame.isGPS
-                if (BaseGame.isGPS) {
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                if (!BaseGame.isGPS) {
                     BaseGame.gps!!.signIn()
-                    achievementButton.touchable = Touchable.enabled
-                    achievementButton.label.color = Color.WHITE
-                    achievementImage.color = Color.WHITE
+                    attemptedToSignIn = true
                 } else {
+                    BaseGame.isGPS = false
                     BaseGame.gps!!.signOut()
                     achievementButton.touchable = Touchable.disabled
                     achievementButton.label.color = Color.DARK_GRAY
                     achievementImage.color = Color.DARK_GRAY
+                    GameUtils.saveGameState()
+                    setToggleButtonColors(toggleGPS, onImage, offImage)
+                    attemptedToSignIn = false
                 }
-                BaseGame.clickSound!!.play(BaseGame.soundVolume)
-                GameUtils.saveGameState()
-                setToggleButtonColors(toggleGPS, onImage, offImage)
+
+                toggleGPS.style.up = TextureRegionDrawable(down)
+                toggleGPS.style.checked = TextureRegionDrawable(down)
             }
         })
         setToggleButtonColors(toggleGPS, onImage, offImage)
@@ -247,21 +255,19 @@ class OptionsScreen : BaseScreen() {
     }
 
     override fun update(dt: Float) {
-        /*if (Gdx.app.type == Application.ApplicationType.Android) { // TODO: check if user actually did or didn't sign in
-            Gdx.app.error(tag, "BaseGame.gps!!.isSignedIn(): ${BaseGame.gps!!.isSignedIn()}")
-            if (BaseGame.gps != null && BaseGame.gps!!.isSignedIn()) {
-                toggleGPS.isChecked = false
-                achievementButton.touchable = Touchable.enabled
-                achievementButton.label.color = Color.WHITE
-                achievementImage.color = Color.WHITE
-            } else {
-                toggleGPS.isChecked = true
-                achievementButton.touchable = Touchable.disabled
-                achievementButton.label.color = Color.DARK_GRAY
-                achievementImage.color = Color.DARK_GRAY
-            }
+        if (attemptedToSignIn && BaseGame.gps!!.isSignedIn()) {
+            BaseGame.isGPS = true
+
+            achievementButton.touchable = Touchable.enabled
+            achievementButton.label.color = Color.WHITE
+            achievementImage.color = Color.WHITE
+
+            GameUtils.saveGameState()
             setToggleButtonColors(toggleGPS, onImage, offImage)
-        }*/
+            toggleGPS.style.up = TextureRegionDrawable(up)
+            toggleGPS.style.checked = TextureRegionDrawable(up)
+            attemptedToSignIn = false
+        }
     }
 
     override fun keyDown(keycode: Int): Boolean {
