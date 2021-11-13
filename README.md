@@ -14,10 +14,8 @@ TODO:
 * <del>Click here to play on Google Play!</del>
 * <del>Click here to play for free on Desktop!</del>
 
-
-![screenshot image of basic game play](https://user-images.githubusercontent.com/4059636/128635517-9c09e98f-2bc8-41ca-9de9-ef243da500e4.png)
-
 ![screenshot image of classic game play](https://user-images.githubusercontent.com/4059636/141648731-59d1f9de-316f-46f9-a1c1-35e2efd132bd.png)
+
 ![images of splash, menu and options](https://user-images.githubusercontent.com/4059636/141648729-b82ca1be-b73a-46ff-a907-8caf47a08c74.png)
 
 
