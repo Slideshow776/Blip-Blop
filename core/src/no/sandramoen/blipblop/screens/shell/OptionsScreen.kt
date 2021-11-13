@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
@@ -38,7 +38,7 @@ class OptionsScreen : BaseScreen() {
         transition.fadeOut()
 
         // background ---------------------------------------------------------------------------------------------
-        Background(0f, 0f, mainStage)
+        Background(0f, 0f, mainStage, colour = Vector3(.09f, .09f, .09f))
 
         // main label ---------------------------------------------------------------------------------------------
         val mainLabel = Label("Options", BaseGame.labelStyle)

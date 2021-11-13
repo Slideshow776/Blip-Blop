@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -13,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import no.sandramoen.blipblop.actors.Background
-import no.sandramoen.blipblop.screens.gameplay.ChallengeScreen
-import no.sandramoen.blipblop.screens.gameplay.ClassicScreen
 import no.sandramoen.blipblop.ui.MadeByLabel
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
@@ -45,7 +44,7 @@ class MenuScreen : BaseScreen() {
         GameUtils.playAndLoopMusic(BaseGame.levelMusic)
 
         // background
-        Background(0f, 0f, mainStage)
+        Background(0f, 0f, mainStage, colour = Vector3(.09f, .09f, .09f))
 
         // title
         val titleScale = 0.4f

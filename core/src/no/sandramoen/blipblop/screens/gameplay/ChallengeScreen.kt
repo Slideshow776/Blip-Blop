@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -12,7 +13,6 @@ import no.sandramoen.blipblop.actors.Background
 import no.sandramoen.blipblop.actors.challenges.*
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
-import no.sandramoen.blipblop.utils.Transition
 import kotlin.math.floor
 
 class ChallengeScreen : LevelScreen() {
@@ -38,9 +38,6 @@ class ChallengeScreen : LevelScreen() {
         super.initialize()
         tag = "ChallengeScreen"
         classicMode = false // for achievements..
-
-        // background
-        background = Background(0f, 0f, background2DStage, "")
 
         // challenges
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)

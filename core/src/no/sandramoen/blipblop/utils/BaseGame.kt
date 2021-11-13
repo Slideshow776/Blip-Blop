@@ -136,7 +136,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load(AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()))
-            assetManager.load(AssetDescriptor("shaders/color01.fs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load(AssetDescriptor("shaders/voronoi01.fs", Text::class.java, TextLoader.TextParameter()))
 
             assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
@@ -173,7 +173,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()
             shockwaveShader = assetManager.get("shaders/shockwave.fs", Text::class.java).getString()
             glowShader = assetManager.get("shaders/glow-pulse.fs", Text::class.java).getString()
-            backgroundShader = assetManager.get("shaders/color01.fs", Text::class.java).getString()
+            backgroundShader = assetManager.get("shaders/voronoi01.fs", Text::class.java).getString()
 
             // fonts
             FreeTypeFontGenerator.setMaxTextureSize(2048) // solves font bug that won't show some characters like "." and "," in android

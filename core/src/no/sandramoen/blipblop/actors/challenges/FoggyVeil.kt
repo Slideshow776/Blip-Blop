@@ -59,5 +59,7 @@ class FoggyVeil(x: Float, y: Float, s: Stage) : Challenge(x, y, s) {
     override fun resetChallengeLogic() {
         setSize(100f, 25f)
         setPosition(0f, 50f - height / 2)
+        bottomEffect.stop()
+        topEffect.stop()
     }
 }

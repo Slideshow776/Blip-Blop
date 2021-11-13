@@ -4,12 +4,12 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.*
-import no.sandramoen.blipblop.screens.shell.MenuScreen
 import no.sandramoen.blipblop.ui.*
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen3D
@@ -18,11 +18,11 @@ import no.sandramoen.blipblop.utils.Transition
 import kotlin.math.floor
 
 open class LevelScreen : BaseScreen3D() {
-    var background: Background? = null
     open var classicMode = true
     lateinit var ball: Ball
     lateinit var balls: Array<Ball>
 
+    private lateinit var background: Background
     private var tag = "LevelScreen"
     private var games = 1
     private var incrementAchievement = false
@@ -32,10 +32,15 @@ open class LevelScreen : BaseScreen3D() {
     private lateinit var winner: Winner
     private lateinit var gameMenu: GameMenu
     private lateinit var transition: Transition
+    private var highestScore: Int = 0
+    private var previousScore: Int = 0
 
     override fun initialize() {
         // miscellaneous
         tag = "LevelScreen"
+
+        // background
+        background = Background(0f, 0f, background2DStage, colour = Vector3(.06f, .06f, .06f))
 
         // players
         players = Array()
@@ -102,6 +107,15 @@ open class LevelScreen : BaseScreen3D() {
                     players[0].miss++
                     players[1].score++
                 }
+
+                if (players[0].score > players[1].score && players[0].score > highestScore) {
+                    highestScore = players[0].score
+                    background.increaseSpeed = true
+                } else if (players[1].score > players[0].score && players[1].score > highestScore) {
+                    highestScore = players[1].score
+                    background.increaseSpeed = true
+                }
+
                 score.setScore(players[1].score, players[0].score)
                 // reportHitRating()
                 games++
@@ -224,6 +238,7 @@ open class LevelScreen : BaseScreen3D() {
         if (players[0].enableAI && ball.getVelocity().y < 0) players[0].spawnShadowBall(ball)
         if (players[1].enableAI && ball.getVelocity().y > 0) players[1].spawnShadowBall(ball)
         gameMenu.disappear()
+        background.restart()
     }
 
     open fun gameOver() {
@@ -235,6 +250,8 @@ open class LevelScreen : BaseScreen3D() {
         gameMenu.appear()
         if (MathUtils.randomBoolean()) BaseGame.win01Sound!!.play(BaseGame.soundVolume)
         else BaseGame.win02Sound!!.play(BaseGame.soundVolume)
+        background.increaseSpeed = false
+        background.decreaseSpeed = true
     }
 
     private fun reportHitRating() {
@@ -246,23 +263,25 @@ open class LevelScreen : BaseScreen3D() {
     }
 
     private fun registerClassicAchievements(dt: Float) {
-        for (ball in balls) {
-            if (!ball.pause &&
-                    Gdx.app.type == Application.ApplicationType.Android &&
-                    gameTime < BaseGame.biggestAchievementTime) {
-                gameTime += dt
-                if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
-                    try {
-                        if (classicMode) BaseGame.gps!!.incrementClassicAchievements()
-                        else BaseGame.gps!!.incrementChallengeAchievements()
-                    } catch (error: Error) {
-                        Gdx.app.error(tag, "Could not increment achievement, error: $error")
+        if (BaseGame.gps != null && BaseGame.gps!!.isSignedIn()) {
+            for (ball in balls) {
+                if (!ball.pause &&
+                        Gdx.app.type == Application.ApplicationType.Android &&
+                        gameTime < BaseGame.biggestAchievementTime) {
+                    gameTime += dt
+                    if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
+                        try {
+                            if (classicMode) BaseGame.gps!!.incrementClassicAchievements()
+                            else BaseGame.gps!!.incrementChallengeAchievements()
+                        } catch (error: Error) {
+                            Gdx.app.error(tag, "Could not increment achievement, error: $error")
+                        }
+                        BaseGame.gameTime = gameTime
+                        GameUtils.saveGameState()
+                        incrementAchievement = false
+                    } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
+                        incrementAchievement = true
                     }
-                    BaseGame.gameTime = gameTime
-                    GameUtils.saveGameState()
-                    incrementAchievement = false
-                } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
-                    incrementAchievement = true
                 }
             }
         }

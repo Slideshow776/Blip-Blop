@@ -16,7 +16,7 @@ class MadeByLabel {
         label = Label("made by Sandra Moen 2021", BaseGame.labelStyle)
         label.setFontScale(.4f)
         label.setAlignment(Align.center)
-        label.color = Color.DARK_GRAY
+        label.color = Color.GRAY
         label.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
                 super.clicked(event, x, y)

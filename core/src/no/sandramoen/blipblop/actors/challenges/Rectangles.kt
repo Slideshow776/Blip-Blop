@@ -26,7 +26,7 @@ class Rectangles(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D)
     private var balls = balls
     private var rectangles: Array<BaseActor3D> = Array()
 
-    private val endTime = 40f
+    private val endTime = 35f
     private var time = 0f
     private var endFlag = false
 
