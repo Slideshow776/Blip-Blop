@@ -26,7 +26,7 @@ class Rectangles(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D)
     private var balls = balls
     private var rectangles: Array<BaseActor3D> = Array()
 
-    private val endTime = 35f
+    private val endTime = 30f
     private var time = 0f
     private var endFlag = false
 
@@ -83,26 +83,21 @@ class Rectangles(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D)
 
     override fun startChallengeLogic() {
         super.startChallengeLogic()
-        rectangles.add(createRectangle(Vector3(-5.5f, .35f, 0f)))
-        rectangles.add(createRectangle(Vector3(-3.3f, .35f, 0f)))
-        rectangles.add(createRectangle(Vector3(-1.1f, .35f, 0f)))
-        rectangles.add(createRectangle(Vector3(1.1f, .35f, 0f)))
-        rectangles.add(createRectangle(Vector3(3.3f, .35f, 0f)))
-        rectangles.add(createRectangle(Vector3(5.5f, .35f, 0f)))
+        val row0Height = .2f
+        rectangles.add(createRectangle(Vector3(-5.5f, row0Height, 0f)))
+        rectangles.add(createRectangle(Vector3(-3.3f, row0Height, 0f)))
+        rectangles.add(createRectangle(Vector3(-1.1f, row0Height, 0f)))
+        rectangles.add(createRectangle(Vector3(1.1f, row0Height, 0f)))
+        rectangles.add(createRectangle(Vector3(3.3f, row0Height, 0f)))
+        rectangles.add(createRectangle(Vector3(5.5f, row0Height, 0f)))
 
-        rectangles.add(createRectangle(Vector3(-5.5f, 0f, 0f)))
-        rectangles.add(createRectangle(Vector3(-3.3f, 0f, 0f)))
-        rectangles.add(createRectangle(Vector3(-1.1f, 0f, 0f)))
-        rectangles.add(createRectangle(Vector3(1.1f, 0f, 0f)))
-        rectangles.add(createRectangle(Vector3(3.3f, 0f, 0f)))
-        rectangles.add(createRectangle(Vector3(5.5f, 0f, 0f)))
-
-        rectangles.add(createRectangle(Vector3(-5.5f, -.35f, 0f)))
-        rectangles.add(createRectangle(Vector3(-3.3f, -.35f, 0f)))
-        rectangles.add(createRectangle(Vector3(-1.1f, -.35f, 0f)))
-        rectangles.add(createRectangle(Vector3(1.1f, -.35f, 0f)))
-        rectangles.add(createRectangle(Vector3(3.3f, -.35f, 0f)))
-        rectangles.add(createRectangle(Vector3(5.5f, -.35f, 0f)))
+        val row1Height = -.2f
+        rectangles.add(createRectangle(Vector3(-5.5f, row1Height, 0f)))
+        rectangles.add(createRectangle(Vector3(-3.3f, row1Height, 0f)))
+        rectangles.add(createRectangle(Vector3(-1.1f, row1Height, 0f)))
+        rectangles.add(createRectangle(Vector3(1.1f, row1Height, 0f)))
+        rectangles.add(createRectangle(Vector3(3.3f, row1Height, 0f)))
+        rectangles.add(createRectangle(Vector3(5.5f, row1Height, 0f)))
     }
 
     override fun resetChallengeLogic() {
