@@ -11,20 +11,32 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 
+/**
+ * Utility class of often used custom methods.
+ */
 class GameUtils {
-    private val tag = "GameUtils.kt"
-
     companion object {
-        fun isTouchDownEvent(e: Event): Boolean { // Custom type checker
-            return e is InputEvent && e.type == InputEvent.Type.touchDown
+        private val tag = "GameUtils.kt"
+
+        /**
+         * Detects if [event] is of type InputEvent.Type.touchDown
+         */
+        fun isTouchDownEvent(event: Event): Boolean { // Custom type checker
+            return event is InputEvent && event.type == InputEvent.Type.touchDown
         }
 
+        /**
+         * Play, set volume and loop [music].
+         */
         fun playAndLoopMusic(music: Music?) {
             music!!.play()
             music!!.volume = BaseGame.musicVolume
             music!!.isLooping = true
         }
 
+        /**
+         * Save persistent game data.
+         */
         fun saveGameState() {
             BaseGame.prefs!!.putBoolean("loadPersonalParameters", true)
             BaseGame.prefs!!.putBoolean("googlePlayServices", BaseGame.isGPS)
@@ -39,6 +51,9 @@ class GameUtils {
             BaseGame.prefs!!.flush()
         }
 
+        /**
+         * Load persistent game data.
+         */
         fun loadGameState() {
             BaseGame.prefs = Gdx.app.getPreferences("blipBlopGameState")
             BaseGame.loadPersonalParameters = BaseGame.prefs!!.getBoolean("loadPersonalParameters")
@@ -49,102 +64,85 @@ class GameUtils {
             BaseGame.gameTime = BaseGame.prefs!!.getFloat("gameTime")
         }
 
+        /**
+         * Stop all music.
+         */
         fun stopAllMusic() {
             BaseGame.levelMusic!!.stop()
         }
 
-        fun setMusicVolume() {
+        /**
+         * Sets the game's music volume to [volume] &#91;0-1&#93;.
+         */
+        fun setMusicVolume(volume: Float) {
+            if (volume > 1f || volume < 0f)
+                Gdx.app.error(tag, "setMusicVolume()'s parameter needs to be within [0-1]. Volume is: $volume")
+            BaseGame.musicVolume = volume
             BaseGame.levelMusic!!.volume = BaseGame.musicVolume
         }
 
-        fun addTextButtonEnterExitEffect(button: TextButton, enterColor: Color = BaseGame.lightPink, exitColor: Color = Color.WHITE) {
-            button.addListener(object : ClickListener() {
-                override fun enter(
-                        event: InputEvent?,
-                        x: Float,
-                        y: Float,
-                        pointer: Int,
-                        fromActor: Actor?
-                ) {
-                    button.label.color = enterColor
+        /**
+         * Adds an [enter]/[exit] color effect on the [textButton].
+         */
+        fun addTextButtonEnterExitEffect(textButton: TextButton, enterColor: Color = BaseGame.lightPink, exitColor: Color = Color.WHITE) {
+            textButton.addListener(object : ClickListener() {
+                override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
+                    textButton.label.color = enterColor
                     super.enter(event, x, y, pointer, fromActor)
                 }
 
-                override fun exit(
-                        event: InputEvent?,
-                        x: Float,
-                        y: Float,
-                        pointer: Int,
-                        toActor: Actor?
-                ) {
-                    button.label.color = exitColor
+                override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
+                    textButton.label.color = exitColor
                     super.exit(event, x, y, pointer, toActor)
                 }
             })
         }
 
+        /**
+         * Adds an [enter]/[exit] color effect on the [label].
+         */
         fun addLabelButtonEnterExitEffect(label: Label, enter: Color = BaseGame.lightPink, exit: Color = Color.WHITE) {
             label.addListener(object : ClickListener() {
-                override fun enter(
-                        event: InputEvent?,
-                        x: Float,
-                        y: Float,
-                        pointer: Int,
-                        fromActor: Actor?
-                ) {
+                override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
                     label.color = enter
                     super.enter(event, x, y, pointer, fromActor)
                 }
 
-                override fun exit(
-                        event: InputEvent?,
-                        x: Float,
-                        y: Float,
-                        pointer: Int,
-                        toActor: Actor?
-                ) {
+                override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
                     label.color = exit
                     super.exit(event, x, y, pointer, toActor)
                 }
             })
         }
 
-        fun randomColor(): Color {
-            when (MathUtils.random(28)) {
-                0 -> return Color.RED
-                1 -> return Color.BLUE
-                2 -> return Color.BROWN
-                3 -> return Color.CHARTREUSE
-                4 -> return Color.CORAL
-                5 -> return Color.CYAN
-                6 -> return Color.FIREBRICK
-                7 -> return Color.FOREST
-                8 -> return Color.GOLD
-                9 -> return Color.GOLDENROD
-                10 -> return Color.GREEN
-                11 -> return Color.LIME
-                12 -> return Color.MAGENTA
-                13 -> return Color.MAROON
-                14 -> return Color.NAVY
-                15 -> return Color.OLIVE
-                16 -> return Color.ORANGE
-                17 -> return Color.PINK
-                18 -> return Color.PURPLE
-                19 -> return Color.RED
-                20 -> return Color.ROYAL
-                21 -> return Color.SALMON
-                22 -> return Color.SCARLET
-                23 -> return Color.SKY
-                24 -> return Color.SLATE
-                25 -> return Color.TAN
-                26 -> return Color.TEAL
-                27 -> return Color.VIOLET
-                28 -> return Color.YELLOW
+        /**
+         * Returns a random color where at least one of the color channels has a threshold of [min] &#91;0-1&#93; and [alpha] &#91;0-1&#93;.
+         */
+        fun randomLightColor(min: Float = 0f, alpha: Float = 1f): Color {
+            if (min < 0 || alpha < 0) {
+                Gdx.app.error(tag, "randomLightColor()'s parameters values must be greater than 0 => min is: $min, alpha is: $alpha")
+                return Color(.5f, .5f, .5f, 1f)
+            } else if (min > 1 || alpha > 1) {
+                Gdx.app.error(tag, "randomLightColor()'s parameters values must be less than 1 => min is: $min, alpha is: $alpha")
+                return Color(.5f, .5f, .5f, 1f)
             }
-            return Color.WHITE
+
+            var r = 0f
+            var g = 0f
+            var b = 0f
+            while (r <= min && g <= min && b <= min) {
+                r = MathUtils.random(0f, 1f)
+                g = MathUtils.random(0f, 1f)
+                b = MathUtils.random(0f, 1f)
+            }
+
+            return Color(r, g, b, alpha)
         }
 
-        fun normalizeValues(x: Float, min: Float, max: Float) : Float {
+        /**
+         * Returns the normalized value of [x] withing [min] and [max].
+         */
+        fun normalizeValues(x: Float, min: Float, max: Float): Float {
             val dividend = x - min
             val divisor = max - min
             return dividend / divisor

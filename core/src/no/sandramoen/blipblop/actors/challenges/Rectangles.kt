@@ -116,7 +116,6 @@ class Rectangles(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D)
     private fun createRectangle(position: Vector3): BaseActor3D {
         val modelBuilder = ModelBuilder()
         val boxMaterial = Material()
-        // boxMaterial.set(BlendingAttribute(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA))
         val usageCode = VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
         val boxModel = modelBuilder.createBox(2f, .3f, .3f, boxMaterial, usageCode.toLong())
         val baseActor = BaseActor3D(0f, 0f, 0f, s3D)
@@ -127,7 +126,7 @@ class Rectangles(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D)
 
         // miscellaneous
         baseActor.loadTexture("player")
-        baseActor.setColor(GameUtils.randomColor())
+        baseActor.setColor(GameUtils.randomLightColor(min = .8f))
         return baseActor
     }
 

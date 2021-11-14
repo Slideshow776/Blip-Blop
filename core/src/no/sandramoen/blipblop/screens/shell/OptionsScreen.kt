@@ -70,8 +70,7 @@ class OptionsScreen : BaseScreen() {
         optionsMusicSlider.value = BaseGame.musicVolume
         optionsMusicSlider.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                BaseGame.musicVolume = optionsMusicSlider.value
-                GameUtils.setMusicVolume()
+                GameUtils.setMusicVolume(optionsMusicSlider.value)
                 GameUtils.saveGameState()
             }
         })

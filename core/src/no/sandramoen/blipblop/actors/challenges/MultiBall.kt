@@ -3,7 +3,6 @@ package no.sandramoen.blipblop.actors.challenges
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
@@ -60,7 +59,7 @@ class MultiBall(x: Float, y: Float, s2D: Stage, balls: Array<Ball>, mainStage3D:
             for (i in balls.size..(numBalls + balls.size - 1)) {
                 val newBall = Ball(ball.getPosition().x, ball.getPosition().y, ball.getPosition().z, s2D,  mainStage3D)
                 newBall.setMotionAngle(ball.getMotionAngle() + MathUtils.random(-25f, 25f))
-                newBall.setColor(GameUtils.randomColor())
+                newBall.setColor(GameUtils.randomLightColor(min=.8f))
                 newBall.index = MathUtils.random(1, 1_000_000)
                 balls.add(newBall)
             }

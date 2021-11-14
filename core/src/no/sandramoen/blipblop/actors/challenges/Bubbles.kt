@@ -14,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
 import no.sandramoen.blipblop.actors.Player
-import no.sandramoen.blipblop.actors.particleEffects.BallImpactLeftEffect
-import no.sandramoen.blipblop.actors.particleEffects.BallImpactRightEffect
 import no.sandramoen.blipblop.actors.particleEffects.BubblePopEffect
 import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseActor3D
@@ -136,7 +134,7 @@ class Bubbles(x: Float, y: Float, s: Stage, balls: Array<Ball>, players: Array<P
 
         // miscellaneous
         baseActor.loadTexture("bubble")
-        baseActor.setColor(GameUtils.randomColor())
+        baseActor.setColor(GameUtils.randomLightColor(.8f, .9f))
         return baseActor
     }
 
