@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.viewport.StretchViewport
 
 abstract class BaseScreen3D : Screen, InputProcessor {
+    private var tag = "BaseScreen3D"
     protected var mainStage3D: Stage3D
     protected var transitionStage: Stage
     protected var uiStage: Stage

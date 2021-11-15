@@ -68,7 +68,9 @@ open class LevelScreen : BaseScreen3D() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.gameStartSound!!.play(BaseGame.soundVolume)
                 restart()
-                resume()
+                for (player in players) player.pause = false
+                for (ball in balls) ball.pause = false
+                gameMenu.disappear()
             }
         })
 
@@ -122,7 +124,7 @@ open class LevelScreen : BaseScreen3D() {
 
                 if (players[0].score == 10)
                     score.topScoreWarning(top = false)
-                else if (players[1].score == 10)
+                if (players[1].score == 10)
                     score.topScoreWarning(top = true)
 
                 if (players[0].score >= 11) {
@@ -195,13 +197,6 @@ open class LevelScreen : BaseScreen3D() {
         else players[1].normalizedTouchX = normalizedPosX
 
         return super.touchDragged(screenX, screenY, pointer)
-    }
-
-    override fun resume() {
-        super.resume()
-        for (player in players) player.pause = false
-        for (ball in balls) ball.pause = false
-        gameMenu.disappear()
     }
 
     open fun endGame() {
