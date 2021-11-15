@@ -17,6 +17,7 @@ import no.sandramoen.blipblop.actors.particleEffects.BlackHoleEffect
 import no.sandramoen.blipblop.actors.particleEffects.BubblePopEffect
 import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseGame
+import kotlin.math.floor
 
 
 class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : Challenge(x, y, s) {
@@ -70,11 +71,16 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
         effect.setPosition(50f, 50f)
         stage.addActor(effect)
         effect.start()
+
+        // ambient sound
+        BaseGame.blackHoleMusic!!.volume = BaseGame.musicVolume
+        BaseGame.blackHoleMusic!!.play()
     }
 
     override fun resetChallengeLogic() {
         blackHoleEntity.moveBy(Vector3(50f, 0f, 0f))
         effect.stop()
+        BaseGame.blackHoleMusic!!.stop()
     }
 
     private fun initializeBlackHoleEntity() {
