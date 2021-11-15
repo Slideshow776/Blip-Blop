@@ -49,7 +49,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var defaultShader: String? = null
         var shockwaveShader: String? = null
         var backgroundShader: String? = null
-        var transitionShader: String? = null
+        var veilShader: String? = null
         var glowShader: String? = null
         var levelMusic: Music? = null
         var blipSound: Sound? = null
@@ -137,6 +137,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load(AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/voronoi01.fs", Text::class.java, TextLoader.TextParameter()))
+            assetManager.load(AssetDescriptor("shaders/veil.fs", Text::class.java, TextLoader.TextParameter()))
 
             assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
@@ -174,6 +175,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             shockwaveShader = assetManager.get("shaders/shockwave.fs", Text::class.java).getString()
             glowShader = assetManager.get("shaders/glow-pulse.fs", Text::class.java).getString()
             backgroundShader = assetManager.get("shaders/voronoi01.fs", Text::class.java).getString()
+            veilShader = assetManager.get("shaders/veil.fs", Text::class.java).getString()
 
             // fonts
             FreeTypeFontGenerator.setMaxTextureSize(2048) // solves font bug that won't show some characters like "." and "," in android

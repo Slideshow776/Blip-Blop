@@ -1,3 +1,7 @@
+#ifdef GL_ES
+precision highp float;
+#endif
+
 varying vec4 v_color;
 varying vec2 v_texCoords;
 

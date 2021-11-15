@@ -139,6 +139,7 @@ class ChallengeScreen : LevelScreen() {
         isChallenge = false
 
         foggyVeil.remove()
+        foggyVeil.endChallenge(0f)
         multiBall.remove()
         longPlayer.remove()
         blackHole.endChallenge(0f)
