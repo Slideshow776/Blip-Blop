@@ -28,6 +28,6 @@ class MadeByLabel {
                     ))
             }
         })
-        GameUtils.addLabelButtonEnterExitEffect(label, Color.GRAY, Color.DARK_GRAY)
+        GameUtils.addWidgetEnterExitEffect(label, Color.GRAY, Color.DARK_GRAY)
     }
 }

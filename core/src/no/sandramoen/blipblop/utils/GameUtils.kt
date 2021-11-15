@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.ui.Widget
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 
 /**
@@ -99,17 +99,17 @@ class GameUtils {
         }
 
         /**
-         * Adds an [enter]/[exit] color effect on the [label].
+         * Adds an [enter]/[exit] color effect on the [widget].
          */
-        fun addLabelButtonEnterExitEffect(label: Label, enter: Color = BaseGame.lightPink, exit: Color = Color.WHITE) {
-            label.addListener(object : ClickListener() {
+        fun addWidgetEnterExitEffect(widget: Widget, enter: Color = BaseGame.lightPink, exit: Color = Color.WHITE) {
+            widget.addListener(object : ClickListener() {
                 override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
-                    label.color = enter
+                    widget.color = enter
                     super.enter(event, x, y, pointer, fromActor)
                 }
 
                 override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
-                    label.color = exit
+                    widget.color = exit
                     super.exit(event, x, y, pointer, toActor)
                 }
             })

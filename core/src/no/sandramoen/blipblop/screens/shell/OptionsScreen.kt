@@ -44,27 +44,14 @@ class OptionsScreen : BaseScreen() {
         val mainLabel = Label("Options", BaseGame.labelStyle)
         mainLabel.setFontScale(1.5f)
 
-        val optionsWidgetWidth =
-                Gdx.graphics.width * .6f // value must be pre-determined for scaling
-        val optionsWidgetHeight =
-                Gdx.graphics.height * .015f // value must be pre-determined for scaling
-        val optionsSliderScale =
-                Gdx.graphics.height * .002f // makes sure scale is device adjustable-ish
+        val optionsWidgetWidth = Gdx.graphics.width * .6f // value must be pre-determined for scaling
+        val optionsWidgetHeight = Gdx.graphics.height * .015f // value must be pre-determined for scaling
+        val optionsSliderScale = Gdx.graphics.height * .002f // makes sure scale is device adjustable-ish
 
         // music -------------------------------------------------------------------------------------------------
         val musicLabel = Label("Music", BaseGame.labelStyle)
         musicLabel.setFontScale(.5f)
-        musicLabel.addListener(object : ClickListener() {
-            override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
-                musicLabel.color = BaseGame.lightPink
-                super.enter(event, x, y, pointer, fromActor)
-            }
-
-            override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
-                musicLabel.color = Color.WHITE
-                super.exit(event, x, y, pointer, toActor)
-            }
-        })
+        GameUtils.addWidgetEnterExitEffect(musicLabel)
 
         val optionsMusicSlider = Slider(0f, 1f, .1f, false, BaseGame.skin)
         optionsMusicSlider.value = BaseGame.musicVolume
@@ -96,17 +83,7 @@ class OptionsScreen : BaseScreen() {
         // sound -------------------------------------------------------------------------------------------------
         val soundLabel = Label("Sound", BaseGame.labelStyle)
         soundLabel.setFontScale(.5f)
-        soundLabel.addListener(object : ClickListener() {
-            override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
-                soundLabel.color = BaseGame.lightPink
-                super.enter(event, x, y, pointer, fromActor)
-            }
-
-            override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
-                soundLabel.color = Color.WHITE
-                super.exit(event, x, y, pointer, toActor)
-            }
-        })
+        GameUtils.addWidgetEnterExitEffect(soundLabel)
 
         val optionsSoundSlider = Slider(0f, 1f, .1f, false, BaseGame.skin)
         optionsSoundSlider.value = BaseGame.soundVolume
@@ -222,13 +199,13 @@ class OptionsScreen : BaseScreen() {
 
         val buttonsTable = Table() // -----------------------------------------------------------------------------------
         buttonsTable.add(optionsSoundSliderContainer).width(optionsWidgetWidth * 5 / 6)
-                .height(optionsWidgetHeight)
-        buttonsTable.add(soundLabel).width(optionsWidgetWidth * 1 / 6)
+                .height(optionsWidgetHeight).padLeft(Gdx.graphics.width * .08f)
+        buttonsTable.add(soundLabel).width(optionsWidgetWidth * 1 / 3)
                 .padLeft(Gdx.graphics.width * .11f).row()
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
         buttonsTable.add(optionsMusicSliderContainer).width(optionsWidgetWidth * 5 / 6)
-                .height(optionsWidgetHeight)
-        buttonsTable.add(musicLabel).width(optionsWidgetWidth * 1 / 6)
+                .height(optionsWidgetHeight).padLeft(Gdx.graphics.width * .08f)
+        buttonsTable.add(musicLabel).width(optionsWidgetWidth * 1 / 3)
                 .padLeft(Gdx.graphics.width * .11f).row()
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
 
