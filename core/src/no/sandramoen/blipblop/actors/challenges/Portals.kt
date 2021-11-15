@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
+import no.sandramoen.blipblop.actors.Player
 import no.sandramoen.blipblop.actors.particleEffects.BluePortalEffect
 import no.sandramoen.blipblop.actors.particleEffects.OrangePortalEffect
 import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
@@ -26,7 +27,7 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
     private var tag = "Portals"
     override var title = "Portals!"
 
-    private val endTime = 30f
+    private val endTime = 40f
     private var balls = balls
     private var s3D = s3D
     private var time = 0f
@@ -40,6 +41,14 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
 
     private var bluePortalEffect: ParticleActor
     private var orangePortalEffect: ParticleActor
+
+    private var isLooping = false
+    private var loopTime = 0f
+    private val loopThreshold = 3f
+    private var portalOpenDelay = 0f
+    private val portalOpenDelayThreshold = 2f
+    private var orangePortalLastBallVelocity = Vector2(0f, 0f)
+    private var bluePortalLastBallVelocity = Vector2(0f, 0f)
 
     init {
         orangePortal = createPortal(Color(1f, 0.603f, 0f, 1f))
@@ -59,28 +68,53 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
                 endChallenge()
             }
 
+            // loop detection
+            if (isLooping && loopTime <= loopThreshold) {
+                loopTime += dt
+            } else if (isLooping && portalOpen) {
+                closePortal(orangePortal, true, dt)
+                closePortal(bluePortal, false, dt)
+            } else if (isLooping && !portalOpen) {
+                setPortalsRandomPosition(orangePortal, top = true)
+                setPortalsRandomPosition(bluePortal, top = false)
+                loopTime = 0f
+                isLooping = false
+            }
+
             // portals
             if (!portalOpen) {
                 openPortal(orangePortal, dt)
                 openPortal(bluePortal, dt)
-            } else {
+            } else if (portalOpen && loopTime <= loopThreshold) {
                 for (ball in balls) { // collisions
                     if (ball.overlaps(orangePortal)) {
+                        // loop detection
+                        if (orangePortalLastBallVelocity == ball.getVelocity()) isLooping = true
+                        orangePortalLastBallVelocity = Vector2(ball.getVelocity().x, ball.getVelocity().y)
+
+                        // ball
                         setPortalOffset(ball)
                         ball.setPosition(Vector3(bluePortal.getPosition().x, bluePortal.getPosition().y + portalOffset, ball.getPosition().z))
+
+                        // miscellaneous
                         BaseGame.portal1Sound!!.play(BaseGame.soundVolume * .5f)
                     } else if (ball.overlaps(bluePortal)) {
+                        // loop detection
+                        if (bluePortalLastBallVelocity == ball.getVelocity()) isLooping = true
+                        bluePortalLastBallVelocity = Vector2(ball.getVelocity().x, ball.getVelocity().y)
+
+                        // ball
                         setPortalOffset(ball)
                         ball.setPosition(Vector3(orangePortal.getPosition().x, orangePortal.getPosition().y + portalOffset, ball.getPosition().z))
+
+                        // miscellaneous
                         BaseGame.portal2Sound!!.play(BaseGame.soundVolume * .5f)
                     }
                 }
             }
         } else {
-            closePortal(orangePortal, dt)
-            closePortal(bluePortal, dt)
-            orangePortalEffect.stop()
-            bluePortalEffect.stop()
+            closePortal(orangePortal, true, dt)
+            closePortal(bluePortal, false, dt)
         }
     }
 
@@ -102,6 +136,12 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
         endFlag = false
         portalOffset = 0f
         portalOpen = false
+        portalOpenDelay = 0f
+        isLooping = false
+        loopTime = 0f
+        portalOpenDelay = 0f
+        orangePortalLastBallVelocity = Vector2(0f, 0f)
+        bluePortalLastBallVelocity = Vector2(0f, 0f)
     }
 
     private fun createPortal(color: Color): BaseActor3D {
@@ -144,20 +184,26 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
     }
 
     private fun openPortal(portal: BaseActor3D, dt: Float) {
-        portalScale += dt * .1f
-        if (portalScale < 1f) {
-            portal.setScale(portalScale, portalScale, portalScale)
-        } else if (portalScale >= 1f) {
-            portalOpen = true
-            BaseGame.portalWorkingSound!!.play(BaseGame.soundVolume)
-            startPortalParticleEffects(orangePortal, orangePortal = true)
-            startPortalParticleEffects(bluePortal, orangePortal = false)
+        portalOpenDelay += dt
+        if (portalOpenDelay > portalOpenDelayThreshold) {
+            portalScale += dt * .2f
+            if (portalScale < 1f) {
+                portal.setScale(portalScale, portalScale, portalScale)
+            } else if (portalScale >= 1f) {
+                portalOpen = true
+                BaseGame.portalWorkingSound!!.play(BaseGame.soundVolume)
+                startPortalParticleEffects(orangePortal, orangePortal = true)
+                startPortalParticleEffects(bluePortal, orangePortal = false)
+                portalOpenDelay = 0f
+            }
         }
     }
 
-    private fun closePortal(portal: BaseActor3D, dt: Float) {
+    private fun closePortal(portal: BaseActor3D, orangePortal: Boolean, dt: Float) {
+        if (orangePortal) orangePortalEffect.stop()
+        else bluePortalEffect.stop()
         if (portalScale >= 0f) {
-            portalScale -= dt * .4f
+            portalScale -= dt * .5f
             if (portalScale < 0f) {
                 portalScale = 0f
                 portalOpen = false

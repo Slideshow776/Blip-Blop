@@ -21,7 +21,7 @@ open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
     private var scale: Vector3
     protected var stage: Stage3D
     var collisionEnabled = true
-    var id = MathUtils.random(0f, 10_000f)
+    var id: Float = MathUtils.random(0f, 10_000f)
 
     private lateinit var boundingPolygon: Polygon
 
