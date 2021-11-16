@@ -89,8 +89,14 @@ abstract class BaseScreen : Screen, InputProcessor {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f)
     }
 
-    override fun pause() {}
-    override fun resume() {}
+    override fun pause() {
+        BaseGame.minimizeSound!!.play(BaseGame.soundVolume * .25f)
+    }
+
+    override fun resume() {
+        BaseGame.maximizeSound!!.play(BaseGame.soundVolume * .25f)
+    }
+
     override fun dispose() {}
 
     // methods required by InputProcessor interface

@@ -203,6 +203,7 @@ open class LevelScreen : BaseScreen3D() {
         // screen transition
         for (ball in balls) {
             if (ball.pause) {
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
                 transition.fadeInToMenuScreen()
                 break
             } else {

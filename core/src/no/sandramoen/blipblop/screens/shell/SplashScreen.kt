@@ -2,6 +2,7 @@ package no.sandramoen.blipblop.screens.shell
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -57,5 +58,11 @@ class SplashScreen : BaseScreen() {
         super.dispose()
         shock.shaderProgram.dispose()
         shock.remove()
+    }
+
+    override fun keyDown(keycode: Int): Boolean {
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACKSPACE)
+            Gdx.app.exit()
+        return false
     }
 }

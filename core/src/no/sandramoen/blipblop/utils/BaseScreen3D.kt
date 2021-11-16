@@ -99,9 +99,17 @@ abstract class BaseScreen3D : Screen, InputProcessor {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f);
     }
 
-    override fun pause() {}
-    override fun resume() {}
-    override fun dispose() {}
+    override fun pause() {
+        BaseGame.minimizeSound!!.play(BaseGame.soundVolume * .25f)
+    }
+
+    override fun resume() {
+        BaseGame.maximizeSound!!.play(BaseGame.soundVolume * .25f)
+    }
+
+    override fun dispose() {
+        BaseGame.scoreWarningSound!!.play(BaseGame.soundVolume * .25f)
+    }
 
     override fun show() {
         val im = Gdx.input.inputProcessor as InputMultiplexer
