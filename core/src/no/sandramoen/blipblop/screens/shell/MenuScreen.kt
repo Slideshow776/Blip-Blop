@@ -22,19 +22,18 @@ import no.sandramoen.blipblop.utils.GameUtils
 
 class MenuScreen : BaseScreen() {
     private lateinit var tag: String
-    private lateinit var title0: BaseActor
-    private lateinit var madeByLabel: Label
     private lateinit var startClassicButton: TextButton
     private lateinit var startChallengeButton: TextButton
     private lateinit var optionsButton: TextButton
-    private lateinit var exitButton: TextButton
     private lateinit var titleBlipLabel: Label
     private lateinit var titleBlopLabel: Label
 
     private lateinit var ball: BaseActor
     private var leftBallBounds = 0f
     private var rightBallBounds = 0f
-    private var ballMovingLeft = true
+
+    lateinit var titleBlipGroup: Group
+    lateinit var titleBlopGroup: Group
 
     override fun initialize() {
         tag = "MenuScreen.kt"
@@ -49,18 +48,20 @@ class MenuScreen : BaseScreen() {
         // title
         val titleScale = 0.4f
         titleBlipLabel = Label("Blip", BaseGame.labelStyle)
-        val titleBlipGroup = Group()
+        titleBlipGroup = Group()
         titleBlipGroup.scaleBy(titleScale)
         titleBlipGroup.addActor(titleBlipLabel)
+        groupAnimation(titleBlipGroup)
 
         titleBlopLabel = Label("Blop", BaseGame.labelStyle)
-        val titleBlopGroup = Group()
+        titleBlopGroup = Group()
         titleBlopGroup.scaleBy(titleScale)
         titleBlopGroup.addActor(titleBlopLabel)
+        groupAnimation(titleBlopGroup, .1f)
 
         val labelHeight = titleBlipLabel.prefHeight * (1 + titleScale)
 
-        val padding = Gdx.graphics.width * .025f
+        val padding = Gdx.graphics.width * .04f
         val ballSpace = Gdx.graphics.width - padding - (titleBlipLabel.prefWidth * (1 + titleScale)) - (titleBlopLabel.prefWidth * (1 + titleScale))
 
         val titleTable = Table()
@@ -75,13 +76,13 @@ class MenuScreen : BaseScreen() {
         ball.color = Color.GREEN
         val ballSize = Gdx.graphics.width * .03f
         ball.setSize(ballSize, Gdx.graphics.height * .03f * BaseGame.RATIO)
-        ball.setPosition(titleBlipLabel.prefWidth * (1 + titleScale) + ballSize / 2, Gdx.graphics.height * .95f)
+        ball.setPosition(titleBlipLabel.prefWidth * (1 + titleScale) + ballSize / 2, Gdx.graphics.height * .805f)
 
-        leftBallBounds = titleBlipLabel.prefWidth * (1 + titleScale)
+        leftBallBounds = titleBlipLabel.prefWidth * (1 + titleScale) + Gdx.graphics.width * .01f
         rightBallBounds = leftBallBounds + ballSpace
         if (Gdx.app.type == Application.ApplicationType.Android) ball.setSpeed(Gdx.graphics.width * .1f)
-        else ball.setSpeed(Gdx.graphics.width * .04f)
-        ball.setMotionAngle(180f)
+        else ball.setSpeed(Gdx.graphics.width * .03f)
+        ball.setMotionAngle(0f)
 
         // menu
         val buttonScale = .75f
@@ -125,15 +126,13 @@ class MenuScreen : BaseScreen() {
 
         // gui setup
         val table = Table()
-        table.add(titleTable).width(Gdx.graphics.width.toFloat()).row()//.fillX().expandX().row()
+        table.add(titleTable).width(Gdx.graphics.width.toFloat()).padTop(Gdx.graphics.height * .15f).row()
         table.add(buttonsTable).fillY().expandY()
         table.row()
         table.add(MadeByLabel().label).padBottom(Gdx.graphics.height * .01f)
         table.setFillParent(true)
         uiTable.add(table).fill().expand()
         // table.debug = true
-
-        // screen transition
     }
 
     override fun update(dt: Float) {
@@ -161,8 +160,13 @@ class MenuScreen : BaseScreen() {
         return false
     }
 
+    override fun resume() {
+        super.resume()
+        groupAnimation(titleBlipGroup)
+        groupAnimation(titleBlopGroup, .1f)
+    }
+
     private fun startClassicMode() {
-        // screen transition
         startClassicButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
                 Actions.run { transition.fadeInToClassicScreen() }
@@ -170,7 +174,6 @@ class MenuScreen : BaseScreen() {
     }
 
     private fun startChallengeMode() {
-        // screen transition
         startClassicButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
                 Actions.run { transition.fadeInToChallengeScreen() }
@@ -178,7 +181,6 @@ class MenuScreen : BaseScreen() {
     }
 
     private fun changeToOptionsScreen() {
-        // screen transition
         optionsButton.addAction(Actions.sequence(
                 Actions.delay(.5f),
                 Actions.run { transition.fadeInToOptionsScreen() }
@@ -186,8 +188,23 @@ class MenuScreen : BaseScreen() {
     }
 
     private fun exitGame() {
-        // screen transition
-        super.dispose()
-        Gdx.app.exit()
+        titleBlipLabel.addAction(Actions.sequence(
+                Actions.run { transition.fadeIn() },
+                Actions.delay(transition.duration),
+                Actions.run {
+                    super.dispose()
+                    Gdx.app.exit()
+                }
+        ))
+    }
+
+    private fun groupAnimation(label: Group, delay: Float = 0f) {
+        val amount = .1f
+        val duration = .1f
+        label.addAction(Actions.sequence(
+                Actions.delay(.5f + delay),
+                Actions.scaleBy(amount, amount, duration),
+                Actions.scaleBy(-amount, -amount, duration)
+        ))
     }
 }

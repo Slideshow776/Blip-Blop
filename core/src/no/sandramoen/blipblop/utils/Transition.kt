@@ -10,7 +10,7 @@ import no.sandramoen.blipblop.screens.shell.OptionsScreen
 
 class Transition(x: Float = 0f, y: Float = 0f, s: Stage) : BaseActor(x, y, s) {
     private var tag: String = "Transition"
-    private var duration = .125f
+    var duration = .125f
 
     init {
         loadImage("whitePixel_BIG")

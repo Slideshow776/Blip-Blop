@@ -20,7 +20,9 @@ class ScreenTransition {
     fun fadeInAndExit() {
         blackOverLay.addAction(Actions.sequence(
             Actions.fadeIn(actionDuration),
-            Actions.run { Gdx.app.exit() }
+            Actions.run {
+                Gdx.app.exit()
+            }
         ))
     }
 

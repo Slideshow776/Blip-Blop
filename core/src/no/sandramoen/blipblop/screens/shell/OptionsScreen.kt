@@ -220,7 +220,7 @@ class OptionsScreen : BaseScreen() {
 
         // gui setup -------------------------------------------------------------------------------------------------
         val table = Table()
-        table.add(mainLabel).padTop(Gdx.graphics.height * .015f)
+        table.add(mainLabel).padTop(Gdx.graphics.height * .15f)
         table.row()
         table.add(buttonsTable).fillY().expandY()
         table.row()
