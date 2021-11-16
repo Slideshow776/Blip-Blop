@@ -1,5 +1,6 @@
 package no.sandramoen.blipblop.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import no.sandramoen.blipblop.BlipBlopGame;
@@ -15,6 +16,7 @@ public class DesktopLauncher {
 		config.width = (int) (LGg8ThinQWidth / scale);
 		config.height = (int) (LGg8ThinQHeight / scale);
 		config.resizable = false;
+		config.addIcon("images/excluded/ic_launcher-desktop.png", Files.FileType.Internal);
 		new LwjglApplication(new BlipBlopGame(null), config);
 	}
 }
