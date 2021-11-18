@@ -4,10 +4,10 @@
 
     <string name="classicBronzeAchievement">CgkItYCk14wGEAIQAg</string>
     <string name="classicSilverAchievement">CgkItYCk14wGEAIQBA</string>
-    <string name="classicGoldeAchievement">CgkItYCk14wGEAIQAw</string>
+    <string name="classicGoldAchievement">CgkItYCk14wGEAIQAw</string>
 
     <string name="challengeBronzeAchievement">CgkItYCk14wGEAIQBQ</string>
     <string name="challengeSilverAchievement">CgkItYCk14wGEAIQBg</string>
-    <string name="challengeGoldeAchievement">CgkItYCk14wGEAIQBw</string>
+    <string name="challengeGoldAchievement">CgkItYCk14wGEAIQBw</string>
 
 </resources>

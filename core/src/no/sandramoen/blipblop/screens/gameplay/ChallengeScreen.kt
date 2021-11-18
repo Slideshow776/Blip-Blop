@@ -37,7 +37,7 @@ class ChallengeScreen : LevelScreen() {
     override fun initialize() {
         super.initialize()
         tag = "ChallengeScreen"
-        classicMode = false // for achievements..
+        startAchievements(false)
 
         // challenges
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)

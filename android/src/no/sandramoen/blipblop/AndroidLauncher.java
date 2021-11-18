@@ -1,6 +1,5 @@
 package no.sandramoen.blipblop;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -114,7 +113,7 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 		// achievement increment
 		mAchievementClient.increment(getString(R.string.classicBronzeAchievement), 1);
 		mAchievementClient.increment(getString(R.string.classicSilverAchievement), 1);
-		mAchievementClient.increment(getString(R.string.classicGoldeAchievement), 1);
+		mAchievementClient.increment(getString(R.string.classicGoldAchievement), 1);
 	}
 
 	public void incrementChallengeAchievements() {
@@ -126,7 +125,7 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 		// achievement increment
 		mAchievementClient.increment(getString(R.string.challengeBronzeAchievement), 1);
 		mAchievementClient.increment(getString(R.string.challengeSilverAchievement), 1);
-		mAchievementClient.increment(getString(R.string.challengeGoldeAchievement), 1);
+		mAchievementClient.increment(getString(R.string.challengeGoldAchievement), 1);
 	}
 
 	public void showAchievements() {

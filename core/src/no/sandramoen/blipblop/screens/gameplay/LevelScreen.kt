@@ -25,7 +25,6 @@ open class LevelScreen : BaseScreen3D() {
     private lateinit var background: Background
     private var tag = "LevelScreen"
     private var games = 1
-    private var incrementAchievement = false
     private var gameTime = BaseGame.gameTime
     lateinit var players: Array<Player>
     private lateinit var score: Score
@@ -80,8 +79,6 @@ open class LevelScreen : BaseScreen3D() {
     }
 
     override fun update(dt: Float) {
-        registerClassicAchievements(dt)
-
         // player
         for (player in players) {
             for (ball in balls) {
@@ -214,6 +211,7 @@ open class LevelScreen : BaseScreen3D() {
                 ball.pause = true
                 gameMenu.appear(delay = 0f)
                 BaseGame.pauseSound!!.play(BaseGame.soundVolume)
+                gameTime = BaseGame.gameTime
             }
         }
     }
@@ -250,36 +248,41 @@ open class LevelScreen : BaseScreen3D() {
         background.decreaseSpeed = true
     }
 
+    open fun startAchievements(isClassic: Boolean) {
+        background.addAction(Actions.forever(Actions.sequence(
+                Actions.delay(BaseGame.registerAchievementFrequency),
+                Actions.run {
+                    for (ball in balls) {
+                        if (
+                                !ball.pause &&
+                                BaseGame.gameTime <= BaseGame.biggestAchievementTime &&
+                                BaseGame.isGPS &&
+                                BaseGame.gps!!.isSignedIn()
+                        ) {
+                            try {
+                                if (isClassic) {
+                                    BaseGame.gps!!.incrementClassicAchievements()
+                                    BaseGame.gameTime = gameTime
+                                    GameUtils.saveGameState()
+                                } else {
+                                    BaseGame.gps!!.incrementChallengeAchievements()
+                                    BaseGame.gameTime = gameTime
+                                    GameUtils.saveGameState()
+                                }
+                            } catch (error: Error) {
+                                Gdx.app.error(tag, "Could not increment achievement, error: $error")
+                            }
+                        }
+                    }
+                }
+        )))
+    }
+
     private fun reportHitRating() {
         val player1HitRating = players[1].hit.toDouble() / (players[1].hit + players[1].miss)
         val player0HitRating = players[0].hit.toDouble() / (players[0].hit + players[0].miss)
         println("\nGames: $games")
         println("top player: hit rating: ${String.format("%.2f", player1HitRating)}")
         println("bottom player: hit rating: ${String.format("%.2f", player0HitRating)}")
-    }
-
-    private fun registerClassicAchievements(dt: Float) {
-        if (BaseGame.gps != null && BaseGame.gps!!.isSignedIn()) {
-            for (ball in balls) {
-                if (!ball.pause &&
-                        Gdx.app.type == Application.ApplicationType.Android &&
-                        gameTime < BaseGame.biggestAchievementTime) {
-                    gameTime += dt
-                    if (floor(gameTime) % BaseGame.registerAchievementFrequency == 0f && incrementAchievement) {
-                        try {
-                            if (classicMode) BaseGame.gps!!.incrementClassicAchievements()
-                            else BaseGame.gps!!.incrementChallengeAchievements()
-                        } catch (error: Error) {
-                            Gdx.app.error(tag, "Could not increment achievement, error: $error")
-                        }
-                        BaseGame.gameTime = gameTime
-                        GameUtils.saveGameState()
-                        incrementAchievement = false
-                    } else if (floor(gameTime) % BaseGame.registerAchievementFrequency != 0f) {
-                        incrementAchievement = true
-                    }
-                }
-            }
-        }
     }
 }
