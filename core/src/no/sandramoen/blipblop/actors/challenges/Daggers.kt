@@ -90,6 +90,10 @@ class Daggers(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
                     daggers.add(createDaggers(Vector3(-9f, MathUtils.random(-4.5f, 4.5f), 0f)))
                 }
         )))
+
+        // ambient sound
+        BaseGame.daggerMusic!!.volume = BaseGame.musicVolume * .8f
+        BaseGame.daggerMusic!!.play()
     }
 
     override fun resetChallengeLogic() {
@@ -99,6 +103,7 @@ class Daggers(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
         for (dagger in daggers) dagger.remove()
         daggers.clear()
         timer.clearActions()
+        BaseGame.daggerMusic!!.stop()
     }
 
     private fun createDaggers(position: Vector3): BaseActor3D {

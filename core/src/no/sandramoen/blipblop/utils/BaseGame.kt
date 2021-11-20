@@ -53,6 +53,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var glowShader: String? = null
         var levelMusic: Music? = null
         var blackHoleMusic: Music? = null
+        var daggerMusic: Music? = null
         var blipSound: Sound? = null
         var blopSound: Sound? = null
         var startSound: Sound? = null
@@ -112,6 +113,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
 
             assetManager.load("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)
             assetManager.load("audio/music/99431__robinhood76__01738-low-creepy-hole.wav", Music::class.java)
+            assetManager.load("audio/music/581491__carthny__thunder-rush-28-july-2021.wav", Music::class.java)
 
             assetManager.load("audio/sound/blip.wav", Sound::class.java)
             assetManager.load("audio/sound/blop.wav", Sound::class.java)
@@ -157,6 +159,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             // audio
             levelMusic = assetManager.get("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)
             blackHoleMusic = assetManager.get("audio/music/99431__robinhood76__01738-low-creepy-hole.wav", Music::class.java)
+            daggerMusic = assetManager.get("audio/music/581491__carthny__thunder-rush-28-july-2021.wav", Music::class.java)
 
             blipSound = assetManager.get("audio/sound/blip.wav", Sound::class.java)
             blopSound = assetManager.get("audio/sound/blop.wav", Sound::class.java)
