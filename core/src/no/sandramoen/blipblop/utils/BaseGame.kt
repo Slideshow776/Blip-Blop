@@ -70,9 +70,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var countDown1Sound: Sound? = null
         var scoreWarningSound: Sound? = null
         var pauseSound: Sound? = null
+        var daggerSound: Sound? = null
         var portalWorkingSound: Sound? = null
-        var maximizeSound: Sound? = null
-        var minimizeSound: Sound? = null
         var gameTime: Float = 0f
 
         // game state
@@ -131,8 +130,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/scoreWarning.wav", Sound::class.java)
             assetManager.load("audio/sound/pause.wav", Sound::class.java)
             assetManager.load("audio/sound/portalWorking.wav", Sound::class.java)
-            assetManager.load("audio/sound/maximize.wav", Sound::class.java)
-            assetManager.load("audio/sound/minimize.wav", Sound::class.java)
+            assetManager.load("audio/sound/175953__freefire66__dagger-drawn2.wav", Sound::class.java)
 
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
@@ -176,8 +174,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             scoreWarningSound = assetManager.get("audio/sound/scoreWarning.wav", Sound::class.java)
             pauseSound = assetManager.get("audio/sound/pause.wav", Sound::class.java)
             portalWorkingSound = assetManager.get("audio/sound/portalWorking.wav", Sound::class.java)
-            maximizeSound = assetManager.get("audio/sound/maximize.wav", Sound::class.java)
-            minimizeSound = assetManager.get("audio/sound/minimize.wav", Sound::class.java)
+            daggerSound = assetManager.get("audio/sound/175953__freefire66__dagger-drawn2.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()

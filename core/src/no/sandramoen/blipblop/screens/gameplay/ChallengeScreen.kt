@@ -31,6 +31,7 @@ class ChallengeScreen : LevelScreen() {
     private lateinit var portals: Portals
     private lateinit var rectangles: Rectangles
     private lateinit var bubbles: Bubbles
+    private lateinit var daggers: Daggers
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -47,6 +48,7 @@ class ChallengeScreen : LevelScreen() {
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
         rectangles = Rectangles(0f, 0f, foreground2DStage, balls, mainStage3D)
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
+        daggers = Daggers(0f, 0f, foreground2DStage, balls, mainStage3D)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -150,6 +152,8 @@ class ChallengeScreen : LevelScreen() {
         rectangles.remove()
         bubbles.endChallenge(0f)
         bubbles.remove()
+        daggers.endChallenge(0f)
+        daggers.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
@@ -157,12 +161,13 @@ class ChallengeScreen : LevelScreen() {
         portals = Portals(0f, 0f, foreground2DStage, balls, mainStage3D)
         rectangles = Rectangles(0f, 0f, foreground2DStage, balls, mainStage3D)
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
+        daggers = Daggers(0f, 0f, foreground2DStage, balls, mainStage3D)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 7)) {
+        when (MathUtils.random(1, 8)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -190,6 +195,10 @@ class ChallengeScreen : LevelScreen() {
             7 -> {
                 bubbles.startChallenge()
                 currentChallenge = bubbles
+            }
+            8 -> {
+                daggers.startChallenge()
+                currentChallenge = daggers
             }
         }
 
@@ -227,6 +236,7 @@ class ChallengeScreen : LevelScreen() {
             portals.endChallenge(0f)
             rectangles.endChallenge(0f)
             bubbles.endChallenge(0f)
+            daggers.endChallenge(0f)
             currentChallenge = null
         }
         if (ball.pause) {
