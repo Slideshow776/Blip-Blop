@@ -64,11 +64,9 @@ open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
 
     fun getTurnAngle(): Float { return rotation.getAngleAround(0f, -1f, 0f) }
 
-    fun setTurnAngle(degrees: Float) {
-        rotation.set(Quaternion(Vector3.Z, degrees))
-    }
+    fun setTurnAngleZ(degrees: Float) { rotation.set(Quaternion(Vector3.Z, degrees)) }
 
-    fun turn(degrees: Float) { rotation.mul(Quaternion(Vector3.X, -degrees)) }
+    fun turnX(degrees: Float) { rotation.mul(Quaternion(Vector3.X, -degrees)) }
     fun turnZ(degrees: Float) { rotation.mul(Quaternion(Vector3.Z, -degrees)) }
 
     fun moveForward(dist: Float) { moveBy(rotation.transform(Vector3(0f, 0f, -1f)).scl(dist)) }

@@ -36,12 +36,13 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
     private var topPlayerYPosition = 5.1f
     private var bottomPlayerYPosition = -5.1f
     private var normalizedXPosition = .5f
-    private var shadowBall: Ball
     private var shouldRunBallImpactAnimation = false
     private var ballImpactAnimationPercent = 0f
     private var turnInterpolation = 0f
     private var stage2D = stage2D
 
+    val shadowBallSpeed = 5f
+    var shadowBall: Ball
     val bottomPlayer: Boolean = bottomPlayer
     var label: PlayerLabel
     val width = 1.875f
@@ -147,7 +148,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
 
     fun spawnShadowBall(ball: Ball) { // inspired by https://www.rharel.com/projects/pong-ai
         shadowBall.setPosition(ball.getPosition())
-        shadowBall.setVelocity(Vector2(ball.getVelocity().x * 5f, ball.getVelocity().y * 5f))
+        shadowBall.setVelocity(Vector2(ball.getVelocity().x * shadowBallSpeed, ball.getVelocity().y * shadowBallSpeed))
         shadowBall.inPlay = true
     }
 
@@ -160,7 +161,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
     private fun moveLeft() {
         if (getPosition().x >= leftWorldBounds) {
             if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
-                setTurnAngle(0f)
+                setTurnAngleZ(0f)
                 val entitySpeed = if (enableAI) speedAI else speedPlayerDesktop
                 var entityAcceleration = if (enableAI) accelerationAI else accelerationPlayerDesktop
 
@@ -178,7 +179,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
     private fun moveRight() {
         if (getPosition().x <= rightWorldBounds) {
             if (Gdx.app.type == Application.ApplicationType.Desktop || enableAI) {
-                setTurnAngle(0f)
+                setTurnAngleZ(0f)
                 val entitySpeed = if (enableAI) speedAI else speedPlayerDesktop
                 var entityAcceleration = if (enableAI) accelerationAI else accelerationPlayerDesktop
 
@@ -197,7 +198,7 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
         accelerationPlayerDesktop = 1f
         accelerationAI = 1f
         turnInterpolation = 0f
-        setTurnAngle(turnInterpolation)
+        setTurnAngleZ(turnInterpolation)
     }
 
     private fun ballImpactAnimation() {
@@ -227,11 +228,11 @@ open class Player(x: Float = 0f, y: Float = 0f, z: Float = 0f, s: Stage3D, stage
         if (left) {
             if (turnInterpolation < 0) turnInterpolation = 0f
             if (turnInterpolation < max) turnInterpolation += amount
-            setTurnAngle(turnInterpolation)
+            setTurnAngleZ(turnInterpolation)
         } else {
             if (turnInterpolation > 0) turnInterpolation = 0f
             if (turnInterpolation > -max) turnInterpolation -= amount
-            setTurnAngle(turnInterpolation)
+            setTurnAngleZ(turnInterpolation)
         }
 
         // reset y position

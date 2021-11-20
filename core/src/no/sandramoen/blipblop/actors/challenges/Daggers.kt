@@ -112,7 +112,7 @@ class Daggers(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
         baseActor.setBaseRectangle()
         baseActor.setPosition(position)
         baseActor.setSpeed(daggerSpeed)
-        baseActor.setTurnAngle(daggerAngle)
+        baseActor.setTurnAngleZ(daggerAngle)
         baseActor.setMotionAngle(daggerAngle)
 
         // miscellaneous

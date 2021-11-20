@@ -72,6 +72,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var pauseSound: Sound? = null
         var daggerSound: Sound? = null
         var portalWorkingSound: Sound? = null
+        var spinSound: Sound? = null
         var gameTime: Float = 0f
 
         // game state
@@ -131,6 +132,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/pause.wav", Sound::class.java)
             assetManager.load("audio/sound/portalWorking.wav", Sound::class.java)
             assetManager.load("audio/sound/175953__freefire66__dagger-drawn2.wav", Sound::class.java)
+            assetManager.load("audio/sound/spin.wav", Sound::class.java)
 
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
@@ -175,6 +177,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             pauseSound = assetManager.get("audio/sound/pause.wav", Sound::class.java)
             portalWorkingSound = assetManager.get("audio/sound/portalWorking.wav", Sound::class.java)
             daggerSound = assetManager.get("audio/sound/175953__freefire66__dagger-drawn2.wav", Sound::class.java)
+            spinSound = assetManager.get("audio/sound/spin.wav", Sound::class.java)
 
             // text files
             defaultShader = assetManager.get("shaders/default.vs", Text::class.java).getString()

@@ -4,12 +4,10 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import no.sandramoen.blipblop.actors.Background
 import no.sandramoen.blipblop.actors.challenges.*
 import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
@@ -32,6 +30,7 @@ class ChallengeScreen : LevelScreen() {
     private lateinit var rectangles: Rectangles
     private lateinit var bubbles: Bubbles
     private lateinit var daggers: Daggers
+    private lateinit var spinny: Spinny
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -49,6 +48,7 @@ class ChallengeScreen : LevelScreen() {
         rectangles = Rectangles(0f, 0f, foreground2DStage, balls, mainStage3D)
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
         daggers = Daggers(0f, 0f, foreground2DStage, balls, mainStage3D)
+        spinny = Spinny(0f, 0f, foreground2DStage, balls, players, mainStage3D)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -154,6 +154,8 @@ class ChallengeScreen : LevelScreen() {
         bubbles.remove()
         daggers.endChallenge(0f)
         daggers.remove()
+        spinny.endChallenge(0f)
+        spinny.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
@@ -162,12 +164,13 @@ class ChallengeScreen : LevelScreen() {
         rectangles = Rectangles(0f, 0f, foreground2DStage, balls, mainStage3D)
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
         daggers = Daggers(0f, 0f, foreground2DStage, balls, mainStage3D)
+        spinny = Spinny(0f, 0f, foreground2DStage, balls, players, mainStage3D)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 8)) {
+        when (MathUtils.random(1, 9)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -199,6 +202,10 @@ class ChallengeScreen : LevelScreen() {
             8 -> {
                 daggers.startChallenge()
                 currentChallenge = daggers
+            }
+            9 -> {
+                spinny.startChallenge()
+                currentChallenge = spinny
             }
         }
 
@@ -237,6 +244,7 @@ class ChallengeScreen : LevelScreen() {
             rectangles.endChallenge(0f)
             bubbles.endChallenge(0f)
             daggers.endChallenge(0f)
+            spinny.endChallenge(0f)
             currentChallenge = null
         }
         if (ball.pause) {
