@@ -104,10 +104,8 @@ class Bubbles(x: Float, y: Float, s: Stage, balls: Array<Ball>, players: Array<P
         endFlag = false
         bubblesShowing = false
         bubblesScale = 0f
-        for (bubble in bubbles) {
-            bubble.setPosition(Vector3(50f, 50f, 50f))
-            bubble.remove()
-        }
+        for (bubble in bubbles)
+            popBubble(bubble)
         bubbles.clear()
     }
 

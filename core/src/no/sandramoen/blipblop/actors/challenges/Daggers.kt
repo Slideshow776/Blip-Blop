@@ -92,7 +92,7 @@ class Daggers(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
         )))
 
         // ambient sound
-        BaseGame.daggerMusic!!.volume = BaseGame.musicVolume * .8f
+        BaseGame.daggerMusic!!.volume = BaseGame.musicVolume * .9f
         BaseGame.daggerMusic!!.play()
     }
 
