@@ -212,6 +212,7 @@ open class LevelScreen : BaseScreen3D() {
                 gameMenu.appear(delay = 0f)
                 BaseGame.pauseSound!!.play(BaseGame.soundVolume)
                 gameTime = BaseGame.gameTime
+                score.resetWarnings()
             }
         }
     }

@@ -88,5 +88,8 @@ class Score(uiTable: Table) {
         }
     }
 
-
+    fun resetWarnings() {
+        topWarning = true
+        bottomWarning = true
+    }
 }
