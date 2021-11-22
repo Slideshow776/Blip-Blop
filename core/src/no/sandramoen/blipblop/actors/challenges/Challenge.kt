@@ -24,7 +24,7 @@ open class Challenge(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             resetChallengeLogic()
             finished = true
             start = false
-        } else if (actions.size == 0) {
+        } else if (actions.size == 0) { // TODO: relying on actions to be zero is not too good...
             addAction(Actions.sequence(
                     Actions.fadeOut(1f),
                     Actions.delay(4f),

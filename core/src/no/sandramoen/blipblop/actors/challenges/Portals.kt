@@ -65,6 +65,7 @@ class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : 
             time += dt
             if (time >= endTime && !endFlag) {
                 endFlag = true
+                clearActions() // TODO: hard to replicate this bug, hope this fixes is. Possible duplicate bug in other challenges.
                 endChallenge()
             }
 
