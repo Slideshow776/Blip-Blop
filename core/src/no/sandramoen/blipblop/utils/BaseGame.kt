@@ -84,6 +84,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var isGPS = false
         var registerAchievementFrequency: Float = 3 * 60f   // three minutes
         var biggestAchievementTime: Float = 60 * 60f        // one hour
+        var bottomPlayerColor = Color.FIREBRICK
+        var topPlayerColor = Color(0.052f,0.329f,1f, 1f)
 
         fun setActiveScreen(s: BaseScreen) {
             game?.setScreen(s)

@@ -17,6 +17,9 @@ class Score(uiTable: Table) {
     private var topWarning = true
     private var bottomWarning = true
 
+    private var topColour = Color.WHITE
+    private var bottomColour = Color.WHITE
+
     init {
         // initialize
         topPlayerLabel = Label("0", BaseGame.labelStyle)
@@ -46,19 +49,26 @@ class Score(uiTable: Table) {
         bottomPlayerLabel.setText("$bottomScore")
     }
 
+    fun setColours(topColor: Color, bottomColor: Color) {
+        topColour = topColor
+        bottomColour = bottomColor
+        topPlayerLabel.color = topColour
+        bottomPlayerLabel.color = bottomColour
+    }
+
     fun topScoreWarning(top: Boolean) {
         if (top && topWarning) {
             BaseGame.scoreWarningSound!!.play(BaseGame.soundVolume)
             val duration = .1f
             topPlayerLabel.addAction(Actions.sequence(
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration),
+                    Actions.color(topColour, duration),
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration),
+                    Actions.color(topColour, duration),
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration),
+                    Actions.color(topColour, duration),
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration)
+                    Actions.color(topColour, duration)
             ))
             topWarning = false
         } else if (!top && bottomWarning) {
@@ -66,15 +76,17 @@ class Score(uiTable: Table) {
             val duration = .1f
             bottomPlayerLabel.addAction(Actions.sequence(
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration),
+                    Actions.color(bottomColour, duration),
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration),
+                    Actions.color(bottomColour, duration),
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration),
+                    Actions.color(bottomColour, duration),
                     Actions.color(Color.GOLD, duration),
-                    Actions.color(Color.WHITE, duration)
+                    Actions.color(bottomColour, duration)
             ))
             bottomWarning = false
         }
     }
+
+
 }

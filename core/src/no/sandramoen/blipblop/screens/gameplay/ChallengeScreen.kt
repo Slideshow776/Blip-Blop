@@ -31,6 +31,7 @@ class ChallengeScreen : LevelScreen() {
     private lateinit var bubbles: Bubbles
     private lateinit var daggers: Daggers
     private lateinit var spinny: Spinny
+    private lateinit var scoreSwap: ScoreSwap
     private lateinit var challengeTextLabel: Label
     private lateinit var challengeCountdownLabel: Label
 
@@ -49,6 +50,7 @@ class ChallengeScreen : LevelScreen() {
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
         daggers = Daggers(0f, 0f, foreground2DStage, balls, mainStage3D)
         spinny = Spinny(0f, 0f, foreground2DStage, balls, players, mainStage3D)
+        scoreSwap = ScoreSwap(0f, 0f, foreground2DStage, players, score)
 
         // ui
         challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
@@ -156,6 +158,8 @@ class ChallengeScreen : LevelScreen() {
         daggers.remove()
         spinny.endChallenge(0f)
         spinny.remove()
+        scoreSwap.endChallenge(0f)
+        scoreSwap.remove()
         foggyVeil = FoggyVeil(50f, 50f, foreground2DStage)
         multiBall = MultiBall(0f, 0f, foreground2DStage, balls, mainStage3D)
         longPlayer = LongPlayer(0f, 0f, foreground2DStage, players)
@@ -165,12 +169,13 @@ class ChallengeScreen : LevelScreen() {
         bubbles = Bubbles(0f, 0f, foreground2DStage, balls, players, mainStage3D)
         daggers = Daggers(0f, 0f, foreground2DStage, balls, mainStage3D)
         spinny = Spinny(0f, 0f, foreground2DStage, balls, players, mainStage3D)
+        scoreSwap = ScoreSwap(0f, 0f, foreground2DStage, players, score)
     }
 
     private fun giveRandomChallenge() {
         isChallenge = true
 
-        when (MathUtils.random(1, 9)) {
+        when (MathUtils.random(1, 10)) {
             1 -> {
                 foggyVeil.startChallenge()
                 currentChallenge = foggyVeil
@@ -206,6 +211,10 @@ class ChallengeScreen : LevelScreen() {
             9 -> {
                 spinny.startChallenge()
                 currentChallenge = spinny
+            }
+            10 -> {
+                scoreSwap.startChallenge()
+                currentChallenge = scoreSwap
             }
         }
 
@@ -245,6 +254,8 @@ class ChallengeScreen : LevelScreen() {
             bubbles.endChallenge(0f)
             daggers.endChallenge(0f)
             spinny.endChallenge(0f)
+            scoreSwap.endChallenge(0f)
+            scoreSwap.swapScores()
             currentChallenge = null
         }
         if (ball.pause) {

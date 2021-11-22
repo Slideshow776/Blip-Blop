@@ -29,8 +29,8 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
 
     init {
         // set-up
-        if (bottomPlayer) { color = Color.FIREBRICK }
-        else { color = Color(0.052f,0.329f,1f, 1f) }
+        if (bottomPlayer) { color = BaseGame.bottomPlayerColor }
+        else { color = BaseGame.topPlayerColor }
         loadImage("touchToPlay!")
 
         setPosition(0f, 0f)
