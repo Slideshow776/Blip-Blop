@@ -14,7 +14,7 @@ import no.sandramoen.blipblop.utils.*
 
 class Spinny(x: Float, y: Float, s: Stage, balls: Array<Ball>, players: Array<Player>, s3D: Stage3D) : Challenge(x, y, s) {
     private var tag = "Spinny"
-    override var title = "Spinny!"
+    override var title = BaseGame.myBundle!!.get("spinny")
 
     private val s3D = s3D
     private var balls = balls

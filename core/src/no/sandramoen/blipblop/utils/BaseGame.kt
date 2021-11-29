@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
+import com.badlogic.gdx.utils.I18NBundle
 import kotlin.system.measureTimeMillis
 
 abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), AssetErrorListener {
@@ -86,6 +87,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
         var biggestAchievementTime: Float = 60 * 60f        // one hour
         var bottomPlayerColor = Color.FIREBRICK
         var topPlayerColor = Color(0.052f,0.329f,1f, 1f)
+        var myBundle: I18NBundle? = null
 
         fun setActiveScreen(s: BaseScreen) {
             game?.setScreen(s)
@@ -151,12 +153,11 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
 
             assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
+            assetManager.load("i18n/MyBundle", I18NBundle::class.java)
+
             assetManager.finishLoading()
 
             textureAtlas = assetManager.get("images/included/packed/blipBlop.pack.atlas") // all images are found in this global static variable
-
-            // skin
-            skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
 
             // audio
             levelMusic = assetManager.get("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)
@@ -190,6 +191,12 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             glowShader = assetManager.get("shaders/glow-pulse.fs", Text::class.java).getString()
             backgroundShader = assetManager.get("shaders/voronoi01.fs", Text::class.java).getString()
             veilShader = assetManager.get("shaders/veil.fs", Text::class.java).getString()
+
+            // skin
+            skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
+
+            // i18n
+            myBundle = assetManager["i18n/MyBundle", I18NBundle::class.java]
 
             // fonts
             FreeTypeFontGenerator.setMaxTextureSize(2048) // solves font bug that won't show some characters like "." and "," in android

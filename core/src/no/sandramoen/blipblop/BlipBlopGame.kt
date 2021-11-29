@@ -19,6 +19,6 @@ class BlipBlopGame(googlePlayServices: GooglePlayServices?) : BaseGame(googlePla
         // setActiveScreen(OptionsScreen())
 
         // setActiveScreen(ClassicScreen())
-        setActiveScreen(ChallengeScreen())
+        // setActiveScreen(ChallengeScreen())
     }
 }

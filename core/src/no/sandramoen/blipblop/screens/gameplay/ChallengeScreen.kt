@@ -53,7 +53,7 @@ class ChallengeScreen : LevelScreen() {
         scoreSwap = ScoreSwap(0f, 0f, foreground2DStage, players, score)
 
         // ui
-        challengeTextLabel = Label("Challenge!", BaseGame.labelStyle)
+        challengeTextLabel = Label(BaseGame.myBundle!!.get("challenge"), BaseGame.labelStyle)
         challengeTextLabel.color = Color.GOLDENROD
         if (Gdx.app.type == Application.ApplicationType.Android) {
             challengeTextLabel.setFontScale(.055f)
@@ -229,7 +229,7 @@ class ChallengeScreen : LevelScreen() {
                         Actions.delay(1f),
                         Actions.fadeOut(1f),
                         Actions.delay(1f),
-                        Actions.run { challengeTextLabel.setText("Challenge!") }
+                        Actions.run { challengeTextLabel.setText(BaseGame.myBundle!!.get("challenge")) }
                 )
         )
         challengeCountdownLabel.addAction(Actions.fadeOut(.25f))
@@ -262,7 +262,7 @@ class ChallengeScreen : LevelScreen() {
             challengeTextLabel.clearActions()
             challengeTextLabel.addAction(Actions.sequence(
                     Actions.fadeOut(.5f),
-                    Actions.run { challengeTextLabel.setText("Challenge!") }
+                    Actions.run { challengeTextLabel.setText(BaseGame.myBundle!!.get("challenge")) }
             ))
             challengeCountdownLabel.clearActions()
             challengeCountdownLabel.addAction(Actions.fadeOut(.5f))

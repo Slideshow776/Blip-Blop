@@ -24,7 +24,7 @@ class GameMenu(uiTable: Table) {
         // initialize
         val scale = if (Gdx.app.type == Application.ApplicationType.Android) .8f else .5f
         val offset = if (Gdx.app.type == Application.ApplicationType.Android) 60f else 80f
-        restart = TextButton("Restart", BaseGame.textButtonStyle)
+        restart = TextButton(BaseGame.myBundle!!.get("restart"), BaseGame.textButtonStyle)
         restart.isTransform = true
         restart.label.setFontScale(scale)
         restart.padRight(offset * scale)
@@ -32,7 +32,7 @@ class GameMenu(uiTable: Table) {
         restart.color.a = 0f
         GameUtils.addTextButtonEnterExitEffect(restart)
 
-        mainMenu = TextButton("Main Menu", BaseGame.textButtonStyle)
+        mainMenu = TextButton(BaseGame.myBundle!!.get("mainMenu"), BaseGame.textButtonStyle)
         mainMenu.isTransform = true
         mainMenu.label.setFontScale(scale)
         mainMenu.padRight(offset * scale)
@@ -41,7 +41,6 @@ class GameMenu(uiTable: Table) {
         mainMenu.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
-                // TODO: screen transition
                 BaseGame.setActiveScreen(MenuScreen())
             }
         })

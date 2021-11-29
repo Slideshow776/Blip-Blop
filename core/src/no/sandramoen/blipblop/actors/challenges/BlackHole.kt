@@ -27,7 +27,7 @@ class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) 
     private var time = 0f
     private var endFlag = false
     private var balls = balls
-    override var title = "Black Hole!"
+    override var title: String = BaseGame.myBundle!!.get("blackHole")
 
     private val endTime = 40f
     private val s3D = s3D

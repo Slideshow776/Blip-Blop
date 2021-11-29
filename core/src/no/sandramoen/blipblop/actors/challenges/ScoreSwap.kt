@@ -9,7 +9,7 @@ import no.sandramoen.blipblop.utils.BaseGame
 
 class ScoreSwap(x: Float, y: Float, s: Stage, players: Array<Player>, score: Score) : Challenge(x, y, s) {
     private var tag = "ScoreSwap"
-    override var title = "Swap Scores!"
+    override var title = BaseGame.myBundle!!.get("scoreSwap")
 
     private var players = players
     private var score = score

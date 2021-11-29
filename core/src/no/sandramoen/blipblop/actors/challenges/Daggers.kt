@@ -20,7 +20,7 @@ import no.sandramoen.blipblop.utils.*
 
 class Daggers(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : Challenge(x, y, s) {
     private var tag = "Daggers"
-    override var title = "Daggers!"
+    override var title = BaseGame.myBundle!!.get("daggers")
 
     private val s3D = s3D
     private var balls = balls

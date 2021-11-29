@@ -3,13 +3,14 @@ package no.sandramoen.blipblop.actors.challenges
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Player
+import no.sandramoen.blipblop.utils.BaseGame
 
 class LongPlayer(x: Float, y: Float, s: Stage, players: Array<Player>) : Challenge(x, y, s) {
     private var tag = "LongPlayer"
     private var players = players
     private var manipulatePlayers = false
 
-    override var title = "Long Paddles!"
+    override var title = BaseGame.myBundle!!.get("longPaddles")
 
     override fun act(dt: Float) {
         super.act(dt)

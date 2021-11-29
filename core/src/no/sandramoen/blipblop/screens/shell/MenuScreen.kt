@@ -86,7 +86,7 @@ class MenuScreen : BaseScreen() {
 
         // menu
         val buttonScale = .75f
-        startClassicButton = TextButton("Classic", BaseGame.textButtonStyle)
+        startClassicButton = TextButton(BaseGame.myBundle!!.get("classicMode"), BaseGame.textButtonStyle)
         startClassicButton.label.setFontScale(buttonScale)
         startClassicButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
@@ -97,7 +97,7 @@ class MenuScreen : BaseScreen() {
         })
         GameUtils.addTextButtonEnterExitEffect(startClassicButton)
 
-        startChallengeButton = TextButton("Challenge", BaseGame.textButtonStyle)
+        startChallengeButton = TextButton(BaseGame.myBundle!!.get("challengeMode"), BaseGame.textButtonStyle)
         startChallengeButton.label.setFontScale(buttonScale)
         startChallengeButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
@@ -108,7 +108,7 @@ class MenuScreen : BaseScreen() {
         })
         GameUtils.addTextButtonEnterExitEffect(startChallengeButton)
 
-        optionsButton = TextButton("Options", BaseGame.textButtonStyle)
+        optionsButton = TextButton(BaseGame.myBundle!!.get("options"), BaseGame.textButtonStyle)
         optionsButton.label.setFontScale(buttonScale)
         optionsButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {

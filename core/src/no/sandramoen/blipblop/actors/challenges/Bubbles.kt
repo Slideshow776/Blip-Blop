@@ -23,7 +23,7 @@ import no.sandramoen.blipblop.utils.Stage3D
 
 class Bubbles(x: Float, y: Float, s: Stage, balls: Array<Ball>, players: Array<Player>, s3D: Stage3D) : Challenge(x, y, s) {
     private var tag = "Bubbles"
-    override var title = "Bubbles!"
+    override var title = BaseGame.myBundle!!.get("bubbles")
 
     private val s3D = s3D
     private var balls = balls

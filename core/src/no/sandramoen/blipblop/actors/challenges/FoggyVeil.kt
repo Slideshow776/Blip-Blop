@@ -17,7 +17,7 @@ import no.sandramoen.blipblop.utils.BaseGame
 
 class FoggyVeil(x: Float, y: Float, s: Stage) : Challenge(x, y, s) {
     private var tag = "FoggyVeil"
-    override var title = "Foggy Veil!"
+    override var title = BaseGame.myBundle!!.get("foggyVeil")
 
     private var bottomEffect: ParticleActor
     private var topEffect: ParticleActor

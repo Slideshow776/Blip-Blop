@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
 import no.sandramoen.blipblop.actors.particleEffects.BubblePopEffect
 import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
+import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GameUtils
 import no.sandramoen.blipblop.utils.Stage3D
 
@@ -20,7 +21,7 @@ class MultiBall(x: Float, y: Float, s2D: Stage, balls: Array<Ball>, mainStage3D:
     private var mainStage3D = mainStage3D
     private var s2D = s2D
 
-    override var title = "Multi Ball!"
+    override var title = BaseGame.myBundle!!.get("multiBall")
     var shouldSpawn = false
 
     override fun startChallengeLogic() {

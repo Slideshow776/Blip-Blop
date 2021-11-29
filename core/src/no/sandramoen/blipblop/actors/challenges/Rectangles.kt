@@ -20,7 +20,7 @@ import no.sandramoen.blipblop.utils.Stage3D
 
 class Rectangles(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : Challenge(x, y, s) {
     private var tag = "Rectangles"
-    override var title = "Rectangles!" // for some reason a 'c' followed by a 'k' does not work too well with the font..
+    override var title = BaseGame.myBundle!!.get("rectangles")
 
     private val s3D = s3D
     private var balls = balls

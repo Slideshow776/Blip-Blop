@@ -41,7 +41,7 @@ class OptionsScreen : BaseScreen() {
         Background(0f, 0f, mainStage, colour = Vector3(.09f, .09f, .09f))
 
         // main label ---------------------------------------------------------------------------------------------
-        val mainLabel = Label("Options", BaseGame.labelStyle)
+        val mainLabel = Label(BaseGame.myBundle!!.get("options"), BaseGame.labelStyle)
         mainLabel.setFontScale(1.5f)
 
         val optionsWidgetWidth = Gdx.graphics.width * .6f // value must be pre-determined for scaling
@@ -49,7 +49,7 @@ class OptionsScreen : BaseScreen() {
         val optionsSliderScale = Gdx.graphics.height * .002f // makes sure scale is device adjustable-ish
 
         // music -------------------------------------------------------------------------------------------------
-        val musicLabel = Label("Music", BaseGame.labelStyle)
+        val musicLabel = Label(BaseGame.myBundle!!.get("music"), BaseGame.labelStyle)
         musicLabel.setFontScale(.5f)
         GameUtils.addWidgetEnterExitEffect(musicLabel)
 
@@ -81,7 +81,7 @@ class OptionsScreen : BaseScreen() {
         })
 
         // sound -------------------------------------------------------------------------------------------------
-        val soundLabel = Label("Sound", BaseGame.labelStyle)
+        val soundLabel = Label(BaseGame.myBundle!!.get("sound"), BaseGame.labelStyle)
         soundLabel.setFontScale(.5f)
         GameUtils.addWidgetEnterExitEffect(soundLabel)
 
@@ -114,7 +114,7 @@ class OptionsScreen : BaseScreen() {
         })
 
         // display achievements ----------------------------------------------------------------------------------------
-        achievementButton = TextButton("Achievements", BaseGame.textButtonStyle)
+        achievementButton = TextButton(BaseGame.myBundle!!.get("achievements"), BaseGame.textButtonStyle)
         achievementButton.label.setFontScale(.5f)
         achievementButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
@@ -140,7 +140,7 @@ class OptionsScreen : BaseScreen() {
         achievementTable.add(achievementImage).width(Gdx.graphics.width * .06f).height(Gdx.graphics.height * .045f)
 
         // google play services --------------------------------------------------------------------------------------
-        val gpsLabel = Label("Google Play Services", BaseGame.labelStyle)
+        val gpsLabel = Label("Google Play ${BaseGame.myBundle!!.get("services")}", BaseGame.labelStyle)
         gpsLabel.setFontScale(.5f)
 
         onImage = Image(BaseGame.textureAtlas!!.findRegion("gpsOn"))
@@ -184,7 +184,7 @@ class OptionsScreen : BaseScreen() {
         // gpsTable.debug = true
 
         // back button -------------------------------------------------------------------------------------------------
-        val backButton = TextButton("Back", BaseGame.textButtonStyle)
+        val backButton = TextButton(BaseGame.myBundle!!.get("back"), BaseGame.textButtonStyle)
         backButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)

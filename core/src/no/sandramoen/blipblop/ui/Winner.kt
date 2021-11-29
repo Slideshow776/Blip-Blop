@@ -22,14 +22,14 @@ class Winner(uiTable: Table) {
     init {
         // initialize
         val scale = 1.0f
-        topPlayerLabel = Label("Winner!", BaseGame.labelStyle)
+        topPlayerLabel = Label(BaseGame.myBundle!!.get("winner"), BaseGame.labelStyle)
         topPlayerLabel.setAlignment(Align.center)
         topPlayerLabel.setFontScale(scale)
         topPlayerLabel.color.a = 0f
         topTable = Table()
         topTable.add(topPlayerLabel)
 
-        bottomPlayerLabel = Label("Winner!", BaseGame.labelStyle)
+        bottomPlayerLabel = Label(BaseGame.myBundle!!.get("winner"), BaseGame.labelStyle)
         bottomPlayerLabel.setAlignment(Align.center)
         bottomPlayerLabel.setFontScale(scale)
         bottomPlayerLabel.color.a = 0f

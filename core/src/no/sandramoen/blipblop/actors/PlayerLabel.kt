@@ -31,7 +31,9 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
         // set-up
         if (bottomPlayer) { color = BaseGame.bottomPlayerColor }
         else { color = BaseGame.topPlayerColor }
-        loadImage("touchToPlay!")
+
+        if (BaseGame.myBundle!!.get("locale") == "no") loadImage("touchToPlay!_no")
+        else loadImage("touchToPlay!")
 
         setPosition(0f, 0f)
         setSize(37f, 8f * BaseGame.RATIO)

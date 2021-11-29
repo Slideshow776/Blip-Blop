@@ -25,7 +25,7 @@ import no.sandramoen.blipblop.utils.Stage3D
 
 class Portals(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : Challenge(x, y, s) {
     private var tag = "Portals"
-    override var title = "Portals!"
+    override var title = BaseGame.myBundle!!.get("portals")
 
     private val endTime = 40f
     private var balls = balls

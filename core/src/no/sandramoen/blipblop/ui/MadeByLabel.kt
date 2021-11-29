@@ -13,7 +13,7 @@ import no.sandramoen.blipblop.utils.GameUtils
 class MadeByLabel {
     var label: Label
     init {
-        label = Label("made by Sandra Moen 2021", BaseGame.labelStyle)
+        label = Label("${BaseGame.myBundle!!.get("madeBy")} Sandra Moen 2021", BaseGame.labelStyle)
         label.setFontScale(.4f)
         label.setAlignment(Align.center)
         label.color = Color.GRAY
