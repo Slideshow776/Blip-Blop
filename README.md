@@ -157,6 +157,9 @@ the id of the sound instance if successful, or -1 on failure.
 ```
 This means you can do something like this: `explosionSound.play(soundVolume, MathUtils.random(0f, 2f), 0f)`, which produces a lot of different explosion sounds from just one audio file.
 
+## Android locale
+I used [this](https://medium.com/@hectorricardomendez/how-to-get-the-current-locale-in-android-fc12d8be6242) resource to figure how to extract the locale from an android device.
+
 For other project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
 
 [Go back to the top](#blip-blop).
