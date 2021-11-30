@@ -1,9 +1,16 @@
 package no.sandramoen.blipblop;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.LocaleList;
 import android.view.Gravity;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.backends.android.AndroidGraphics;
@@ -13,6 +20,9 @@ import com.google.android.gms.games.*;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.Locale;
+
 import no.sandramoen.blipblop.utils.GooglePlayServices;
 
 public class AndroidLauncher extends AndroidApplication implements GooglePlayServices {
@@ -30,13 +40,29 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 	private AchievementsClient mAchievementClient;
 	private PlayersClient mPlayersClient;
 
+	@RequiresApi(api = Build.VERSION_CODES.N)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
 		config.useImmersiveMode = true;
-		initialize(new BlipBlopGame(this), config);
+
+		// locale
+		String locale = "en";
+		try {
+			if (getResources().getConfiguration().getLocales().get(0).toString().equals("nb_NO") || getResources().getConfiguration().getLocales().get(0).toString().equals("nn_NO")) {
+				locale = "no";
+			} else if (Locale.getDefault().toString().equals("nb_NO") || Locale.getDefault().toString().equals("nn_NO")) {
+				locale = "no";
+			} else if (Resources.getSystem().getConfiguration().locale.toString().equals("nb_NO") || Resources.getSystem().getConfiguration().locale.toString().equals("nn_NO")) {
+				locale = "no";
+			}
+		} catch(Exception e) {
+			System.err.println("Error setting up locale in AndroidLauncher.java: " + e);
+		}
+
+		initialize(new BlipBlopGame(this, locale), config);
 	}
 
 	private void startSignInIntent() {
@@ -69,11 +95,11 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 				String message = result.getStatus().getStatusMessage();
 				System.out.println("AndroidLauncher.java: " + result.getStatus());
 				// Status{statusCode=SIGN_IN_REQUIRED, resolution=null}
-				/*if (message == null || message.isEmpty()) {
+				if (message == null || message.isEmpty()) {
 					message = "There was an issue with sign in: " + result.getStatus();
 				}
 				new AlertDialog.Builder(this).setMessage(message)
-						.setNeutralButton(android.R.string.ok, null).show();*/
+						.setNeutralButton(android.R.string.ok, null).show();
 			}
 		}
 	}

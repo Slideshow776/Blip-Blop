@@ -8,7 +8,7 @@ import no.sandramoen.blipblop.screens.shell.SplashScreen
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GooglePlayServices
 
-class BlipBlopGame(googlePlayServices: GooglePlayServices?) : BaseGame(googlePlayServices) {
+class BlipBlopGame(googlePlayServices: GooglePlayServices?, appLocale: String) : BaseGame(googlePlayServices, appLocale) {
 
     override fun create() {
         super.create()

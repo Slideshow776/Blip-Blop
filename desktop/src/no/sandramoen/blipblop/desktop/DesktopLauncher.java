@@ -17,6 +17,6 @@ public class DesktopLauncher {
 		config.height = (int) (LGg8ThinQHeight / scale);
 		config.resizable = false;
 		config.addIcon("images/excluded/ic_launcher-desktop.png", Files.FileType.Internal);
-		new LwjglApplication(new BlipBlopGame(null), config);
+		new LwjglApplication(new BlipBlopGame(null, "en"), config);
 	}
 }

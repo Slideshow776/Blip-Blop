@@ -28,8 +28,9 @@ import kotlin.system.measureTimeMillis
 import com.badlogic.gdx.assets.loaders.I18NBundleLoader.I18NBundleParameter
 import java.util.Locale
 
-abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), AssetErrorListener {
+abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: String) : Game(), AssetErrorListener {
     private val tag = "BaseGame.kt"
+    private val appLocale = appLocale
 
     init {
         game = this
@@ -163,8 +164,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             // skins
             assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
-            // i18n, change locale by swapping country code with the desired one
-            assetManager.load("i18n/MyBundle", I18NBundle::class.java, I18NBundleParameter(Locale("en")))
+            // i18n
+            assetManager.load("i18n/MyBundle", I18NBundle::class.java, I18NBundleParameter(Locale(appLocale)))
 
             assetManager.finishLoading()
 

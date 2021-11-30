@@ -22,6 +22,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        resConfigs "en", "no"
     }
     buildTypes {
         release {
