@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
-import no.sandramoen.blipblop.screens.gameplay.LevelScreen
 import no.sandramoen.blipblop.screens.shell.MenuScreen
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.GameUtils

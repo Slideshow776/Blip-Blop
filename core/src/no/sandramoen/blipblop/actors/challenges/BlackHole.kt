@@ -14,10 +14,7 @@ import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.Stage3D
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
 import no.sandramoen.blipblop.actors.particleEffects.BlackHoleEffect
-import no.sandramoen.blipblop.actors.particleEffects.BubblePopEffect
-import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
 import no.sandramoen.blipblop.utils.BaseGame
-import kotlin.math.floor
 
 
 class BlackHole(x: Float, y: Float, s: Stage, balls: Array<Ball>, s3D: Stage3D) : Challenge(x, y, s) {

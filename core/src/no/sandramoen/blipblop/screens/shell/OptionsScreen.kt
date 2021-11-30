@@ -3,6 +3,7 @@ package no.sandramoen.blipblop.screens.shell
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.assets.loaders.I18NBundleLoader
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector3
@@ -15,11 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.utils.I18NBundle
 import no.sandramoen.blipblop.actors.Background
 import no.sandramoen.blipblop.ui.MadeByLabel
 import no.sandramoen.blipblop.utils.BaseGame
 import no.sandramoen.blipblop.utils.BaseScreen
 import no.sandramoen.blipblop.utils.GameUtils
+import java.util.*
 
 class OptionsScreen : BaseScreen() {
     private lateinit var tag: String
@@ -139,6 +142,38 @@ class OptionsScreen : BaseScreen() {
         achievementTable.add(achievementButton)
         achievementTable.add(achievementImage).width(Gdx.graphics.width * .06f).height(Gdx.graphics.height * .045f)
 
+        // language toggle -------------------------------------------------------------------------------------------------
+        val localeLabel = Label("${BaseGame.myBundle!!.get("chooseLanguage")}", BaseGame.labelStyle)
+        localeLabel.setFontScale(.5f)
+        val localeLeftButton = TextButton("<<", BaseGame.textButtonStyle)
+        localeLeftButton.label.setFontScale(.5f)
+        localeLeftButton.label.color = BaseGame.lightPink
+        localeLeftButton.addListener(object : ActorGestureListener() {
+            override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                if (BaseGame.currentLocale == "en") changeLocale("no")
+                else if (BaseGame.currentLocale == "no") changeLocale("en")
+            }
+        })
+        val language = if (BaseGame.currentLocale == "no") "Norsk" else "English"
+        val localeLanguageLabel = Label(language, BaseGame.labelStyle)
+        localeLanguageLabel.setFontScale(.5f)
+        val localeRightButton = TextButton(">>", BaseGame.textButtonStyle)
+        localeRightButton.label.setFontScale(.5f)
+        localeRightButton.label.color = BaseGame.lightPink
+        localeRightButton.addListener(object : ActorGestureListener() {
+            override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
+                BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                if (BaseGame.currentLocale == "en") changeLocale("no")
+                else if (BaseGame.currentLocale == "no") changeLocale("en")
+            }
+        })
+        val localeTable = Table()
+        localeTable.add(localeLabel).colspan(3).padBottom(Gdx.graphics.height * .02f).row()
+        localeTable.add(localeLeftButton)
+        localeTable.add(localeLanguageLabel)
+        localeTable.add(localeRightButton)
+
         // google play services --------------------------------------------------------------------------------------
         val gpsLabel = Label("Google Play ${BaseGame.myBundle!!.get("services")}", BaseGame.labelStyle)
         gpsLabel.setFontScale(.5f)
@@ -209,6 +244,8 @@ class OptionsScreen : BaseScreen() {
                 .padLeft(Gdx.graphics.width * .11f).row()
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
 
+        buttonsTable.add(localeTable).padBottom(Gdx.graphics.height * .03f).colspan(2).row()
+
         if (Gdx.app.type == Application.ApplicationType.Android) {
             buttonsTable.add(gpsTable).colspan(2).row()
             buttonsTable.add(achievementTable).padTop(Gdx.graphics.height * .03f).colspan(2).row()
@@ -216,7 +253,7 @@ class OptionsScreen : BaseScreen() {
 
         buttonsTable.add(Label("", BaseGame.labelStyle)).row()
         buttonsTable.add(backButton).colspan(2)
-        buttonsTable.debug = false
+        // buttonsTable.debug = true
 
         // gui setup -------------------------------------------------------------------------------------------------
         val table = Table()
@@ -260,5 +297,14 @@ class OptionsScreen : BaseScreen() {
             onImage.color = Color.DARK_GRAY
             offImage.color = Color.WHITE
         }
+    }
+
+    private fun changeLocale(locale: String) {
+        BaseGame.assetManager.unload("i18n/MyBundle")
+        BaseGame.assetManager.load("i18n/MyBundle", I18NBundle::class.java, I18NBundleLoader.I18NBundleParameter(Locale(locale)))
+        BaseGame.assetManager.finishLoading()
+        BaseGame.myBundle = BaseGame.assetManager["i18n/MyBundle", I18NBundle::class.java]
+        BaseGame.currentLocale = locale
+        transition.fadeInToOptionsScreen()
     }
 }

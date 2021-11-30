@@ -6,13 +6,11 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import no.sandramoen.blipblop.actors.particleEffects.FoggyBottomVeilEffect
 import no.sandramoen.blipblop.actors.particleEffects.FoggyTopVeilEffect
 import no.sandramoen.blipblop.actors.particleEffects.ParticleActor
-import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 
 class FoggyVeil(x: Float, y: Float, s: Stage) : Challenge(x, y, s) {

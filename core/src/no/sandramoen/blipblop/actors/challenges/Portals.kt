@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import no.sandramoen.blipblop.actors.Ball
-import no.sandramoen.blipblop.actors.Player
 import no.sandramoen.blipblop.actors.particleEffects.BluePortalEffect
 import no.sandramoen.blipblop.actors.particleEffects.OrangePortalEffect
 import no.sandramoen.blipblop.actors.particleEffects.ParticleActor

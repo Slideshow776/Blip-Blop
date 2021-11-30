@@ -95,11 +95,11 @@ public class AndroidLauncher extends AndroidApplication implements GooglePlaySer
 				String message = result.getStatus().getStatusMessage();
 				System.out.println("AndroidLauncher.java: " + result.getStatus());
 				// Status{statusCode=SIGN_IN_REQUIRED, resolution=null}
-				if (message == null || message.isEmpty()) {
+				/*if (message == null || message.isEmpty()) {
 					message = "There was an issue with sign in: " + result.getStatus();
 				}
 				new AlertDialog.Builder(this).setMessage(message)
-						.setNeutralButton(android.R.string.ok, null).show();
+						.setNeutralButton(android.R.string.ok, null).show();*/
 			}
 		}
 	}

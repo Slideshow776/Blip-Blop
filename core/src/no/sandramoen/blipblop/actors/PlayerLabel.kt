@@ -2,24 +2,14 @@ package no.sandramoen.blipblop.actors
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g3d.Material
-import com.badlogic.gdx.graphics.g3d.ModelInstance
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import no.sandramoen.blipblop.utils.BaseActor
-import no.sandramoen.blipblop.utils.BaseActor3D
 import no.sandramoen.blipblop.utils.BaseGame
-import no.sandramoen.blipblop.utils.Stage3D
 
 class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseActor(x, y, s) {
     private var vertexShader: String? = null

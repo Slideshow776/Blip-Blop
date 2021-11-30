@@ -94,6 +94,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
         var bottomPlayerColor = Color.FIREBRICK
         var topPlayerColor = Color(0.052f,0.329f,1f, 1f)
         var myBundle: I18NBundle? = null
+        var currentLocale: String? = null
 
         fun setActiveScreen(s: BaseScreen) {
             game?.setScreen(s)
@@ -114,6 +115,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
             musicVolume = .25f
         }
         RATIO = Gdx.graphics.width.toFloat() / Gdx.graphics.height
+        currentLocale = appLocale
 
         // asset manager
         val time = measureTimeMillis {
