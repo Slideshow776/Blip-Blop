@@ -160,6 +160,7 @@ This means you can do something like this: `explosionSound.play(soundVolume, Mat
 ## Android locale
 I used [this](https://medium.com/@hectorricardomendez/how-to-get-the-current-locale-in-android-fc12d8be6242) resource to figure how to extract the locale from an android device.
 
+## Other
 For other project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
 
 [Go back to the top](#blip-blop).
