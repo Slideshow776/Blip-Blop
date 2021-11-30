@@ -1,6 +1,9 @@
 package no.sandramoen.blipblop.utils
 
-import com.badlogic.gdx.*
+import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.assets.AssetErrorListener
 import com.badlogic.gdx.assets.AssetManager
@@ -22,6 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.badlogic.gdx.utils.I18NBundle
 import kotlin.system.measureTimeMillis
+import com.badlogic.gdx.assets.loaders.I18NBundleLoader.I18NBundleParameter
+import java.util.Locale
 
 abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), AssetErrorListener {
     private val tag = "BaseGame.kt"
@@ -115,10 +120,12 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.setErrorListener(this)
             assetManager.load("images/included/packed/blipBlop.pack.atlas", TextureAtlas::class.java)
 
+            // music
             assetManager.load("audio/music/251461__joshuaempyre__arcade-music-loop.wav", Music::class.java)
             assetManager.load("audio/music/99431__robinhood76__01738-low-creepy-hole.wav", Music::class.java)
             assetManager.load("audio/music/581491__carthny__thunder-rush-28-july-2021.wav", Music::class.java)
 
+            // sounds
             assetManager.load("audio/sound/blip.wav", Sound::class.java)
             assetManager.load("audio/sound/blop.wav", Sound::class.java)
             assetManager.load("audio/sound/start.wav", Sound::class.java)
@@ -140,20 +147,24 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             assetManager.load("audio/sound/175953__freefire66__dagger-drawn2.wav", Sound::class.java)
             assetManager.load("audio/sound/spin.wav", Sound::class.java)
 
+            // fonts
             val resolver = InternalFileHandleResolver()
             assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(resolver))
             assetManager.setLoader(BitmapFont::class.java, ".ttf", FreetypeFontLoader(resolver))
             assetManager.setLoader(Text::class.java, TextLoader(InternalFileHandleResolver()))
 
+            // shaders
             assetManager.load(AssetDescriptor("shaders/default.vs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/shockwave.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/glow-pulse.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/voronoi01.fs", Text::class.java, TextLoader.TextParameter()))
             assetManager.load(AssetDescriptor("shaders/veil.fs", Text::class.java, TextLoader.TextParameter()))
 
+            // skins
             assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
-            assetManager.load("i18n/MyBundle", I18NBundle::class.java)
+            // i18n, change locale by swapping country code with the desired one
+            assetManager.load("i18n/MyBundle", I18NBundle::class.java, I18NBundleParameter(Locale("en")))
 
             assetManager.finishLoading()
 
@@ -212,8 +223,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?) : Game(), A
             val customFont = fontGenerator.generateFont(fontParameters)
 
             val buttonFontParameters = FreeTypeFontParameter()
-            buttonFontParameters.size =
-                    (.04f * Gdx.graphics.height).toInt() // If the resolutions height is 1440 then the font size becomes 86
+            buttonFontParameters.size = (.04f * Gdx.graphics.height).toInt() // If the resolutions height is 1440 then the font size becomes 86
             buttonFontParameters.color = Color.WHITE
             buttonFontParameters.borderWidth = 2f
             buttonFontParameters.borderColor = Color.BLACK
