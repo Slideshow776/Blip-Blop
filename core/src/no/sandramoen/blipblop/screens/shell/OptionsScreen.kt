@@ -148,6 +148,7 @@ class OptionsScreen : BaseScreen() {
         val localeLeftButton = TextButton("<<", BaseGame.textButtonStyle)
         localeLeftButton.label.setFontScale(.5f)
         localeLeftButton.label.color = BaseGame.lightPink
+        GameUtils.pulseWidget(localeLeftButton, .9f, 2f)
         localeLeftButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
@@ -161,6 +162,7 @@ class OptionsScreen : BaseScreen() {
         val localeRightButton = TextButton(">>", BaseGame.textButtonStyle)
         localeRightButton.label.setFontScale(.5f)
         localeRightButton.label.color = BaseGame.lightPink
+        GameUtils.pulseWidget(localeRightButton, .9f, 2f)
         localeRightButton.addListener(object : ActorGestureListener() {
             override fun tap(event: InputEvent?, x: Float, y: Float, count: Int, button: Int) {
                 BaseGame.clickSound!!.play(BaseGame.soundVolume)
@@ -242,9 +244,9 @@ class OptionsScreen : BaseScreen() {
                 .height(optionsWidgetHeight).padLeft(Gdx.graphics.width * .08f)
         buttonsTable.add(musicLabel).width(optionsWidgetWidth * 1 / 3)
                 .padLeft(Gdx.graphics.width * .11f).row()
-        buttonsTable.add(Label("", BaseGame.labelStyle)).row()
+        buttonsTable.add(Label("", BaseGame.labelStyle)).padBottom(Gdx.graphics.height * .0225f).row() // hack to get that extra space
 
-        buttonsTable.add(localeTable).padBottom(Gdx.graphics.height * .03f).colspan(2).row()
+        buttonsTable.add(localeTable).padBottom(Gdx.graphics.height * .05f).colspan(25).row()
 
         if (Gdx.app.type == Application.ApplicationType.Android) {
             buttonsTable.add(gpsTable).colspan(2).row()
@@ -257,7 +259,7 @@ class OptionsScreen : BaseScreen() {
 
         // gui setup -------------------------------------------------------------------------------------------------
         val table = Table()
-        table.add(mainLabel).padTop(Gdx.graphics.height * .15f)
+        table.add(mainLabel).padTop(Gdx.graphics.height * .1f)
         table.row()
         table.add(buttonsTable).fillY().expandY()
         table.row()

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Widget
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
@@ -148,6 +149,16 @@ class GameUtils {
             val dividend = x - min
             val divisor = max - min
             return dividend / divisor
+        }
+
+        /**
+         * Adds an action to pulse [actor] forever down to [lowestAlpha] with a total frequency of [duration].
+         */
+        fun pulseWidget(actor: Actor, lowestAlpha: Float, duration: Float) {
+            actor.addAction(Actions.forever(Actions.sequence(
+                    Actions.alpha(lowestAlpha, duration / 2),
+                    Actions.alpha(1f, duration / 2)
+            )))
         }
     }
 }
