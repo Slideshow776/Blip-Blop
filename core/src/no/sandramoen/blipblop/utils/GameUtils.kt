@@ -43,6 +43,7 @@ class GameUtils {
             BaseGame.prefs!!.putFloat("musicVolume", BaseGame.musicVolume)
             BaseGame.prefs!!.putFloat("soundVolume", BaseGame.soundVolume)
             BaseGame.prefs!!.putBoolean("googlePlayServices", BaseGame.isGPS)
+            BaseGame.prefs!!.putString("locale", BaseGame.currentLocale)
             try {
                 BaseGame.prefs!!.putFloat("gameTime", BaseGame.gameTime)
             } catch (error: Error) {
@@ -62,6 +63,7 @@ class GameUtils {
             BaseGame.soundVolume = BaseGame.prefs!!.getFloat("soundVolume")
             BaseGame.isGPS = BaseGame.prefs!!.getBoolean("googlePlayServices")
             BaseGame.gameTime = BaseGame.prefs!!.getFloat("gameTime")
+            BaseGame.currentLocale = BaseGame.prefs!!.getString("locale")
         }
 
         /**

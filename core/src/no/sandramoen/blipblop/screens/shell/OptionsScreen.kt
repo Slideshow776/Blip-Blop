@@ -305,6 +305,7 @@ class OptionsScreen : BaseScreen() {
         BaseGame.assetManager.finishLoading()
         BaseGame.myBundle = BaseGame.assetManager["i18n/MyBundle", I18NBundle::class.java]
         BaseGame.currentLocale = locale
+        GameUtils.saveGameState()
         transition.fadeInToOptionsScreen()
     }
 }

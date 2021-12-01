@@ -110,12 +110,13 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
 
         // global variables
         gps = this.googlePlayServices
+        GameUtils.loadGameState()
         if (!loadPersonalParameters) {
             soundVolume = .75f
             musicVolume = .25f
+            currentLocale = appLocale
         }
         RATIO = Gdx.graphics.width.toFloat() / Gdx.graphics.height
-        currentLocale = appLocale
 
         // asset manager
         val time = measureTimeMillis {
@@ -167,7 +168,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
             assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
             // i18n
-            assetManager.load("i18n/MyBundle", I18NBundle::class.java, I18NBundleParameter(Locale(appLocale)))
+            assetManager.load("i18n/MyBundle", I18NBundle::class.java, I18NBundleParameter(Locale(currentLocale)))
 
             assetManager.finishLoading()
 
@@ -252,8 +253,8 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
     }
 
     override fun dispose() {
-        GameUtils.saveGameState()
         super.dispose()
+        GameUtils.saveGameState()
         gps!!.signOut()
         /*try { // TODO: uncomment this when development is done
             assetManager.dispose()

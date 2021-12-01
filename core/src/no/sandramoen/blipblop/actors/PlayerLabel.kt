@@ -12,6 +12,7 @@ import no.sandramoen.blipblop.utils.BaseActor
 import no.sandramoen.blipblop.utils.BaseGame
 
 class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseActor(x, y, s) {
+    private val tag = "PlayerLabel"
     private var vertexShader: String? = null
     private var fragmentShader: String? = null
     private var shaderProgram: ShaderProgram? = null
@@ -59,7 +60,7 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
         shaderProgram = ShaderProgram(vertexShader, fragmentShader)
 
         // to detect errors in GPU compilation
-        if (!shaderProgram!!.isCompiled) println("Couldn't compile shader: " + shaderProgram!!.log)
+        if (!shaderProgram!!.isCompiled) Gdx.app.error(tag, "Couldn't compile shader: " + shaderProgram!!.log)
 
         time = 0f
     }
