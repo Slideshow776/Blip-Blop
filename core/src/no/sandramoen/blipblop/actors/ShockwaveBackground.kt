@@ -20,6 +20,7 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
     var shaderProgram: ShaderProgram
 
     private var time = .0f
+    private var animationDelay = 1f
     private var shockWavePositionX = -5.0f
     private var shockWavePositionY = -5.0f
     private var disabled = false
@@ -70,7 +71,7 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
     }
 
     private fun start(normalizedPosX: Float, normalizedPosY: Float) {
-        if (time >= 1f) { // prevents interrupting previous animation
+        if (time >= animationDelay) {
             this.shockWavePositionX = normalizedPosX
             this.shockWavePositionY = normalizedPosY
             val enable = RunnableAction()
