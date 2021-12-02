@@ -40,6 +40,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
         private var game: BaseGame? = null
 
         lateinit var assetManager: AssetManager
+        lateinit var fontGenerator: FreeTypeFontGenerator
         const val WORLD_WIDTH = 100f
         const val WORLD_HEIGHT = 100f
         const val scale = 1.0f
@@ -215,7 +216,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
 
             // fonts
             FreeTypeFontGenerator.setMaxTextureSize(2048) // solves font bug that won't show some characters like "." and "," in android
-            val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("fonts/ARCADE_R.TTF"))
+            fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("fonts/ARCADE_R.TTF"))
             val fontParameters = FreeTypeFontParameter()
             fontParameters.size = (.038f * Gdx.graphics.height).toInt() // Font size is based on width of screen...
             fontParameters.color = Color.WHITE
@@ -255,13 +256,13 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
     override fun dispose() {
         super.dispose()
         GameUtils.saveGameState()
-        gps!!.signOut()
-        /*try { // TODO: uncomment this when development is done
+        if (gps != null) gps!!.signOut()
+        try { // TODO: uncomment this when development is done
             assetManager.dispose()
             fontGenerator.dispose()
         } catch (error: UninitializedPropertyAccessException) {
-            Gdx.app.error("BaseGame", "Error $error")
-        }*/
+            Gdx.app.error("BaseGame", "$error")
+        }
     }
 
     override fun error(asset: AssetDescriptor<*>, throwable: Throwable) {
