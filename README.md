@@ -18,7 +18,7 @@ Read on below for project specifics.
 
 ![screenshot image of classic game play](https://user-images.githubusercontent.com/4059636/141648731-59d1f9de-316f-46f9-a1c1-35e2efd132bd.png)
 
-![images of splash, menu and options](https://user-images.githubusercontent.com/4059636/141648729-b82ca1be-b73a-46ff-a907-8caf47a08c74.png)
+![images of splash, menu, and options](https://user-images.githubusercontent.com/4059636/141648729-b82ca1be-b73a-46ff-a907-8caf47a08c74.png)
 
 
 ## Game Design Document
@@ -72,7 +72,7 @@ Read on below for project specifics.
     Each players' score is shown on the right side of their own space in a tilted fashion for all to read equally.    
     
     * **What menus, screens, or overlays will there be?**
-    A splash screen showing the author of the game. A menu screen showing the start game in classic or challenge mode, as well as options.
+    A splash screen showing the author of the game. A menu screen shows the start game in classic or challenge mode, as well as options.
     The options screen features control over audio and music, as well as in Android the ability to turn on/off `Google Play Services.
     
     * **How does the player interact with the game at the software level?**
