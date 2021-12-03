@@ -1,25 +1,27 @@
 # Blip Blop
+
 My own version of [Pong](https://www.ponggame.org), an old-time arcade game.
 >Pong is a two-dimensional sports game that simulates table tennis. The player controls an in-game paddle by moving it vertically across the left or right side of the screen. They can compete against another player controlling a second paddle on the opposing side. Players use the paddles to hit a ball back and forth. The goal is for each player to reach eleven points before the opponent; points are earned when one fails to return the ball to the other.
 >
 >[_-Wikipedia_](https://en.wikipedia.org/wiki/Pong#Gameplay)
+
+* [Youtube trailer](https://www.youtube.com/watch?v=eB2sI0VbE5s)
+* [Click here to play on Google Play!](https://play.google.com/store/apps/details?id=no.sandramoen.blipblop)
+* [Click here to play for free on Desktop!](https://github.com/Slideshow776/Blip-Blop/tree/master/release)
+
+Read on below for project specifics.
 
 1. [Game Design Document](#game-design-document)
 2. [Audio Licences Used](#audio-licences-used)
 2. [Project Comments](#project-comments)
 4. [Project Kanban Board](https://github.com/Slideshow776/Blip-Blop/projects/1?add_cards_query=is%3Aopen)
 
-TODO: 
-* <del>Youtube trailer</del>
-* <del>Click here to play on Google Play!</del>
-* <del>Click here to play for free on Desktop!</del>
-
 ![screenshot image of classic game play](https://user-images.githubusercontent.com/4059636/141648731-59d1f9de-316f-46f9-a1c1-35e2efd132bd.png)
 
 ![images of splash, menu and options](https://user-images.githubusercontent.com/4059636/141648729-b82ca1be-b73a-46ff-a907-8caf47a08c74.png)
 
 
-# Game Design Document
+## Game Design Document
 
 1. Overall Vision
     * **Write a short paragraph explaining the game:**
