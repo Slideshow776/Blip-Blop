@@ -7,7 +7,7 @@ My own version of [Pong](https://www.ponggame.org), an old-time arcade game.
 
 * [Youtube trailer](https://www.youtube.com/watch?v=eB2sI0VbE5s)
 * [Click here to play on Google Play!](https://play.google.com/store/apps/details?id=no.sandramoen.blipblop)
-* [Click here to play for free on Desktop!](https://github.com/Slideshow776/Blip-Blop/tree/master/Release)
+* [Click here to play for free on Desktop!](https://github.com/Slideshow776/Blip-Blop/tree/master/release)
 
 Read on below for project specifics.
 
