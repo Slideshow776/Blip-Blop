@@ -93,7 +93,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
         var registerAchievementFrequency: Float = 3 * 60f   // three minutes
         var biggestAchievementTime: Float = 60 * 60f        // one hour
         var bottomPlayerColor = Color.FIREBRICK
-        var topPlayerColor = Color(0.052f,0.329f,1f, 1f)
+        var topPlayerColor = Color(0.052f, 0.329f, 1f, 1f)
         var myBundle: I18NBundle? = null
         var currentLocale: String? = null
 
@@ -209,11 +209,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
             veilShader = assetManager.get("shaders/veil.fs", Text::class.java).getString()
 
             // skin
-            try {
-                skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
-            } catch (error: Error) {
-                Gdx.app.error(tag, "$error")
-            }
+            skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
 
             // i18n
             myBundle = assetManager["i18n/MyBundle", I18NBundle::class.java]
