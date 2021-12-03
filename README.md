@@ -9,6 +9,7 @@ My own version of [Pong](https://www.ponggame.org), an old-time arcade game.
 * [Click here to play on Google Play!](https://play.google.com/store/apps/details?id=no.sandramoen.blipblop)
 * [Click here to play for free on Desktop!](https://github.com/Slideshow776/Blip-Blop/tree/master/release)
 
+Read on below for project specifics.
 
 1. [Game Design Document](#game-design-document)
 2. [Audio Licences Used](#audio-licences-used)
@@ -20,7 +21,7 @@ My own version of [Pong](https://www.ponggame.org), an old-time arcade game.
 ![images of splash, menu and options](https://user-images.githubusercontent.com/4059636/141648729-b82ca1be-b73a-46ff-a907-8caf47a08c74.png)
 
 
-# Game Design Document
+## Game Design Document
 
 1. Overall Vision
     * **Write a short paragraph explaining the game:**
