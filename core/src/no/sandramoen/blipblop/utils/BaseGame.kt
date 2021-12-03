@@ -209,7 +209,11 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
             veilShader = assetManager.get("shaders/veil.fs", Text::class.java).getString()
 
             // skin
-            skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
+            try {
+                skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
+            } catch (error: Error) {
+                Gdx.app.error(tag, "$error")
+            }
 
             // i18n
             myBundle = assetManager["i18n/MyBundle", I18NBundle::class.java]
