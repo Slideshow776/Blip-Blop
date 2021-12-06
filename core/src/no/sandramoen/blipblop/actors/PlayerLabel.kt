@@ -79,7 +79,7 @@ class PlayerLabel(x: Float, y: Float, s: Stage, bottomPlayer: Boolean) : BaseAct
                 shaderProgram!!.setUniformi("u_glowRadius", 7)
                 super.draw(batch, parentAlpha)
                 batch.shader = null
-            } catch (error: Error) {
+            } catch (error: Throwable) {
                 super.draw(batch, parentAlpha)
             }
         } else {

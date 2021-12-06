@@ -35,6 +35,10 @@ class OptionsScreen : BaseScreen() {
     private var attemptedToSignIn = false
     private lateinit var up: TextureRegion
     private lateinit var down: TextureRegion
+    private var optionsSoundSliderContainer: Container<Slider>? = null
+    private var optionsMusicSliderContainer: Container<Slider>? = null
+    private lateinit var soundLabel: Label
+    private lateinit var musicLabel: Label
 
     override fun initialize() {
         tag = "OptionsScreen.kt"
@@ -51,70 +55,72 @@ class OptionsScreen : BaseScreen() {
         val optionsWidgetHeight = Gdx.graphics.height * .015f // value must be pre-determined for scaling
         val optionsSliderScale = Gdx.graphics.height * .002f // makes sure scale is device adjustable-ish
 
-        // music -------------------------------------------------------------------------------------------------
-        val musicLabel = Label(BaseGame.myBundle!!.get("music"), BaseGame.labelStyle)
-        musicLabel.setFontScale(.5f)
-        GameUtils.addWidgetEnterExitEffect(musicLabel)
+        if (BaseGame.skin != null) {
+            // music -------------------------------------------------------------------------------------------------
+            musicLabel = Label(BaseGame.myBundle!!.get("music"), BaseGame.labelStyle)
+            musicLabel.setFontScale(.5f)
+            GameUtils.addWidgetEnterExitEffect(musicLabel)
 
-        val optionsMusicSlider = Slider(0f, 1f, .1f, false, BaseGame.skin)
-        optionsMusicSlider.value = BaseGame.musicVolume
-        optionsMusicSlider.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent?, actor: Actor?) {
-                GameUtils.setMusicVolume(optionsMusicSlider.value)
-                GameUtils.saveGameState()
-            }
-        })
-        val optionsMusicSliderContainer = Container(optionsMusicSlider)
-        optionsMusicSliderContainer.isTransform = true
-        optionsMusicSliderContainer.setOrigin(
-                (optionsWidgetWidth * 5 / 6) / 2,
-                optionsWidgetHeight / 2
-        )
-        optionsMusicSliderContainer.setScale(optionsSliderScale)
-        optionsMusicSliderContainer.addListener(object : ClickListener() {
-            override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
-                musicLabel.color = BaseGame.lightPink
-                super.enter(event, x, y, pointer, fromActor)
-            }
+            val optionsMusicSlider = Slider(0f, 1f, .1f, false, BaseGame.skin)
+            optionsMusicSlider.value = BaseGame.musicVolume
+            optionsMusicSlider.addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    GameUtils.setMusicVolume(optionsMusicSlider.value)
+                    GameUtils.saveGameState()
+                }
+            })
+            optionsMusicSliderContainer = Container(optionsMusicSlider)
+            optionsMusicSliderContainer!!.isTransform = true
+            optionsMusicSliderContainer!!.setOrigin(
+                    (optionsWidgetWidth * 5 / 6) / 2,
+                    optionsWidgetHeight / 2
+            )
+            optionsMusicSliderContainer!!.setScale(optionsSliderScale)
+            optionsMusicSliderContainer!!.addListener(object : ClickListener() {
+                override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
+                    musicLabel.color = BaseGame.lightPink
+                    super.enter(event, x, y, pointer, fromActor)
+                }
 
-            override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
-                musicLabel.color = Color.WHITE
-                super.exit(event, x, y, pointer, toActor)
-            }
-        })
+                override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
+                    musicLabel.color = Color.WHITE
+                    super.exit(event, x, y, pointer, toActor)
+                }
+            })
 
-        // sound -------------------------------------------------------------------------------------------------
-        val soundLabel = Label(BaseGame.myBundle!!.get("sound"), BaseGame.labelStyle)
-        soundLabel.setFontScale(.5f)
-        GameUtils.addWidgetEnterExitEffect(soundLabel)
+            // sound -------------------------------------------------------------------------------------------------
+            soundLabel = Label(BaseGame.myBundle!!.get("sound"), BaseGame.labelStyle)
+            soundLabel.setFontScale(.5f)
+            GameUtils.addWidgetEnterExitEffect(soundLabel)
 
-        val optionsSoundSlider = Slider(0f, 1f, .1f, false, BaseGame.skin)
-        optionsSoundSlider.value = BaseGame.soundVolume
-        optionsSoundSlider.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent?, actor: Actor?) {
-                BaseGame.soundVolume = optionsSoundSlider.value
-                BaseGame.clickSound!!.play(BaseGame.soundVolume)
-                GameUtils.saveGameState()
-            }
-        })
-        val optionsSoundSliderContainer = Container(optionsSoundSlider)
-        optionsSoundSliderContainer.isTransform = true
-        optionsSoundSliderContainer.setOrigin(
-                (optionsWidgetWidth * 5 / 6) / 2,
-                optionsWidgetHeight / 2
-        )
-        optionsSoundSliderContainer.setScale(optionsSliderScale)
-        optionsSoundSliderContainer.addListener(object : ClickListener() {
-            override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
-                soundLabel.color = BaseGame.lightPink
-                super.enter(event, x, y, pointer, fromActor)
-            }
+            val optionsSoundSlider = Slider(0f, 1f, .1f, false, BaseGame.skin)
+            optionsSoundSlider.value = BaseGame.soundVolume
+            optionsSoundSlider.addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    BaseGame.soundVolume = optionsSoundSlider.value
+                    BaseGame.clickSound!!.play(BaseGame.soundVolume)
+                    GameUtils.saveGameState()
+                }
+            })
+            optionsSoundSliderContainer = Container(optionsSoundSlider)
+            optionsSoundSliderContainer!!.isTransform = true
+            optionsSoundSliderContainer!!.setOrigin(
+                    (optionsWidgetWidth * 5 / 6) / 2,
+                    optionsWidgetHeight / 2
+            )
+            optionsSoundSliderContainer!!.setScale(optionsSliderScale)
+            optionsSoundSliderContainer!!.addListener(object : ClickListener() {
+                override fun enter(event: InputEvent?, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
+                    soundLabel.color = BaseGame.lightPink
+                    super.enter(event, x, y, pointer, fromActor)
+                }
 
-            override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
-                soundLabel.color = Color.WHITE
-                super.exit(event, x, y, pointer, toActor)
-            }
-        })
+                override fun exit(event: InputEvent?, x: Float, y: Float, pointer: Int, toActor: Actor?) {
+                    soundLabel.color = Color.WHITE
+                    super.exit(event, x, y, pointer, toActor)
+                }
+            })
+        }
 
         // display achievements ----------------------------------------------------------------------------------------
         achievementButton = TextButton(BaseGame.myBundle!!.get("achievements"), BaseGame.textButtonStyle)
@@ -235,18 +241,20 @@ class OptionsScreen : BaseScreen() {
         GameUtils.addTextButtonEnterExitEffect(backButton)
 
         val buttonsTable = Table() // -----------------------------------------------------------------------------------
-        buttonsTable.add(optionsSoundSliderContainer).width(optionsWidgetWidth * 5 / 6)
-                .height(optionsWidgetHeight).padLeft(Gdx.graphics.width * .08f)
-        buttonsTable.add(soundLabel).width(optionsWidgetWidth * 1 / 3)
-                .padLeft(Gdx.graphics.width * .11f).row()
-        buttonsTable.add(Label("", BaseGame.labelStyle)).row()
-        buttonsTable.add(optionsMusicSliderContainer).width(optionsWidgetWidth * 5 / 6)
-                .height(optionsWidgetHeight).padLeft(Gdx.graphics.width * .08f)
-        buttonsTable.add(musicLabel).width(optionsWidgetWidth * 1 / 3)
-                .padLeft(Gdx.graphics.width * .11f).row()
-        buttonsTable.add(Label("", BaseGame.labelStyle)).padBottom(Gdx.graphics.height * .0225f).row() // hack to get that extra space
+        if (BaseGame.skin != null) {
+            buttonsTable.add(optionsSoundSliderContainer).width(optionsWidgetWidth * 5 / 6)
+                    .height(optionsWidgetHeight).padLeft(Gdx.graphics.width * .08f)
+            buttonsTable.add(soundLabel).width(optionsWidgetWidth * 1 / 3)
+                    .padLeft(Gdx.graphics.width * .11f).row()
+            buttonsTable.add(Label("", BaseGame.labelStyle)).row()
+            buttonsTable.add(optionsMusicSliderContainer).width(optionsWidgetWidth * 5 / 6)
+                    .height(optionsWidgetHeight).padLeft(Gdx.graphics.width * .08f)
+            buttonsTable.add(musicLabel).width(optionsWidgetWidth * 1 / 3)
+                    .padLeft(Gdx.graphics.width * .11f).row()
+            buttonsTable.add(Label("", BaseGame.labelStyle)).padBottom(Gdx.graphics.height * .0225f).row() // hack to get that extra space
+        }
 
-        buttonsTable.add(localeTable).padBottom(Gdx.graphics.height * .06f).colspan(25).row()
+        buttonsTable.add(localeTable).padBottom(Gdx.graphics.height * .06f).colspan(2).row()
 
         if (Gdx.app.type == Application.ApplicationType.Android) {
             buttonsTable.add(gpsTable).colspan(2).row()

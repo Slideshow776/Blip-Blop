@@ -118,6 +118,11 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
             currentLocale = appLocale
         }
         RATIO = Gdx.graphics.width.toFloat() / Gdx.graphics.height
+        try { // Hack: any unfound assets will crash the game...
+            skin = Skin(Gdx.files.internal("skins/arcade/arcade.json"))
+        } catch (error: Throwable) {
+            Gdx.app.error(tag, "Error: Could not load skin: $error")
+        }
 
         // asset manager
         val time = measureTimeMillis {
@@ -166,7 +171,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
             assetManager.load(AssetDescriptor("shaders/veil.fs", Text::class.java, TextLoader.TextParameter()))
 
             // skins
-            assetManager.load("skins/arcade/arcade.json", Skin::class.java)
+            // assetManager.load("skins/arcade/arcade.json", Skin::class.java)
 
             // i18n
             assetManager.load("i18n/MyBundle", I18NBundle::class.java, I18NBundleParameter(Locale(currentLocale)))
@@ -209,7 +214,7 @@ abstract class BaseGame(var googlePlayServices: GooglePlayServices?, appLocale: 
             veilShader = assetManager.get("shaders/veil.fs", Text::class.java).getString()
 
             // skin
-            skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
+            // skin = assetManager.get("skins/arcade/arcade.json", Skin::class.java)
 
             // i18n
             myBundle = assetManager["i18n/MyBundle", I18NBundle::class.java]

@@ -47,7 +47,7 @@ class GameUtils {
             BaseGame.prefs!!.putString("locale", BaseGame.currentLocale)
             try {
                 BaseGame.prefs!!.putFloat("gameTime", BaseGame.gameTime)
-            } catch (error: Error) {
+            } catch (error: Throwable) {
                 BaseGame.prefs!!.putFloat("gameTime", Float.MAX_VALUE)
             }
             BaseGame.prefs!!.flush()

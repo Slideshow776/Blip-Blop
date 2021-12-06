@@ -58,7 +58,7 @@ class ShockwaveBackground(x: Float, y: Float, texturePath: String, s: Stage) : B
                 shaderProgram.setUniformf("u_shockParams", Vector3(10f, .8f, .1f))
                 super.draw(batch, parentAlpha)
                 batch.shader = null
-            } catch (error: Error) {
+            } catch (error: Throwable) {
                 super.draw(batch, parentAlpha)
             }
         } else

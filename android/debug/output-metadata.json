@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "no.sandramoen.blipblop",
+  "variantName": "debug",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "versionCode": 6,
+      "versionName": "6.0",
+      "outputFile": "android-debug.apk"
+    }
+  ]
+}

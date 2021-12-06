@@ -58,7 +58,7 @@ class FoggyVeil(x: Float, y: Float, s: Stage) : Challenge(x, y, s) {
                 shaderProgram.setUniformf("u_alpha", color.a)
                 super.draw(batch, parentAlpha)
                 batch.shader = null
-            } catch (error: Error) {
+            } catch (error: Throwable) {
                 super.draw(batch, parentAlpha)
             }
         } else

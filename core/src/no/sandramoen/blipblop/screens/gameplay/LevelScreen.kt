@@ -270,7 +270,7 @@ open class LevelScreen : BaseScreen3D() {
                                     BaseGame.gameTime = gameTime
                                     GameUtils.saveGameState()
                                 }
-                            } catch (error: Error) {
+                            } catch (error: Throwable) {
                                 Gdx.app.error(tag, "Could not increment achievement, error: $error")
                             }
                         }

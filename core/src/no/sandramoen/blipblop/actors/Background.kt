@@ -47,7 +47,7 @@ class Background(x: Float, y: Float, s: Stage, colour: Vector3) : BaseActor(x, y
                 shaderProgram.setUniformf("u_color", colour)
                 super.draw(batch, parentAlpha)
                 batch.shader = null
-            } catch (error: Error) {
+            } catch (error: Throwable) {
                 super.draw(batch, parentAlpha)
             }
         }

@@ -1,7 +1,7 @@
 {
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	arcade_rounded: {
-		file: arcade_rounded.fnt
+	arcadeRounded: {
+		file: arcadeRounded.fnt
 	}
 	default-font: {
 		file: default.fnt
@@ -65,7 +65,7 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
 		checkboxOn: checkBoxUnChecked
 		checkboxOff: checkBoxChecked
-		font: arcade_rounded
+		font: arcadeRounded
 		fontColor: white
 	}
 }
