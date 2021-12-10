@@ -40,3 +40,10 @@
    boolean reportFixture(long);
    float   reportRayFixture(long, float, float, float, float, float);
 }
+
+# Keeps skins integrity, avoids crashes...
+# https://stackoverflow.com/questions/35366302/libgdx-fatal-exception-loading-a-skin-json-file/47393132#47393132
+-keep class com.badlogic.gdx.scenes.scene2d.ui.**{
+    **[] $VALUES;
+     *;
+ }
