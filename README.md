@@ -162,6 +162,22 @@ This means you can do something like this: `explosionSound.play(soundVolume, Mat
 ## Android locale
 I used [this](https://medium.com/@hectorricardomendez/how-to-get-the-current-locale-in-android-fc12d8be6242) resource to figure how to extract the locale from an android device.
 
+## Production error
+Android has something called [Proguard](https://en.wikipedia.org/wiki/ProGuard), which shrinks, optimizes and obfuscates Java code. This caused the skin asset to fail, and only in production. A proguard rule was then added to rectify the situation.
+
+This code should be added to the `android/proguard-rules.pro` file:
+```
+# Keeps skins integrity, avoids crashes...
+# https://stackoverflow.com/questions/35366302/libgdx-fatal-exception-loading-a-skin-json-file/47393132#47393132
+-keep class com.badlogic.gdx.scenes.scene2d.ui.**{
+    **[] $VALUES;
+     *;
+ }
+```
+
+* The [commit](https://github.com/Slideshow776/Blip-Blop/commit/ff4058d0bc42641a9c23754fdebdadd7a4e29074)
+* The [solution](https://stackoverflow.com/questions/35366302/libgdx-fatal-exception-loading-a-skin-json-file/47393132#47393132)
+
 ## Other
 For other project specifics check out the [commits](https://github.com/Slideshow776/Blip-Blop/commits/master).
 
