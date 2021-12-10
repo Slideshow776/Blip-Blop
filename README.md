@@ -157,7 +157,7 @@ pan - panning in the range -1 (full left) to 1 (full right). 0 is center positio
 Returns:
 the id of the sound instance if successful, or -1 on failure.
 ```
-This means you can do something like this: `explosionSound.play(soundVolume, MathUtils.random(0f, 2f), 0f)`, which produces a lot of different explosion sounds from just one audio file.
+This means you can do something like this: `explosionSound.play(soundVolume, MathUtils.random(.8f, 1.2f), 0f)`, which produces a lot of different explosion sounds from just one audio file.
 
 ## Android locale
 I used [this](https://medium.com/@hectorricardomendez/how-to-get-the-current-locale-in-android-fc12d8be6242) resource to figure how to extract the locale from an android device.
