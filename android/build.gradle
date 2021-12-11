@@ -20,11 +20,11 @@ android {
         applicationId "no.sandramoen.blipblop"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 9
-        versionName "9.0"
+        versionCode 13
+        versionName "13.0"
         resConfigs "en", "no"
     }
-    buildTypes {
+    /*buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -33,7 +33,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
+    }*/
 }
 
 
