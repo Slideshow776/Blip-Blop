@@ -137,9 +137,9 @@ Read on below for project specifics.
 # Project comments
 ## Google Play Services (GPS)
 These three resources helped me to a great extent implement GPS.
-* Leaderboards in Android Game: https://developers.google.com/games/services/android/leaderboards
-* Google Play Services for Libgdx: https://stackoverflow.com/questions/48135531/signinsilently-failure-when-trying-to-sign-in-to-googleplay-game-services-w/48135617#48135617
-* Implementing and using an interface for cross-platform usability: https://github.com/libgdx/libgdx/wiki/Interfacing-with-platform-specific-code
+* [Leaderboards in Android Game](https://developers.google.com/games/services/android/leaderboards)
+* [Google Play Services for Libgdx](https://stackoverflow.com/questions/48135531/signinsilently-failure-when-trying-to-sign-in-to-googleplay-game-services-w/48135617#48135617)
+* [Implementing and using an interface for cross-platform usability](https://github.com/libgdx/libgdx/wiki/Interfacing-with-platform-specific-code)
 * The SHA-1 fingerprint is your general android development environment key found in `C:\Users\[user name]\.android\debug.keystore`. To get the SHA-1 run `$keytool -list -v -keystore .\debug.keystore`, this is to be used in both `https://play.google.com/console` and `https://console.cloud.google.com`.
 * How to implement [achievements in Android games](https://developers.google.com/games/services/android/achievements).
 ### GPS into production
