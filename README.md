@@ -137,11 +137,21 @@ Read on below for project specifics.
 # Project comments
 ## Google Play Services (GPS)
 These three resources helped me to a great extent implement GPS.
-* Leaderboards in Android Game: https://developers.google.com/games/services/android/leaderboards
-* Google Play Services for Libgdx: https://stackoverflow.com/questions/48135531/signinsilently-failure-when-trying-to-sign-in-to-googleplay-game-services-w/48135617#48135617
-* Implementing and using an interface for cross-platform usability: https://github.com/libgdx/libgdx/wiki/Interfacing-with-platform-specific-code
-* The SHA-1 fingerprint is your general android development environment key found in `C:\Users\Sandra Moen\.android\debug.keystore`. To get the SHA-1 run `$keytool -list -v -keystore .\debug.keystore`, this is to be used in both `https://play.google.com/console` and `https://console.cloud.google.com`.
+* [Leaderboards in Android Game](https://developers.google.com/games/services/android/leaderboards)
+* [Google Play Services for Libgdx](https://stackoverflow.com/questions/48135531/signinsilently-failure-when-trying-to-sign-in-to-googleplay-game-services-w/48135617#48135617)
+* [Implementing and using an interface for cross-platform usability](https://github.com/libgdx/libgdx/wiki/Interfacing-with-platform-specific-code)
+* The SHA-1 fingerprint is your general android development environment key found in `C:\Users\[user name]\.android\debug.keystore`. To get the SHA-1 run `$keytool -list -v -keystore .\debug.keystore`, this is to be used in both `https://play.google.com/console` and `https://console.cloud.google.com`.
 * How to implement [achievements in Android games](https://developers.google.com/games/services/android/achievements).
+### GPS into production
+To get GPS to work in production, you need to update the new SHA-1 key to the `console.cloud`.
+
+The new SHA-1 key is found here.
+
+![where to find the new SHA-1 key](https://user-images.githubusercontent.com/4059636/145675115-8659c571-3e51-47d3-a05c-9968e5679c73.png)
+
+Make a new one called "production", and put in the new key.
+
+![where to put the new SHA-1 key](https://user-images.githubusercontent.com/4059636/145675097-78c2e7dd-e6e6-471f-a23f-b77a4d6c52c5.png)
 
 ## LibGDX sound
 I haven't seen this until now, you can change the pitch and pan when playing audio.
@@ -157,7 +167,7 @@ pan - panning in the range -1 (full left) to 1 (full right). 0 is center positio
 Returns:
 the id of the sound instance if successful, or -1 on failure.
 ```
-This means you can do something like this: `explosionSound.play(soundVolume, MathUtils.random(0f, 2f), 0f)`, which produces a lot of different explosion sounds from just one audio file.
+This means you can do something like this: `explosionSound.play(soundVolume, MathUtils.random(.8f, 1.2f), 0f)`, which produces a lot of different explosion sounds from just one audio file.
 
 ## Android locale
 I used [this](https://medium.com/@hectorricardomendez/how-to-get-the-current-locale-in-android-fc12d8be6242) resource to figure how to extract the locale from an android device.
