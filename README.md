@@ -142,6 +142,16 @@ These three resources helped me to a great extent implement GPS.
 * Implementing and using an interface for cross-platform usability: https://github.com/libgdx/libgdx/wiki/Interfacing-with-platform-specific-code
 * The SHA-1 fingerprint is your general android development environment key found in `C:\Users\[user name]\.android\debug.keystore`. To get the SHA-1 run `$keytool -list -v -keystore .\debug.keystore`, this is to be used in both `https://play.google.com/console` and `https://console.cloud.google.com`.
 * How to implement [achievements in Android games](https://developers.google.com/games/services/android/achievements).
+### GPS into production
+To get GPS to work in production, you need to update the new SHA-1 key to the `console.cloud`.
+
+The new SHA-1 key is found here.
+
+![where to find the new SHA-1 key](https://user-images.githubusercontent.com/4059636/145675115-8659c571-3e51-47d3-a05c-9968e5679c73.png)
+
+Make a new one called "production", and put in the new key.
+
+![where to put the new SHA-1 key](https://user-images.githubusercontent.com/4059636/145675097-78c2e7dd-e6e6-471f-a23f-b77a4d6c52c5.png)
 
 ## LibGDX sound
 I haven't seen this until now, you can change the pitch and pan when playing audio.
